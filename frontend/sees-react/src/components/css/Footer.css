@@ -1,0 +1,12 @@
+/* src/Footer.css */
+
+.Footer {
+    background-color: #282c34;
+    padding: 10px 0;
+    color: white;
+    text-align: center;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+  }
+  
