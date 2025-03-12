@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 
 // Find the root element in the DOM
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
 // Render the app
 root.render(

@@ -1,29 +1,73 @@
-/* src/Navbar.css */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 2px solid lightblue;
+}
 
-.Navbar {
-    background-color: #282c34;
-    padding: 10px 0;
-  }
-  
-  .Navbar ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .Navbar li {
-    margin: 0 15px;
-  }
-  
-  .Navbar a {
-    text-decoration: none;
-    color: white;
-    font-size: 18px;
-  }
-  
-  .Navbar a:hover {
-    color: #61dafb;
-  }
-  
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+  color: red;
+  margin-right: 15px;
+}
+
+.search-bar {
+  position: relative;
+}
+
+.search-bar input {
+  padding: 5px 25px;
+  border: 2px solid black;
+  border-radius: 15px;
+  font-size: 14px;
+  color: grey;
+  outline: none;
+}
+
+.search-bar::before {
+  content: "🔍";
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: grey;
+}
+
+.navbar-right ul {
+  display: flex;
+  list-style: none;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-button {
+  border: 2px solid black;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.nav-button a {
+  text-decoration: none;
+  color: black;
+}
+
+.sign-up {
+  background-color: red;
+  color: white;
+  border: none;
+}
+
+.sign-up a {
+  color: white;
+}
