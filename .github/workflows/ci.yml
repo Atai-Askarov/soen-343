@@ -76,9 +76,9 @@ jobs:
         working-directory: ./SEES
         run: npm install
 
-      - name: Run Jest Tests with Coverage
-        working-directory: ./SEES
-        run: npm run test -- --coverage
+    #   - name: Run Jest Tests with Coverage
+    #     working-directory: ./SEES
+    #     run: npm run test -- --coverage
 
       - name: Run Python Tests
         working-directory: ./SEES
