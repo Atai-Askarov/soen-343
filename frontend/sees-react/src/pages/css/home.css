@@ -1,0 +1,15 @@
+.scrollImage {
+    width: 100%;
+    height: 600px;
+    text-align: center; 
+    padding-top: 20px
+  }
+  
+  .image {
+    width: 80%; 
+    height: 50%; 
+    border-radius: 15px; 
+    display: block; 
+    margin: 0 auto; 
+  }
+  
