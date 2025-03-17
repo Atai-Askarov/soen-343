@@ -82,7 +82,7 @@ jobs:
 
       - name: Run Python Tests
         working-directory: ./SEES
-        run: pytest --cov=app tests/
+        run: python -m pytest
 
   deploy:
     runs-on: ubuntu-latest
