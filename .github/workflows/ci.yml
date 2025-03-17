@@ -20,7 +20,7 @@ jobs:
 
       - name: Install Python Dependencies
         working-directory: ./SEES
-        run: pip install -r requirements.txt
+        run: pip install -r ./SEES/backend/requirements.txt
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
