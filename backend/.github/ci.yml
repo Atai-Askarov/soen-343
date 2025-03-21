@@ -1,0 +1,91 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: ["*"]
+  pull_request:
+    branches: ["*"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install Python Dependencies
+        working-directory: ./SEES
+        run: pip install -r requirements.txt
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install Node.js Dependencies
+        working-directory: ./SEES
+        run: npm install
+
+      - name: Lint Code
+        working-directory: ./SEES
+        run: npm run lint
+
+      - name: Format Code
+        working-directory: ./SEES
+        run: npx prettier --check .
+
+  test:
+    runs-on: ubuntu-latest
+    # services:
+    #   mysql:
+    #     image: mysql:latest
+    #     env:
+    #       MYSQL_ROOT_PASSWORD: root
+    #       MYSQL_DATABASE: testdb
+    #       MYSQL_USER: testuser
+    #       MYSQL_PASSWORD: testpassword
+    #     ports:
+    #       - 3306:3306
+    #     options: --health-cmd="mysqladmin ping --host=localhost --user=root --password=root" --health-interval=10s --health-timeout=5s --health-retries=5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install Python Dependencies
+        working-directory: ./SEES
+        run: pip install -r requirements.txt
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install Node.js Dependencies
+        working-directory: ./SEES
+        run: npm install
+
+    #   - name: Run Jest Tests with Coverage
+    #     working-directory: ./SEES
+    #     run: npm run test -- --coverage
+
+    #   - name: Run Python Tests
+    #     working-directory: ./SEES
+    #     run: python3 -m pytest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - name: Deploy to GitHub Pages
+        run: echo "Deploying to GitHub Pages..."
