@@ -1,10 +1,9 @@
 .Footer {
-    background-color: #282c34;
-    padding: 10px 0;
-    color: white;
-    text-align: center;
-    position:relative;
-    width: 100%;
-    bottom: 0;
-  }
-  
+  background-color: #282c34;
+  padding: 10px 0;
+  color: white;
+  text-align: center;
+  position: relative;
+  width: 100%;
+  bottom: 0;
+}

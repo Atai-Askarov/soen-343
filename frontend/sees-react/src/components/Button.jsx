@@ -1,13 +1,20 @@
-import React from 'react'
-import './css/button.css'
+import React from "react";
+import PropTypes from "prop-types"; // Import PropTypes
+import "./css/button.css";
 
-const Button = ({ onClick, children, type = 'button' }) => {
-    return (
-        <button type={type} className='adjust-button' onClick={onClick}>
-            {children}
-        </button>
-    );
+const Button = ({ onClick, children, type = "button" }) => {
+  return (
+    <button type={type} className="adjust-button" onClick={onClick}>
+      {children}
+    </button>
+  );
 };
 
-//To make your button, follow this skeleton: <button type="wantedType(e.g "submit")" className="custom-button">Button Text</button>
+// Add prop validation using PropTypes
+Button.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  children: PropTypes.node.isRequired,
+  type: PropTypes.string,
+};
+
 export default Button;
