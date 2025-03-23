@@ -1,5 +1,5 @@
-from flask import Flask, jsonify, request
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, jsonify
+from account import db, User, sign_in, get_users
 
 app = Flask(__name__)
 
@@ -7,40 +7,28 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://sql5768901:EDshaBtW7e@sql5.freesqldatabase.com/sql5768901"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-db = SQLAlchemy(app)
-
-# User Model
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(100), nullable=False, unique=True)
-    password = db.Column(db.String(255), nullable=False)
+# Initialize the database
+db.init_app(app)
 
 # Create Database Tables
 with app.app_context():
     db.create_all()
 
+# Define Routes
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
 
-# Route to add a new user
+# Route to add a new user (sign up)
 @app.route("/add_user", methods=["POST"])
 def add_user():
-    data = request.get_json()
-    new_user = User(username=data["username"], email=data["email"], password=data["password"])
-    
-    db.session.add(new_user)
-    db.session.commit()
-    
-    return jsonify({"message": "User added successfully!"})
+    return sign_in()  # Calls the sign_in function to create a new user
 
 # Route to get all users
 @app.route("/users", methods=["GET"])
-def get_users():
-    users = User.query.all()
-    user_list = [{"id": user.id, "username": user.username, "email": user.email} for user in users]
-    return jsonify(user_list)
+def users():
+    return get_users()  # Get users from the account.py
+
 
 if __name__ == "__main__":
     app.run(debug=True)
