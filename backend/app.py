@@ -1,5 +1,6 @@
 from flask import Flask, jsonify
 from account import db, User, sign_in, get_users
+from event import create_event, db  # Import create_event function and db
 
 app = Flask(__name__)
 
@@ -29,6 +30,11 @@ def add_user():
 def users():
     return get_users()  # Get users from the account.py
 
+
+# Route to create a new event
+@app.route("/create_event", methods=["POST"])
+def create_new_event():
+    return create_event()  # Calls the create_event function from event.py to create an event
 
 if __name__ == "__main__":
     app.run(debug=True)
