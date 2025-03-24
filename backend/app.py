@@ -1,6 +1,7 @@
 from flask import Flask, jsonify
+from flask_migrate import Migrate
 from account import db, User, sign_in, get_users
-from event import create_event, db  # Import create_event function and db
+from event import create_event, register_for_event
 
 app = Flask(__name__)
 
@@ -11,30 +12,29 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # Initialize the database
 db.init_app(app)
 
-# Create Database Tables
-with app.app_context():
-    db.create_all()
+# Initialize Flask-Migrate
+migrate = Migrate(app, db)
 
 # Define Routes
 @app.route("/")
 def hello_world():
-    return "<p>Hello, World!</p>"
+    return "<p>Event Registration System</p>"
 
-# Route to add a new user (sign up)
 @app.route("/add_user", methods=["POST"])
 def add_user():
-    return sign_in()  # Calls the sign_in function to create a new user
+    return sign_in()
 
-# Route to get all users
 @app.route("/users", methods=["GET"])
 def users():
-    return get_users()  # Get users from the account.py
+    return jsonify(get_users())
 
-
-# Route to create a new event
 @app.route("/create_event", methods=["POST"])
 def create_new_event():
-    return create_event()  # Calls the create_event function from event.py to create an event
+    return create_event()
+
+@app.route("/register_event", methods=["POST"])
+def register_event():
+    return register_for_event()
 
 if __name__ == "__main__":
     app.run(debug=True)
