@@ -24,7 +24,7 @@ const CreateEvent = () => {
       <h1>Create New Event</h1>
       <form onSubmit={handleSubmit}>
         <label>
-          Name:
+          Event Name:
           <input
             type="text"
             value={name}
