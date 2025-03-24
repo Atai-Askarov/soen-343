@@ -1,3 +1,4 @@
+// src/App.jsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
@@ -7,25 +8,27 @@ import Login from "./pages/login";
 import Home from "./pages/Home";
 import Signup from "./pages/signup";
 import CreateEvent from "./pages/createEvent";
+import Dashboard from "./pages/orgDashboard";
 
 const App = () => {
   return (
-    <div className="App">
-      <Router>
+    <Router>
+      <div className="App">
         <div className="page-container">
           <Navbar />
-          <div className="main-content">
+          <main className="main-content">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/createEvent" element={<CreateEvent />} />
+              <Route path="/Dashboard" element={<Dashboard />} />
             </Routes>
-          </div>
+          </main>
+          <Footer />
         </div>
-      </Router>
-      <Footer />
-    </div>
+      </div>
+    </Router>
   );
 };
 

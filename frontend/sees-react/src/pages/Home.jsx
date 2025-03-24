@@ -11,7 +11,6 @@ const Home = () => {
           alt="placeholder"
         />
       </div>
-
       <div className="content">
         <h1>Home Page</h1>
         <p>Welcome to the homepage.</p>

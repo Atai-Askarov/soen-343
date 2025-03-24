@@ -1,0 +1,54 @@
+.dashboard-container {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+  
+  .welcome-header {
+    font-size: 40px;
+    font-weight: bolder;
+    text-align: left;
+    width: 100%;
+  }
+  
+  .events-section,
+  .campaigns-section {
+    margin-top: 20px;
+  }
+  
+  .section-header {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .events-table,
+  .campaigns-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .events-table th,
+  .events-table td,
+  .campaigns-table th,
+  .campaigns-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .events-table th,
+  .campaigns-table th {
+    background-color: #f0f0f0;
+  }
+  
+  .event-image {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  
+  .campaigns-section {
+    margin-top: 30px;
+  }
+
