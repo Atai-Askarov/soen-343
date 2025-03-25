@@ -2,7 +2,7 @@ from flask import Flask
 from flask_migrate import Migrate
 from flask_cors import CORS
 from account import db, User, sign_in, get_users
-from event import create_event, register_for_event, migrate_database
+from event import create_event, register_for_event
 
 app = Flask(__name__)
 
@@ -46,13 +46,7 @@ def create_new_event():
 def register_event():
     return register_for_event()
 
-@app.route("/migrate", methods=["POST"])
-def run_migration():
-    try:
-        migrate_database()
-        return jsonify({"message": "Migration completed successfully"}), 200
-    except Exception as e:
-        return jsonify({"message": f"Migration failed: {str(e)}"}), 500
+
 
 if __name__ == "__main__":
     with app.app_context():

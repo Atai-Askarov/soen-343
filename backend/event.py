@@ -131,27 +131,3 @@ def register_for_event():
         db.session.rollback()
         return jsonify({"message": f"Registration error: {str(e)}"}), 500
 
-def migrate_database():
-    """Helper function to migrate existing database"""
-    with app.app_context():
-        try:
-            # Add new columns to events table
-            db.engine.execute("""
-                ALTER TABLE events 
-                ADD COLUMN IF NOT EXISTS speaker VARCHAR(100)
-            """)
-            db.engine.execute("""
-                ALTER TABLE events 
-                ADD COLUMN IF NOT EXISTS stakeholder VARCHAR(100)
-            """)
-            db.engine.execute("""
-                ALTER TABLE events 
-                ADD COLUMN IF NOT EXISTS organizer VARCHAR(100) NOT NULL
-            """)
-            db.engine.execute("""
-                ALTER TABLE events 
-                ADD COLUMN IF NOT EXISTS event_type VARCHAR(50) NOT NULL
-            """)
-            print("Database migration completed successfully")
-        except Exception as e:
-            print(f"Migration error: {str(e)}")
