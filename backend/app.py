@@ -1,9 +1,19 @@
-from flask import Flask, jsonify
+from flask import Flask
 from flask_migrate import Migrate
+from flask_cors import CORS
 from account import db, User, sign_in, get_users
-from event import create_event, register_for_event
+from event import create_event, register_for_event, migrate_database
 
 app = Flask(__name__)
+
+# Configure CORS to allow all routes from your React app
+CORS(app, resources={
+    r"/*": {
+        "origins": ["http://localhost:3000"],
+        "methods": ["GET", "POST", "PUT", "DELETE"],
+        "allow_headers": ["Content-Type"]
+    }
+})
 
 # Database Configuration
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://sql5768901:EDshaBtW7e@sql5.freesqldatabase.com/sql5768901"
@@ -36,5 +46,15 @@ def create_new_event():
 def register_event():
     return register_for_event()
 
+@app.route("/migrate", methods=["POST"])
+def run_migration():
+    try:
+        migrate_database()
+        return jsonify({"message": "Migration completed successfully"}), 200
+    except Exception as e:
+        return jsonify({"message": f"Migration failed: {str(e)}"}), 500
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    with app.app_context():
+        db.create_all()  # Create tables if they don't exist
+    app.run(debug=True, host="0.0.0.0", port=5000)
