@@ -1,25 +1,37 @@
 /* Style for the body and html */
 html,
 body {
-  height: 100%; /* Ensures the body takes up full height of the viewport */
+  min-height: 100vh; /* Ensure full viewport height */
+  height: 100%; /* Keep this for flexbox context */
   margin: 0;
-  display: flex; /* Use flexbox layout */
-  flex-direction: column; /* Align children vertically */
+  padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Wrapper for the entire page */
+/* Wrapper for the entire app */
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure it takes up the full viewport height */
+  margin: 0;
+  padding: 0;
+}
+
+/* Wrapper for the page content */
 .page-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100vh; /* Ensure it takes up the full viewport height */
   margin: 0;
+  padding: 0;
 }
 
 /* Main content area */
 .main-content {
-  flex-grow: 1;
-  padding-top: 60px;
-  overflow: auto;
+  flex: 1;
+  margin: 0;
+  padding: 0;
 }
 
 /* Footer */
@@ -29,5 +41,11 @@ body {
   color: white;
   text-align: center;
   width: 100%;
-  margin-top: auto; /* Ensures the footer is pushed to the bottom */
+  margin: 0;
+  margin-top: auto; /* Push to the bottom of page-container */
+}
+
+/* Remove default margins from elements inside the Footer */
+.Footer * {
+  margin: 0;
 }

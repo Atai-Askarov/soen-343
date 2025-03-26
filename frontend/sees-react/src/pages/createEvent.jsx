@@ -1,22 +1,78 @@
-import React from "react";
+import React, { useState } from "react";
 import "./css/createEvent.css";
-import { useState } from "react";
 
 const CreateEvent = () => {
-  const [name, setName] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [location, setLocation] = useState("");
-  const [eventType, setEventType] = useState("");
-  const [description, setDescription] = useState("");
-  const [organizer, setOrganizer] = useState("");
-  const [speaker, setSpeaker] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    date: "",
+    location: "Montreal", 
+    description: "",
+    speaker: "",
+    stakeholder: "",
+    organizer: "",
+    event_type: "workshop" 
+  });
 
-  const handleSubmit = (e) => {
+  const eventTypes = ["workshop", "webinar", "conference", "seminar"];
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleLocationChange = (location) => {
+    setFormData(prev => ({
+      ...prev,
+      location
+    }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Event created!");
+    
+    try {
+      const response = await fetch('http://localhost:5000/create_event', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          eventname: formData.name,
+          eventdate: formData.date,
+          eventlocation: formData.location,
+          eventdescription: formData.description,
+          speaker: formData.speaker,
+          stakeholder: formData.stakeholder,
+          organizer: formData.organizer,
+          event_type: formData.event_type
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(`Event created successfully! ID: ${data.eventid}`);
+        // Reset form
+        setFormData({
+          name: "",
+          date: "",
+          location: "Montreal",
+          description: "",
+          speaker: "",
+          stakeholder: "",
+          organizer: "",
+          event_type: "workshop"
+        });
+      } else {
+        throw new Error(data.message || 'Failed to create event');
+      }
+    } catch (error) {
+      alert(`Error: ${error.message}`);
+      console.error('Submission error:', error);
+    }
   };
 
   return (
@@ -27,88 +83,101 @@ const CreateEvent = () => {
           Event Name:
           <input
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
           />
         </label>
+        
         <label>
-          Start Date:
+          Date:
           <input
             type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
+            name="date"
+            value={formData.date}
+            onChange={handleChange}
+            required
           />
         </label>
-        <label>
-          End Date:
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-          />
-        </label>
-        <label>
-          Start Time:
-          <input
-            type="time"
-            value={startTime}
-            onChange={(e) => setStartTime(e.target.value)}
-          />
-        </label>
-        <label>
-          End Time:
-          <input
-            type="time"
-            value={endTime}
-            onChange={(e) => setEndTime(e.target.value)}
-          />
-        </label>
-        <label>
-          Location:
-          <input
-            type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          />
-        </label>
-        <label>
-          Who&apos;s organizing this event?
-          <input
-            type="text"
-            value={organizer}
-            onChange={(e) => setOrganizer(e.target.value)}
-          />
-        </label>
-        <label>
-          Speaker Name
-          <input
-            type="text"
-            value={speaker}
-            onChange={(e) => setSpeaker(e.target.value)}
-          />
-        </label>
-        <label>
-          Event Type:
-          <br></br>
-          <br></br>
-          <select
-            name="event-type"
-            value={eventType}
-            onChange={(e) => setEventType(e.target.value)}
-          >
-            <option value="workshop">workshop</option>
-            <option value="webinar">webinar</option>
-            <option value="conference">conference</option>
-            <option value="seminar">seminar</option>
-          </select>
-        </label>
+        
+        <div className="form-group">
+          <label>Location:</label>
+          <div className="location-buttons">
+            <button
+              type="button"
+              className={`location-btn ${formData.location === 'Montreal' ? 'active' : ''}`}
+              onClick={() => handleLocationChange('Montreal')}
+            >
+              Montreal
+            </button>
+            <button
+              type="button"
+              className={`location-btn ${formData.location === 'Laval' ? 'active' : ''}`}
+              onClick={() => handleLocationChange('Laval')}
+            >
+              Laval
+            </button>
+          </div>
+        </div>
+        
         <label>
           Description:
           <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            required
           />
         </label>
+        
+        <label>
+          Speaker:
+          <input
+            type="text"
+            name="speaker"
+            value={formData.speaker}
+            onChange={handleChange}
+          />
+        </label>
+        
+        <label>
+          Stakeholder:
+          <input
+            type="text"
+            name="stakeholder"
+            value={formData.stakeholder}
+            onChange={handleChange}
+          />
+        </label>
+        
+        <label>
+          Organizer:
+          <input
+            type="text"
+            name="organizer"
+            value={formData.organizer}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        
+        <label>
+          Event Type:
+          <select
+            name="event_type"
+            value={formData.event_type}
+            onChange={handleChange}
+            required
+          >
+            {eventTypes.map(type => (
+              <option key={type} value={type}>
+                {type.charAt(0).toUpperCase() + type.slice(1)}
+              </option>
+            ))}
+          </select>
+        </label>
+        
         <button type="submit">Create Event</button>
       </form>
     </div>
