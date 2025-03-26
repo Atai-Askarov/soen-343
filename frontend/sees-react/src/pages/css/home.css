@@ -19,3 +19,28 @@
   align-items: center;
   padding: 20px;
 }
+
+.similar-interests-section {
+  margin-top: 20px;
+}
+
+.similar-interests-section h2 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.matching-users-list {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  gap: 80px; /* Space between emails */
+}
+
+.matching-users-list li {
+  font-size: 16px;
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 20px 35px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /*subtle shadow for depth*/
+}

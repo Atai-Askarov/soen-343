@@ -32,7 +32,7 @@ const initialEvents = [
 ];
 
 const AdminDashboard = () => {
-  const [events, setEvents] = useState(initialEvents); //Please remove this when backend logic is made to retrieve events list
+  const [events, setEvents] = useState(initialEvents); //Please remove this when backend logic is made to retrieve events list, code assumes cookies :(
 
   //TODO - Fetch events from backend and use the 2 commented lines below
   //const [events, setEvents] = useState([]);
