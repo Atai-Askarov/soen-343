@@ -2,7 +2,6 @@
   "name": "sees-react",
   "version": "0.1.0",
   "private": true,
-  "proxy":"http://localhost:5000/",
   "dependencies": {
     "@testing-library/user-event": "^13.5.0",
     "ajv": "^8.17.1",
