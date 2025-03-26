@@ -14,11 +14,11 @@ class User(db.Model):
     interests = db.Column(db.String(255), nullable=True)  # Optional field
 
 def create_user(username, email, password, user_type='user', interests=None):
-    hashed_password = generate_password_hash(password)
+    # hashed_password = generate_password_hash(password)
     new_user = User(
         username=username,
         email=email,
-        password=hashed_password,
+        password=password,
         user_type=user_type,
         interests=interests
     )
@@ -56,6 +56,7 @@ def sign_in():
                 "id": new_user.id,
                 "username": new_user.username,
                 "email": new_user.email,
+                "password": new_user.password,
                 "user_type": new_user.user_type,
                 "interests": new_user.interests
             }
