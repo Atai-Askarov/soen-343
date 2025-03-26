@@ -1,20 +1,14 @@
-from flask import Flask
+from flask import Flask, jsonify, request
 from flask_migrate import Migrate
 from flask_cors import CORS
 from account import db, User, sign_in, get_users
 from event import create_event, register_for_event
 
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 app = Flask(__name__)
-
-# Configure CORS to allow all routes from your React app
-CORS(app, resources={
-    r"/*": {
-        "origins": ["http://localhost:3000"],
-        "methods": ["GET", "POST", "PUT", "DELETE"],
-        "allow_headers": ["Content-Type"]
-    }
-})
-
+CORS(app)
 # Database Configuration
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://sql5768901:EDshaBtW7e@sql5.freesqldatabase.com/sql5768901"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -46,6 +40,26 @@ def create_new_event():
 def register_event():
     return register_for_event()
 
+@app.route("/api/signUp", methods=["POST"])
+def sign_up():
+    data = request.json
+    email = data.get("email")
+    password = data.get("password")
+    user_type = data.get("type")
+    interests = data.get("interests", "")
+
+    if not email or not password or not user_type:
+        return jsonify({"error": "Missing required fields"}), 400
+
+    existing_user = User.query.filter_by(email=email).first()
+    if existing_user:
+        return jsonify({"error": "Email already exists"}), 409
+
+    new_user = User(email=email, password=password, user_type=user_type, interests=interests)
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({"message": "User created successfully"}), 201
 
 
 if __name__ == "__main__":
