@@ -29,6 +29,7 @@ const sampleEvents = [
   },
 ];
 
+//TODO - Fetch event from backend and use the commented lines below
 // const Event = () => {
 //   const { id } = useParams(); // Get the event ID from the URL
 //   const [event, setEvent] = useState(null);
@@ -66,19 +67,6 @@ const Event = () => {
   if (!event) {
     return <div className="error-message">Event not found.</div>;
   }
-
-  // Handle ticket purchase (placeholder for now)
-  //   const handlePurchaseTicket = () => {
-  //     alert('Ticket purchase functionality coming soon!');
-  //   };
-
-  //   if (error) {
-  //     return <div className="error-message">{error}</div>;
-  //   }
-
-  //   if (!event) {
-  //     return <div>Loading event...</div>;
-  //   }
 
   return (
     <div className="event-container">

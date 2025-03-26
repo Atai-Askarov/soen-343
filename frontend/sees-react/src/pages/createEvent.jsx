@@ -5,39 +5,39 @@ const CreateEvent = () => {
   const [formData, setFormData] = useState({
     name: "",
     date: "",
-    location: "Montreal", 
+    location: "Montreal",
     description: "",
     speaker: "",
     stakeholder: "",
     organizer: "",
-    event_type: "workshop" 
+    event_type: "workshop",
   });
 
   const eventTypes = ["workshop", "webinar", "conference", "seminar"];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleLocationChange = (location) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      location
+      location,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
-      const response = await fetch('http://localhost:5000/create_event', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5000/create_event", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           eventname: formData.name,
@@ -47,7 +47,7 @@ const CreateEvent = () => {
           speaker: formData.speaker,
           stakeholder: formData.stakeholder,
           organizer: formData.organizer,
-          event_type: formData.event_type
+          event_type: formData.event_type,
         }),
       });
 
@@ -64,14 +64,14 @@ const CreateEvent = () => {
           speaker: "",
           stakeholder: "",
           organizer: "",
-          event_type: "workshop"
+          event_type: "workshop",
         });
       } else {
-        throw new Error(data.message || 'Failed to create event');
+        throw new Error(data.message || "Failed to create event");
       }
     } catch (error) {
       alert(`Error: ${error.message}`);
-      console.error('Submission error:', error);
+      console.error("Submission error:", error);
     }
   };
 
@@ -89,7 +89,7 @@ const CreateEvent = () => {
             required
           />
         </label>
-        
+
         <label>
           Date:
           <input
@@ -100,27 +100,27 @@ const CreateEvent = () => {
             required
           />
         </label>
-        
+
         <div className="form-group">
           <label>Location:</label>
           <div className="location-buttons">
             <button
               type="button"
-              className={`location-btn ${formData.location === 'Montreal' ? 'active' : ''}`}
-              onClick={() => handleLocationChange('Montreal')}
+              className={`location-btn ${formData.location === "Montreal" ? "active" : ""}`}
+              onClick={() => handleLocationChange("Montreal")}
             >
               Montreal
             </button>
             <button
               type="button"
-              className={`location-btn ${formData.location === 'Laval' ? 'active' : ''}`}
-              onClick={() => handleLocationChange('Laval')}
+              className={`location-btn ${formData.location === "Laval" ? "active" : ""}`}
+              onClick={() => handleLocationChange("Laval")}
             >
               Laval
             </button>
           </div>
         </div>
-        
+
         <label>
           Description:
           <textarea
@@ -130,7 +130,7 @@ const CreateEvent = () => {
             required
           />
         </label>
-        
+
         <label>
           Speaker:
           <input
@@ -140,7 +140,7 @@ const CreateEvent = () => {
             onChange={handleChange}
           />
         </label>
-        
+
         <label>
           Stakeholder:
           <input
@@ -150,7 +150,7 @@ const CreateEvent = () => {
             onChange={handleChange}
           />
         </label>
-        
+
         <label>
           Organizer:
           <input
@@ -161,7 +161,7 @@ const CreateEvent = () => {
             required
           />
         </label>
-        
+
         <label>
           Event Type:
           <select
@@ -170,14 +170,14 @@ const CreateEvent = () => {
             onChange={handleChange}
             required
           >
-            {eventTypes.map(type => (
+            {eventTypes.map((type) => (
               <option key={type} value={type}>
                 {type.charAt(0).toUpperCase() + type.slice(1)}
               </option>
             ))}
           </select>
         </label>
-        
+
         <button type="submit">Create Event</button>
       </form>
     </div>

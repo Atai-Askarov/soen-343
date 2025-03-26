@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import './css/adminDashboard.css';
-import axios from 'axios';
-
+import React, { useState, useEffect } from "react";
+import "./css/adminDashboard.css";
+import axios from "axios";
 
 // Sample events data for admin approval, to be replaced with API call from backend
 const initialEvents = [
@@ -10,7 +9,8 @@ const initialEvents = [
     name: "Eruption of Mount Vesuvius in 79 AD",
     type: "Webinar",
     date: "March 28",
-    description: "A webinar discussing the historical eruption of Mount Vesuvius.",
+    description:
+      "A webinar discussing the historical eruption of Mount Vesuvius.",
     speaker: "David",
     stakeholder: "Atai",
     organizer: "Bob",
@@ -36,74 +36,76 @@ const AdminDashboard = () => {
 
   //TODO - Fetch events from backend and use the 2 commented lines below
   //const [events, setEvents] = useState([]);
- // const [error, setError] = useState('');
+  // const [error, setError] = useState('');
 
+  //TODO - Fetch events from backend and use the commented useEffect below
+  //  useEffect(() => {
+  //     const fetchPendingEvents = async () => {
+  //       try {
+  //         const response = await axios.get('http://localhost:5050/api/admin/events/pending', { //Change port to backend one
+  //           withCredentials: true, // Include cookies for authentication
+  //         });
+  //         const eventData = response.data.map((event) => ({
+  //           ...event,
+  //           id: event.id,
+  //         }));
+  //         setEvents(eventData);
+  //       } catch (err) {
+  //         setError('Failed to load pending events. Please try again.');
+  //       }
+  //     };
 
- //TODO - Fetch events from backend and use the commented useEffect below
-//  useEffect(() => {
-//     const fetchPendingEvents = async () => {
-//       try {
-//         const response = await axios.get('http://localhost:5050/api/admin/events/pending', { //Change port to backend one
-//           withCredentials: true, // Include cookies for authentication
-//         });
-//         const eventData = response.data.map((event) => ({
-//           ...event,
-//           id: event.id,
-//         }));
-//         setEvents(eventData);
-//       } catch (err) {
-//         setError('Failed to load pending events. Please try again.');
-//       }
-//     };
-
-//     fetchPendingEvents();
-//   }, []);
-
+  //     fetchPendingEvents();
+  //   }, []);
 
   // Function to approve an event placeholder
   const handleApprove = (id) => {
-    setEvents(events.map((event) =>
-      event.id === id ? { ...event, status: 'approved' } : event
-    ));
+    setEvents(
+      events.map((event) =>
+        event.id === id ? { ...event, status: "approved" } : event,
+      ),
+    );
   };
 
   //TODO - Implement approve event functionality with backend, adjust port and URL. BTW THIS CODE ASSUMES USAGE OF COOKIES :O
-//   const handleApprove = async (id) => {
-//     try {
-//       await axios.put(
-//         `http://localhost:5050/api/admin/events/${id}/approve`,
-//         {},
-//         { withCredentials: true }
-//       );
-//       setEvents(events.filter((event) => event.id !== id)); // Remove the event from the list
-//     } catch (err) {
-//       setError('Failed to approve event. Please try again.');
-//     }
-//   };
+  //   const handleApprove = async (id) => {
+  //     try {
+  //       await axios.put(
+  //         `http://localhost:5050/api/admin/events/${id}/approve`,
+  //         {},
+  //         { withCredentials: true }
+  //       );
+  //       setEvents(events.filter((event) => event.id !== id)); // Remove the event from the list
+  //     } catch (err) {
+  //       setError('Failed to approve event. Please try again.');
+  //     }
+  //   };
 
   // Function to reject an event
   const handleReject = (id) => {
-    setEvents(events.map((event) =>
-      event.id === id ? { ...event, status: 'rejected' } : event
-    ));
+    setEvents(
+      events.map((event) =>
+        event.id === id ? { ...event, status: "rejected" } : event,
+      ),
+    );
   };
 
   //TODO - Same as approve functionality, make backend, adjust port and url
-//   const handleReject = async (id) => {
-//     try {
-//       await axios.put(
-//         `http://localhost:5050/api/admin/events/${id}/reject`,
-//         {},
-//         { withCredentials: true }
-//       );
-//       setEvents(events.filter((event) => event.id !== id));
-//     } catch (err) {
-//       setError('Failed to reject event. Please try again.');
-//     }
-//   };
+  //   const handleReject = async (id) => {
+  //     try {
+  //       await axios.put(
+  //         `http://localhost:5050/api/admin/events/${id}/reject`,
+  //         {},
+  //         { withCredentials: true }
+  //       );
+  //       setEvents(events.filter((event) => event.id !== id));
+  //     } catch (err) {
+  //       setError('Failed to reject event. Please try again.');
+  //     }
+  //   };
 
   // Filter events to show only those with status "pending"
-  const pendingEvents = events.filter((event) => event.status === 'pending');
+  const pendingEvents = events.filter((event) => event.status === "pending");
 
   return (
     <div className="admin-dashboard-container">
@@ -134,7 +136,11 @@ const AdminDashboard = () => {
               {pendingEvents.map((event) => (
                 <tr key={event.id}>
                   <td>
-                    <img src={event.image} alt={event.name} className="event-image" />
+                    <img
+                      src={event.image}
+                      alt={event.name}
+                      className="event-image"
+                    />
                     {event.name}
                   </td>
                   <td>{event.type}</td>

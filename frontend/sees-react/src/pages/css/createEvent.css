@@ -95,9 +95,9 @@ textarea:focus {
 }
 
 .location-btn.active {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
-  border-color: #4CAF50;
+  border-color: #4caf50;
 }
 
 .form-group {
