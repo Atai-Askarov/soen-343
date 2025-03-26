@@ -1,4 +1,3 @@
-// src/pages/Dashboard.jsx
 import React, { useState } from "react";
 import "./css/orgDashboard.css";
 import Button from "../components/Button.jsx";

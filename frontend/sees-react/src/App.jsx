@@ -10,6 +10,7 @@ import Signup from "./pages/signup";
 import CreateEvent from "./pages/createEvent";
 import Dashboard from "./pages/orgDashboard";
 import Event from "./pages/eventPage";
+import AdminDashboard from "./pages/adminDashboard";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
               <Route path="/createEvent" element={<CreateEvent />} />
               <Route path="/Dashboard" element={<Dashboard />} />
               <Route path="/Event/:id" element={<Event />} />
+              <Route path="/adminDashboard" element={<AdminDashboard />} />
             </Routes>
           </main>
           <Footer />
