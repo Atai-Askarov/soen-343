@@ -8,6 +8,7 @@ const SignUpPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [signUpType, setSignUpType] = useState("");
 
   const handleSignUp = async (event) => {
     event.preventDefault();
@@ -68,7 +69,7 @@ const SignUpPage = () => {
     <div className="SignUpContent">
       <div className="container">
         <form onSubmit={handleSignUp}>
-          <h2 className="welcome">Welcome!</h2>
+          <h2 className="welcome">Welcome{signUpType ? ` ${signUpType}!`  : "!"}</h2>
           <label htmlFor="email" className="text">
             Email:
           </label>
@@ -91,6 +92,19 @@ const SignUpPage = () => {
           />
           <div className="button-container">
             <Button type="submit">Sign Up</Button>
+            <select
+            name="event-type"
+            value={signUpType}
+            onChange={(e) => setSignUpType(e.target.value)}
+          >
+            <option value="">Select Account Type</option>
+            <option value="Organizer">Organizer</option>
+            <option value="Attendee">Attendee</option>
+            <option value="Admin">Admin</option>
+            <option value="Stakeholder">Stakeholder</option>
+
+
+            </select>
             <Link to="/login" className="have-account">
               Already have an account?
             </Link>
