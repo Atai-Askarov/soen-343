@@ -34,9 +34,9 @@
 
 .container {
   width: 30vw;
-  height: 50vh;
+  height: 70vh;
   max-width: 300px;
-  max-height: 500px;
+  max-height: 800px;
   min-width: 300px;
   min-height: 300px;
   background-color: white;

@@ -1,8 +1,10 @@
 from flask import Flask
 from flask_migrate import Migrate
 from flask_cors import CORS
-from account import db, User, sign_in, get_users
+from account import db, User, sign_in, get_users, log_in
 from event import create_event, register_for_event
+from flask import Flask, request, jsonify
+
 
 app = Flask(__name__)
 
@@ -45,6 +47,11 @@ def create_new_event():
 @app.route("/register_event", methods=["POST"])
 def register_event():
     return register_for_event()
+
+@app.route("/login", methods=["POST"])
+def login():
+    return log_in()  # Call log_in function from account.py
+
 
 
 

@@ -20,20 +20,19 @@ const LoginPage = () => {
     }
 
     try {
-      //Send the POST request to the server
+      // Send the POST request to the backend API
       const response = await axios.post(
-        "http://localhost:5050/api/login", //TODO: Change this to the correct backend route
-        { email, password },
-        { withCredentials: true }, // Allows cookies to be sent with the request
+        "http://localhost:5000/login", // Ensure the correct backend URL is used
+        { email, password }
       );
 
       if (response.status === 200) {
-        navigate("/"); // Redirect to home page after successful login
+        // Redirect to the home page after successful login
+        navigate("/home");
       }
     } catch (err) {
-      setError(
-        err.response?.data?.message || "Login failed. Please try again.",
-      );
+      // Handle any errors (invalid login, etc.)
+      setError(err.response?.data?.message || "Login failed. Please try again.");
     }
   };
 
@@ -68,10 +67,11 @@ const LoginPage = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          
           <div className="button-container">
             <Button type="submit">Login</Button>
-            <Link to="/login" className="no-account">
-              Already have an account?
+            <Link to="/signup" className="no-account">
+              Don't have an account? Sign up.
             </Link>
           </div>
         </form>

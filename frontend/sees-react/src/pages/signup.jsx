@@ -7,55 +7,52 @@ import axios from "axios";
 const SignUpPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [userType, setUserType] = useState("learner"); // Default value
+  const [interests, setInterests] = useState("coding"); // Default value
   const navigate = useNavigate();
 
   const handleSignUp = async (event) => {
     event.preventDefault();
 
-    // Basic form validation, subject to change
-    if (!email || !password) {
+    if (!email || !password || !username) {
       alert("Please fill out all fields.");
       return;
     }
-    // Email format validation
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       alert("Please enter a valid email address.");
       return;
     }
-    // Password format validation (e.g., minimum 8 characters, at least one number)
+
     const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
     if (!passwordRegex.test(password)) {
       alert(
-        "Password must be at least 8 characters long, contain at least one number, one lowercase and one uppercase letter.",
+        "Password must be at least 8 characters long, contain at least one number, one lowercase and one uppercase letter."
       );
       return;
     }
 
     try {
-      // Send the POST request to the server
-      const response = await axios.post("http://localhost:5050/api/signUp", {
-        //TODO: Change to the correct backend route
+      const response = await axios.post("http://localhost:5000/add_user", {
+        username,
         email,
         password,
+        user_type: userType,
+        interests,
       });
 
-      // Log response to check the status
       console.log("Server Response:", response);
 
-      // Check for successful account creation
       if (response.status === 201) {
         alert("Account created successfully!");
-
-        // Redirect to the login page after successful account creation
         navigate("/login");
       } else {
         alert(`Unexpected response status: ${response.status}`);
       }
     } catch (error) {
-      // Log the error for debugging
       console.error("Error creating account:", error);
-
       if (error.response && error.response.status === 409) {
         alert("Email already in use.");
       } else {
@@ -69,9 +66,17 @@ const SignUpPage = () => {
       <div className="container">
         <form onSubmit={handleSignUp}>
           <h2 className="welcome">Welcome!</h2>
-          <label htmlFor="email" className="text">
-            Email:
-          </label>
+
+          <label className="text">Username:</label>
+          <input
+            className="userInput"
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+
+          <label className="text">Email:</label>
           <input
             className="userInput"
             type="email"
@@ -79,9 +84,8 @@ const SignUpPage = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <label htmlFor="password" className="text">
-            Password:
-          </label>
+
+          <label className="text">Password:</label>
           <input
             className="userInput"
             type="password"
@@ -89,6 +93,33 @@ const SignUpPage = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+
+          {/* Dropdown for User Type */}
+          <label className="text">User Type:</label>
+          <select
+            className="userInput"
+            value={userType}
+            onChange={(e) => setUserType(e.target.value)}
+          >
+            <option value="organizer">Organizer</option>
+            <option value="learner">Learner</option>
+            <option value="stakeholder">Stakeholder</option>
+          </select>
+
+          {/* Dropdown for Interests */}
+          <label className="text">Interests:</label>
+          <select
+            className="userInput"
+            value={interests}
+            onChange={(e) => setInterests(e.target.value)}
+          >
+            <option value="coding">Coding</option>
+            <option value="reading">Reading</option>
+            <option value="gaming">Gaming</option>
+            <option value="sports">Sports</option>
+            <option value="music">Music</option>
+          </select>
+
           <div className="button-container">
             <Button type="submit">Sign Up</Button>
             <Link to="/login" className="have-account">
