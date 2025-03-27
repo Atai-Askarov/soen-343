@@ -43,7 +43,7 @@ textarea {
 }
 
 button {
-  background-color: #007bff;
+  background-color: red;
   color: white;
   border: none;
   cursor: pointer;
@@ -52,11 +52,11 @@ button {
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: darkred;
 }
 
 button:active {
-  background-color: #004494;
+  background-color: darkred;
 }
 
 button:focus {
@@ -117,3 +117,5 @@ select {
   border-radius: 4px;
   margin-top: 8px;
 }
+
+
