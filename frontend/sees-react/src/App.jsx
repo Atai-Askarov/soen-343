@@ -10,6 +10,7 @@ import Signup from "./pages/signup";
 import CreateEvent from "./pages/createEvent";
 import Dashboard from "./pages/orgDashboard";
 import Event from "./pages/eventPage";
+import LandingPage from "./pages/LandingPage";
 
 const App = () => {
   return (
@@ -19,12 +20,13 @@ const App = () => {
           <Navbar />
           <main className="main-content">
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/createEvent" element={<CreateEvent />} />
               <Route path="/Dashboard" element={<Dashboard />} />
               <Route path="/Event/:id" element={<Event />} />
+              <Route path="/home" element={<Home />} />
             </Routes>
           </main>
           <Footer />

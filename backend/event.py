@@ -79,55 +79,86 @@ def create_event():
         db.session.rollback()
         return jsonify({"message": f"Error creating event: {str(e)}"}), 500
 
-def register_for_event():
-    """Register a user for an event using email"""
-    data = request.get_json()
-    
-    if 'email' not in data or 'eventid' not in data:
-        return jsonify({"message": "Email and Event ID are required!"}), 400
-    
+def get_events():
+    """Retrieve all events from the database."""
     try:
-        user = User.query.filter_by(email=data['email']).first()
-        if not user:
-            return jsonify({"message": "User not found!"}), 404
+        # Fetch all events from the database
+        events = Event.query.all()
         
-        event = Event.query.get(data['eventid'])
-        if not event:
-            return jsonify({"message": "Event not found!"}), 404
+        # If no events are found, return an empty list
+        if not events:
+            return {"message": "No events found."}, 404
         
-        existing = db.session.query(Ticket).filter(
-            Ticket.user_email == data['email'],
-            Ticket.eventid == data['eventid']
-        ).first()
+        # Serialize events into a list of dictionaries
+        events_list = []
+        for event in events:
+            events_list.append({
+                "eventid": event.eventid,
+                "eventname": event.eventname,
+                "eventdate": event.eventdate,
+                "eventlocation": event.eventlocation,
+                "eventdescription": event.eventdescription,
+                "speaker": event.speaker,
+                "stakeholder": event.stakeholder,
+                "organizer": event.organizer,
+                "event_type": event.event_type
+            })
         
-        if existing:
-            return jsonify({
-                "message": "Already registered for this event!",
-                "ticketid": existing.ticketid
-            }), 409
-
-        ticket = Ticket(
-            eventid=data['eventid'],
-            user_email=data['email'],
-            userid=user.id
-        )
+        # Return events as a dictionary, which Flask will automatically jsonify
+        return {"events": events_list}, 200
         
-        db.session.add(ticket)
-        db.session.commit()
-        
-        return jsonify({
-            "message": "Registration successful!",
-            "ticketid": ticket.ticketid,
-            "event": event.eventname,
-            "user": user.username,
-            "email": user.email,
-            "timestamp": datetime.utcnow().isoformat()
-        }), 201
-        
-    except exc.IntegrityError as e:
-        db.session.rollback()
-        return jsonify({"message": "Database error during registration", "error": str(e)}), 500
     except Exception as e:
-        db.session.rollback()
-        return jsonify({"message": f"Registration error: {str(e)}"}), 500
+        return {"message": f"Error retrieving events: {str(e)}"}, 500
+
+# def register_for_event():
+#     """Register a user for an event using email"""
+#     data = request.get_json()
+    
+#     if 'email' not in data or 'eventid' not in data:
+#         return jsonify({"message": "Email and Event ID are required!"}), 400
+    
+#     try:
+#         user = User.query.filter_by(email=data['email']).first()
+#         if not user:
+#             return jsonify({"message": "User not found!"}), 404
+        
+#         event = Event.query.get(data['eventid'])
+#         if not event:
+#             return jsonify({"message": "Event not found!"}), 404
+        
+#         existing = db.session.query(Ticket).filter(
+#             Ticket.user_email == data['email'],
+#             Ticket.eventid == data['eventid']
+#         ).first()
+        
+#         if existing:
+#             return jsonify({
+#                 "message": "Already registered for this event!",
+#                 "ticketid": existing.ticketid
+#             }), 409
+
+#         ticket = Ticket(
+#             eventid=data['eventid'],
+#             user_email=data['email'],
+#             userid=user.id
+#         )
+        
+#         db.session.add(ticket)
+#         db.session.commit()
+        
+#         return jsonify({
+#             "message": "Registration successful!",
+#             "ticketid": ticket.ticketid,
+#             "event": event.eventname,
+#             "user": user.username,
+#             "email": user.email,
+#             "timestamp": datetime.utcnow().isoformat()
+#         }), 201
+        
+#     except exc.IntegrityError as e:
+#         db.session.rollback()
+#         return jsonify({"message": "Database error during registration", "error": str(e)}), 500
+#     except Exception as e:
+#         db.session.rollback()
+#         return jsonify({"message": f"Registration error: {str(e)}"}), 500
 

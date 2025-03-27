@@ -12,29 +12,38 @@ const LoginPage = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-
-    // Basic form validation
+  
     if (!email || !password) {
       setError("Please fill out all fields.");
+      console.log("Missing email or password");
       return;
     }
-
+  
     try {
-      // Send the POST request to the backend API
-      const response = await axios.post(
-        "http://localhost:5000/login", // Ensure the correct backend URL is used
-        { email, password }
-      );
-
+      console.log("Sending login request with email:", email, "and password:", password);
+  
+      const response = await axios.post("http://localhost:5000/login", { email, password });
+  
+      console.log("Response received:", response);  // Check the entire response
+  
       if (response.status === 200) {
-        // Redirect to the home page after successful login
+        const { token, user } = response.data;
+  
+        console.log("Login successful, user data:", user);  // Log the user data
+        console.log("Storing token and user data in localStorage");
+  
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user)); // Save user details like ID
+  
+        console.log("Redirecting to home page...");
         navigate("/home");
       }
     } catch (err) {
-      // Handle any errors (invalid login, etc.)
+      console.log("Error occurred during login:", err);
       setError(err.response?.data?.message || "Login failed. Please try again.");
     }
   };
+
 
   return (
     <div className="loginContent">
