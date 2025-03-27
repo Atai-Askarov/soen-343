@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link,  } from "react-router-dom";
 import "./css/home.css"; 
 import "./css/eventPage.css"; 
 
@@ -105,6 +106,10 @@ const Home = () => {
                   >
                     Purchase Ticket
                   </button>
+                  <button>
+                    <Link to={`/eventpage/${event.eventid}`}>View More!</Link>
+                  </button>
+                  
                 </div>
               ))
             ) : (

@@ -66,10 +66,16 @@ def event_by_id(event_id):
 def get_all_ticket_desc():
     return get_ticket_desc()
 
+
 @app.route('/create_ticket_description', methods=['POST'])
 @cross_origin(origin='http://localhost:3000')
 def create_ticket_desc():
     return create_ticket_description()
+
+@app.route('/ticket-descriptions/<int:event_id>', methods=['GET'])
+@cross_origin(origin='http://localhost:3000')
+def ticket_description_by_id(event_id):
+    return get_ticket_descriptions_by_event(event_id)
 
 # @app.route("/register_event", methods=["POST"])
 # def register_event():

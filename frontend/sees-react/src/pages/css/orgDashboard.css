@@ -51,3 +51,28 @@
 .campaigns-section {
   margin-top: 30px;
 }
+
+.calendar-section {
+  width: 100%;  /* Make sure the calendar section is responsive */
+  overflow-x: auto;  /* Allow horizontal scroll if needed */
+}
+
+.react-big-calendar {
+  width: 100% !important; /* Make sure the calendar spans the full width */
+}
+
+.rbc-btn-group button {
+  font-size: 12px;  /* Make the text smaller */
+  padding: 5px 10px;  /* Reduce padding for smaller buttons */
+  margin: 2px;  /* Optional: add a little spacing between buttons */
+  border-radius: 3px;  /* Optional: add rounded corners */
+  width: 70px; 
+}
+
+.event-popup {
+  max-width: 300px;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
