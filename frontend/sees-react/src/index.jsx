@@ -1,24 +1,14 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
 
-import Checkout from './components/Checkout';
-import Success from './components/Success';
-import Canceled from './components/Canceled';
+// Find the root element in the DOM
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
-import './css/normalize.css';
-import './css/global.css';
-
-function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/success.html" element={<Success />} />
-        <Route path="/canceled.html" element={<Canceled />} />
-        <Route path="/" element={<Checkout />} />
-      </Routes>
-    </BrowserRouter>
-  );
-}
-
-ReactDOM.render(<App />, document.getElementById('root'));
+// Render the app
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);

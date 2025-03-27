@@ -1,38 +1,51 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Style for the body and html */
+html,
+body {
+  min-height: 100vh; /* Ensure full viewport height */
+  height: 100%; /* Keep this for flexbox context */
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+
+/* Wrapper for the entire app */
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure it takes up the full viewport height */
+  margin: 0;
+  padding: 0;
+}
+
+/* Wrapper for the page content */
+.page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure it takes up the full viewport height */
+  margin: 0;
+  padding: 0;
+}
+
+/* Main content area */
+.main-content {
+  flex: 1;
+  margin: 0;
+  padding: 0;
+}
+
+/* Footer */
+.Footer {
+  background-color: #282c34;
+  padding: 10px 0;
   color: white;
+  text-align: center;
+  width: 100%;
+  margin: 0;
+  margin-top: auto; /* Push to the bottom of page-container */
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Remove default margins from elements inside the Footer */
+.Footer * {
+  margin: 0;
 }

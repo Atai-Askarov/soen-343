@@ -1,0 +1,68 @@
+.SignUpContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.welcome {
+  font-size: 20px;
+  color: red;
+  font-weight: bolder;
+  margin-bottom: 2vh;
+  text-align: center;
+}
+
+.text {
+  font-size: 16px;
+  color: red;
+  margin-bottom: 5px;
+  display: block;
+  text-align: left;
+  width: 100%;
+}
+
+.userInput {
+  display: block;
+  color: gray;
+  width: 90%; /* Slightly less than full width for padding */
+  padding: 1vw;
+  margin-top: 1vh;
+  font-size: 1vw; /* Adjust input text size */
+}
+
+.container {
+  width: 30vw;
+  height: 70vh;
+  max-width: 300px;
+  max-height: 800px;
+  min-width: 300px;
+  min-height: 300px;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border: 1px solid red;
+  border-radius: 25px;
+  padding: 2vw;
+}
+
+.have-account {
+  color: red;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.have-account:hover {
+  color: darkred;
+  text-decoration: underline;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
