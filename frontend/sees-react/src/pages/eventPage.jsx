@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import "./css/eventDashboard.css"; // Ensure you have your styles
+import "./css/eventPage.css";
 
 const Event = () => {
   const { eventId } = useParams(); 
@@ -41,15 +41,15 @@ const Event = () => {
   }
 
   return (
-    <div>
+    <div className="event-container">
       <h1>Event Page</h1>
       {event ? (
         <div>
-          <h2>{event.eventname}</h2>
-          <p>Type: {event.event_type}</p>
-          <p>Date: {event.eventdate}</p>
-          <p>Location: {event.eventlocation}</p>
-          <p>Description: {event.eventdescription}</p>
+          <h1 className="event-name">{event.eventname}</h1>
+          <p className="event-type">Type: {event.event_type}</p>
+          <p className="event-date">Date: {event.eventdate}</p>
+          <p className="event-location">Location: {event.eventlocation}</p>
+          <p className="event-description">Description: {event.eventdescription}</p>
         </div>
       ) : (
         <p>Event not found.</p>
