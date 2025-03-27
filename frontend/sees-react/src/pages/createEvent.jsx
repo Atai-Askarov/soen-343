@@ -11,6 +11,7 @@ const CreateEvent = () => {
     description: "",
     speakerid: "",
     event_type: "workshop",
+    social_media_link: "",
   });
 
   const eventTypes = ["workshop", "webinar", "conference", "seminar"];
@@ -61,6 +62,7 @@ const CreateEvent = () => {
           speakerid: formData.speakerid,
           organizerid: formData.organizerid,
           event_type: formData.event_type,
+          social_media_link: formData.social_media_link
         }),
       });
 
@@ -78,6 +80,7 @@ const CreateEvent = () => {
           description: "",
           speakerid: "",
           event_type: "workshop",
+          social_media_link: ""
         });
       } else {
         throw new Error(data.message || 'Failed to create event');
@@ -115,26 +118,28 @@ const CreateEvent = () => {
         </label>
 
         <label>
-          Start Time:
-          <input
-            type="time"
-            name="starttime"
-            value={formData.starttime}
-            onChange={handleChange}
-            required
-          />
-        </label>
+  Start Time:
+  <input
+    type="time"
+    name="starttime"
+    value={formData.starttime}
+    onChange={handleChange}
+    step="1" // Allows seconds
+    pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}" // Ensures HH:MM:SS format
+  />
+</label>
 
-        <label>
-          End Time:
-          <input
-            type="time"
-            name="endtime"
-            value={formData.endtime}
-            onChange={handleChange}
-            required
-          />
-        </label>
+<label>
+  End Time:
+  <input
+    type="time"
+    name="endtime"
+    value={formData.endtime}
+    onChange={handleChange}
+    step="1"
+    pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}"
+  />
+</label>
 
         <div className="form-group">
           <label>Location:</label>
@@ -192,7 +197,15 @@ const CreateEvent = () => {
             ))}
           </select>
         </label>
-
+        <label>
+          Social Media Link
+          <input
+            type="text"
+            name="social_media_link"
+            value={formData.social_media_link}
+            onChange={handleChange}
+          />
+        </label>
         <button type="submit">Create Event</button>
       </form>
     </div>
