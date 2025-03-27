@@ -6,15 +6,21 @@ from datetime import datetime
 class Event(db.Model):
     __tablename__ = 'events'
     
-    eventid = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    # Column names updated to match the database schema
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # Changed to 'id' as per your schema
     eventname = db.Column(db.String(100), nullable=False)
-    eventdate = db.Column(db.String(50), nullable=False)
+    eventdate = db.Column(db.Date, nullable=False)
+    eventstarttime = db.Column(db.DateTime, nullable=False)
+    eventendtime = db.Column(db.DateTime, nullable=False)
     eventlocation = db.Column(db.String(100), nullable=False)
     eventdescription = db.Column(db.String(500), nullable=True)
-    speaker = db.Column(db.String(100), nullable=True)
-    stakeholder = db.Column(db.String(100), nullable=True)
-    organizer = db.Column(db.String(100), nullable=False)
+    speakerid = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    organizerid = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     event_type = db.Column(db.String(50), nullable=False)
+    
+    # Relationships for speaker and organizer
+    speaker = db.relationship('User', foreign_keys=[speakerid], backref='events_as_speaker', lazy=True)
+    organizer = db.relationship('User', foreign_keys=[organizerid], backref='events_as_organizer', lazy=True)
     
     tickets = db.relationship('Ticket', backref='event', lazy=True)
 
@@ -25,7 +31,7 @@ class Ticket(db.Model):
     __tablename__ = 'tickets'
 
     ticketid = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    eventid = db.Column(db.Integer, db.ForeignKey('events.eventid'), nullable=False)
+    eventid = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)  # Changed to 'id' to match events table
     userid = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     user_email = db.Column(db.String(100), db.ForeignKey('users.email'), nullable=True)
 
@@ -37,12 +43,13 @@ def create_event():
     data = request.get_json()
     
     required_fields = [
-        'eventname', 'eventdate', 'eventlocation',
-        'organizer', 'event_type'
+        'eventname', 'eventdate', 'eventstarttime', 'eventendtime',
+        'eventlocation', 'organizerid', 'event_type', 'speakerid'
     ]
+    
     if not all(field in data for field in required_fields):
         return jsonify({
-            "message": "Event name, date, location, organizer and type are required!",
+            "message": "Event name, date, start time, end time, location, organizer, type, and speaker are required!",
             "missing_fields": [field for field in required_fields if field not in data]
         }), 400
     
@@ -50,11 +57,12 @@ def create_event():
         new_event = Event(
             eventname=data['eventname'],
             eventdate=data['eventdate'],
+            eventstarttime=data['eventstarttime'],
+            eventendtime=data['eventendtime'],
             eventlocation=data['eventlocation'],
             eventdescription=data.get('eventdescription'),
-            speaker=data.get('speaker'),
-            stakeholder=data.get('stakeholder'),
-            organizer=data['organizer'],
+            speakerid=data['speakerid'],
+            organizerid=data['organizerid'],
             event_type=data['event_type']
         )
         
@@ -63,7 +71,7 @@ def create_event():
         
         return jsonify({
             "message": "Event created successfully!",
-            "eventid": new_event.eventid,
+            "eventid": new_event.id,  # Use 'id' instead of 'eventid'
             "eventname": new_event.eventname,
             "details": {
                 "date": new_event.eventdate,
@@ -93,14 +101,15 @@ def get_events():
         events_list = []
         for event in events:
             events_list.append({
-                "eventid": event.eventid,
+                "eventid": event.id,  # Use 'id' instead of 'eventid'
                 "eventname": event.eventname,
                 "eventdate": event.eventdate,
+                "eventstarttime": event.eventstarttime,
+                "eventendtime": event.eventendtime,
                 "eventlocation": event.eventlocation,
                 "eventdescription": event.eventdescription,
-                "speaker": event.speaker,
-                "stakeholder": event.stakeholder,
-                "organizer": event.organizer,
+                "speakerid": event.speakerid,
+                "organizerid": event.organizerid,
                 "event_type": event.event_type
             })
         
@@ -109,6 +118,7 @@ def get_events():
         
     except Exception as e:
         return {"message": f"Error retrieving events: {str(e)}"}, 500
+
 
 # def register_for_event():
 #     """Register a user for an event using email"""
