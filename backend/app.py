@@ -4,6 +4,7 @@ from flask_cors import CORS, cross_origin
 from account import db, sign_in, get_users, log_in
 from event import create_event, get_events, get_event_by_id #register_for_event
 from ticketdescription import create_ticket_description, get_ticket_desc, get_ticket_descriptions_by_event 
+from tickets import get_tickets
 from flask import Flask, request, jsonify
 
 
@@ -65,6 +66,17 @@ def event_by_id(event_id):
 @cross_origin(origin='http://localhost:3000')
 def get_all_ticket_desc():
     return get_ticket_desc()
+
+
+@app.route('/get_tickets', methods=['GET'])
+@cross_origin(origin='http://localhost:3000')
+def get_all_tickets():
+    return get_tickets()
+
+@app.route('/get_ticket_desc', methods=['GET'])
+@cross_origin(origin='http://localhost:3000')
+def get_all_ticket_desc():
+    return get_ticket_desc()()
 
 
 @app.route('/create_ticket_description', methods=['POST'])
