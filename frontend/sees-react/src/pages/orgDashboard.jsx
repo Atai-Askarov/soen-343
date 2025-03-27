@@ -1,53 +1,45 @@
-// src/pages/Dashboard.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./css/orgDashboard.css";
 import Button from "../components/Button.jsx";
+import { Link} from "react-router-dom";
 
 const Dashboard = () => {
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      name: "Eruption of Mount Vesuvius in 79 AD",
-      type: "Webinar",
-      date: "March 28",
-      status: "On Sale",
-      image: "https://via.placeholder.com/50",
-    },
-    {
-      id: 2,
-      name: "The Dangers of Chemicals",
-      type: "Seminar",
-      date: "March 31",
-      status: "On Sale",
-      image: "https://via.placeholder.com/50",
-    },
-    {
-      id: 3,
-      name: "Trump and his Tariffs",
-      type: "Conference",
-      date: "March 22",
-      status: "Finished",
-      image: "https://via.placeholder.com/50",
-    },
-  ]);
-
+  const [user, setUser] = useState(null);
+  const [events, setEvents] = useState([]);
   const [campaigns, setCampaigns] = useState([
     { id: 1, name: "Event Newsletter", status: "Ongoing" },
     { id: 2, name: "New Subscribers", status: "Done" },
   ]);
+  const [loading, setLoading] = useState(true);
 
-  // Handler to add a new event, placeholder for now
-  const handleAddEvent = () => {
-    const newEvent = {
-      id: events.length + 1,
-      name: `New Event ${events.length + 1}`,
-      type: "Workshop",
-      date: "April 5",
-      status: "On Sale",
-      image: "https://via.placeholder.com/50",
-    };
-    setEvents([...events, newEvent]);
-  };
+  useEffect(() => {
+    // Retrieve user data from localStorage
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      // Fetch events organized by the logged-in user
+      const fetchEvents = async () => {
+        try {
+          const response = await fetch(`http://127.0.0.1:5000/events?organizerid=${user.id}`);
+          const data = await response.json();
+          if (data.events) {
+            setEvents(data.events);
+          }
+        } catch (error) {
+          console.error("Error fetching events:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchEvents();
+    }
+  }, [user]);
 
   // Handler to add a new campaign
   const handleAddCampaign = () => {
@@ -61,45 +53,46 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      {/* Header */}
-      <h1 className="welcome-header">Welcome back, User!</h1>{" "}
-      {/* Placeholder for now */}
+      <h1 className="welcome-header">
+        {user ? `Welcome back, ${user.username}!` : "Loading..."}
+      </h1>
+
       {/* My Events Section */}
       <div className="events-section">
         <h2 className="section-header">My Events:</h2>
-        <table className="events-table">
-          <thead>
-            <tr>
-              <th>Event</th>
-              <th>Type</th>
-              <th>Date</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {events.map((event) => (
-              <tr key={event.id}>
-                <td>
-                  <img
-                    src={event.image}
-                    alt={event.name}
-                    className="event-image"
-                  />
-                  {event.name}
-                </td>
-                <td>{event.type}</td>
-                <td>{event.date}</td>
-                <td>{event.status}</td>
+
+        {loading ? (
+          <p>Loading events...</p>
+        ) : events.length > 0 ? (
+          <table className="events-table">
+            <thead>
+              <tr>
+                <th>Event</th>
+                <th>Type</th>
+                <th>Date</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <Button type="button" onClick={handleAddEvent}>
-          {" "}
-          Create Event{" "}
-        </Button>
+            </thead>
+            <tbody>
+              {events.map((event) => (
+                <tr key={event.eventid}>
+                <td>{event.eventname}</td>
+                <td>{event.event_type}</td>
+                <td>{event.eventdate}</td>
+                <td>{event.eventid}</td>
+                  <td> <Link to={`/eventDashboard/${event.eventid}`}>Event Dashboard</Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>No events found.</p>
+        )}
+
+        <Button type="button">Create Event</Button>
       </div>
-      {/* My Email Campaigns Section */}
+
+      {/* My Email Campaigns Section (UNCHANGED) */}
       <div className="campaigns-section">
         <h2 className="section-header">My Email Campaigns</h2>
         <table className="campaigns-table">
@@ -119,8 +112,8 @@ const Dashboard = () => {
           </tbody>
         </table>
       </div>
+
       <Button type="button" onClick={handleAddCampaign}>
-        {" "}
         New Campaign
       </Button>
     </div>
@@ -128,3 +121,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+

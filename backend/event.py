@@ -119,6 +119,37 @@ def get_events():
     except Exception as e:
         return {"message": f"Error retrieving events: {str(e)}"}, 500
 
+def get_event_by_id(event_id):
+    """Retrieve an event by its ID from the database."""
+    try:
+        # Fetch the event by its ID
+        event = Event.query.get(event_id)
+        
+        # If event is not found, return a 404 response
+        if not event:
+            return jsonify({"message": f"Event with ID {event_id} not found."}), 404
+        
+        # Serialize the event into a dictionary
+        event_data = {
+            "eventid": event.id,
+            "eventname": event.eventname,
+            "eventdate": event.eventdate,
+            "eventstarttime": event.eventstarttime,
+            "eventendtime": event.eventendtime,
+            "eventlocation": event.eventlocation,
+            "eventdescription": event.eventdescription,
+            "speakerid": event.speakerid,
+            "organizerid": event.organizerid,
+            "event_type": event.event_type
+        }
+        
+        # Return the event data as a JSON response
+        return jsonify(event_data), 200
+        
+    except Exception as e:
+        return jsonify({"message": f"Error retrieving event: {str(e)}"}), 500
+
+
 
 # def register_for_event():
 #     """Register a user for an event using email"""

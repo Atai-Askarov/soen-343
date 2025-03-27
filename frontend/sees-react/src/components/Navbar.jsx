@@ -52,7 +52,7 @@ const Navbar = () => {
                 <Link to="/createEvent"> Create Event</Link>
               </li>
               <li className="nav-button">
-                <Link to="/myevents">My Events</Link>
+                <Link to="/Dashboard">My Events</Link>
               </li>
             </>
           );
@@ -107,12 +107,6 @@ const Navbar = () => {
           ) : (
             // If the user is not logged in, show these options
             <>
-              <li className="nav-button">
-                <Link to="/">Pricing</Link>
-              </li>
-              <li className="nav-button">
-                <Link to="createEvent">Plan Event</Link>
-              </li>
               <li className="nav-button">
                 <Link to="login">Login</Link>
               </li>

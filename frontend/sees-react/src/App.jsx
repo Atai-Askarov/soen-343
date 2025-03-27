@@ -11,7 +11,8 @@ import CreateEvent from "./pages/createEvent";
 import Dashboard from "./pages/orgDashboard";
 import Event from "./pages/eventPage";
 import LandingPage from "./pages/LandingPage";
-
+import EventDashboard from "./pages/eventDashboard";
+import TicketsPage from "./pages/ticketsPage";
 const App = () => {
   return (
     <Router>
@@ -27,6 +28,8 @@ const App = () => {
               <Route path="/Dashboard" element={<Dashboard />} />
               <Route path="/Event/:id" element={<Event />} />
               <Route path="/home" element={<Home />} />
+              <Route path="/eventDashboard/:eventId" element={<EventDashboard />} />
+              <Route path="/manage-ticketing/:eventId" element={<TicketsPage />} />
             </Routes>
           </main>
           <Footer />
