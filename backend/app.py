@@ -102,3 +102,8 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()  # Create tables if they don't exist
     app.run(debug=True, host="0.0.0.0", port=5000)
+    
+@app.route('/emailSending', methods=['GET'])
+@cross_origin(origin='http://localhost:3000')
+def get_all_ticket_desc():
+    return get_ticket_desc()
