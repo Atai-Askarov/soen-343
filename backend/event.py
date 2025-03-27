@@ -17,7 +17,11 @@ class Event(db.Model):
     speakerid = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     organizerid = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     event_type = db.Column(db.String(50), nullable=False)
-    
+    social_media_link = db.Column(db.String(200), nullable=True)
+
+    __table_args__ = (
+        db.UniqueConstraint('eventname', 'eventdate', 'eventlocation', name='unique_event'),
+        {'extend_existing': True} )
     # Relationships for speaker and organizer
     speaker = db.relationship('User', foreign_keys=[speakerid], backref='events_as_speaker', lazy=True)
     organizer = db.relationship('User', foreign_keys=[organizerid], backref='events_as_organizer', lazy=True)
@@ -27,6 +31,36 @@ class Event(db.Model):
     def __repr__(self):
         return f'<Event {self.eventname}>'
 
+    # Singleton method
+    @classmethod
+    def get_instance(cls, eventname, eventdate, eventlocation, **kwargs):
+        try:
+            existing_event = cls.query.filter_by(
+                eventname=eventname,
+                eventdate=eventdate,
+                eventlocation=eventlocation
+            ).first()
+
+            if existing_event:
+                print(f"✅ Event already exists: {existing_event}")
+                return existing_event
+
+            print("🚀 Creating new event")
+            new_event = cls(eventname=eventname, eventdate=eventdate, eventlocation=eventlocation, **kwargs)
+            db.session.add(new_event)
+            db.session.commit()
+            return new_event
+        
+        except exc.IntegrityError as e:
+            db.session.rollback()
+            print(f"⚠️ Integrity Error: {e}")
+            raise e
+        except Exception as e:
+            db.session.rollback()
+            print(f"❗ Error Creating Event: {e}")
+            raise e
+
+
 class Ticket(db.Model):
     __tablename__ = 'tickets'
 
@@ -34,12 +68,13 @@ class Ticket(db.Model):
     eventid = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)  # Changed to 'id' to match events table
     userid = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     user_email = db.Column(db.String(100), db.ForeignKey('users.email'), nullable=True)
+    
+    __table_args__ = {'extend_existing': True}  # Prevents conflicts with existing table definition
 
     def __repr__(self):
         return f'<Ticket {self.ticketid}>'
 
 def create_event():
-    """Create a new event with all fields"""
     data = request.get_json()
     
     required_fields = [
@@ -49,12 +84,18 @@ def create_event():
     
     if not all(field in data for field in required_fields):
         return jsonify({
-            "message": "Event name, date, start time, end time, location, organizer, type, and speaker are required!",
+            "message": "Missing required fields!",
             "missing_fields": [field for field in required_fields if field not in data]
         }), 400
     
     try:
-        new_event = Event(
+        # Convert string inputs to date and datetime
+        data['eventdate'] = datetime.strptime(data['eventdate'], "%Y-%m-%d").date()
+        data['eventstarttime'] = datetime.strptime(data['eventstarttime'], "%Y-%m-%d %H:%M:%S")
+        data['eventendtime'] = datetime.strptime(data['eventendtime'], "%Y-%m-%d %H:%M:%S")
+
+        # Use singleton to check or create event
+        new_event = Event.get_instance(
             eventname=data['eventname'],
             eventdate=data['eventdate'],
             eventstarttime=data['eventstarttime'],
@@ -63,29 +104,27 @@ def create_event():
             eventdescription=data.get('eventdescription'),
             speakerid=data['speakerid'],
             organizerid=data['organizerid'],
-            event_type=data['event_type']
+            event_type=data['event_type'],
+            social_media_link=data.get('social_media_link')
+
         )
         
-        db.session.add(new_event)
-        db.session.commit()
-        
         return jsonify({
-            "message": "Event created successfully!",
-            "eventid": new_event.id,  # Use 'id' instead of 'eventid'
-            "eventname": new_event.eventname,
-            "details": {
-                "date": new_event.eventdate,
-                "location": new_event.eventlocation,
-                "type": new_event.event_type
-            }
+            "message": "Event created or retrieved successfully!",
+            "eventid": new_event.id,
+            "eventname": new_event.eventname
         }), 201
         
+    except ValueError as e:
+        return jsonify({"message": f"Invalid date or time format: {e}"}), 400
     except exc.IntegrityError as e:
         db.session.rollback()
-        return jsonify({"message": "Database integrity error!", "error": str(e)}), 500
+        return jsonify({"message": "Database error!", "error": str(e)}), 500
     except Exception as e:
         db.session.rollback()
-        return jsonify({"message": f"Error creating event: {str(e)}"}), 500
+        return jsonify({"message": f"Error: {str(e)}"}), 500
+
+
 
 def get_events():
     """Retrieve all events from the database."""
@@ -202,4 +241,3 @@ def get_event_by_id(event_id):
 #     except Exception as e:
 #         db.session.rollback()
 #         return jsonify({"message": f"Registration error: {str(e)}"}), 500
-
