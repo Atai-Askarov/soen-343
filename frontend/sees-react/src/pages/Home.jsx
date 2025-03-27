@@ -26,7 +26,7 @@ const Home = () => {
 
         {user ? (
           <div>
-            <p>Welcome, {user.name}!</p>
+            <p>Welcome, {user.username}!</p>
             <p>Your user ID is: {user.id}</p>
           </div>
         ) : (

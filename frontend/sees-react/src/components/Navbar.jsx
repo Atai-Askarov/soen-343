@@ -21,6 +21,68 @@ const Navbar = () => {
     navigate("/login"); // Redirect to login page
   };
 
+  const renderUserLinks = () => {
+    if (user && user.user_type) {
+      switch (user.user_type) {
+        case "learner":
+          return (
+            <>
+              
+              <li className="nav-button">
+                <Link to="/myevents">My Events</Link>
+              </li>
+              <li className="nav-button">
+                <Link to="/networking">Networking</Link>
+              </li>
+            </>
+          );
+        case "sponsor":
+          return (
+            <>
+
+              <li className="nav-button">
+                <Link to="/myevents">Sponsored Events</Link>
+              </li>
+            </>
+          );
+        case "organizer":
+          return (
+            <>
+              <li className="nav-button">
+                <Link to="/createEvent"> Create Event</Link>
+              </li>
+              <li className="nav-button">
+                <Link to="/myevents">My Events</Link>
+              </li>
+            </>
+          );
+        case "speaker":
+          return (
+            <>
+
+              <li className="nav-button">
+                <Link to="/my-events">My Events</Link>
+              </li>
+            </>
+          );
+        case "admin":
+          return (
+            <>
+              <li className="nav-button">
+                <Link to="/admin-dashboard">Admin Dashboard</Link>
+              </li>
+              <li className="nav-button">
+                <Link to="/admin-users">Manage Users</Link>
+              </li>
+            </>
+          );
+        default:
+          return null;
+      }
+    }
+    return null;
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar-left">
@@ -37,12 +99,7 @@ const Navbar = () => {
               <li className="nav-button">
                 <Link to="/home">Home</Link>
               </li>
-              <li className="nav-button">
-                <Link to="/my-events">My Events</Link>
-              </li>
-              <li className="nav-button">
-                <Link to="/networking">Networking</Link>
-              </li>
+              {renderUserLinks()}
               <li className="nav-button" onClick={handleLogout}>
                 <button className="logout-button">Logout</button>
               </li>
@@ -71,4 +128,5 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
 
