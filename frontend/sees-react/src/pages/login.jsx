@@ -10,31 +10,39 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (event) => {
-    event.preventDefault();
+ // LoginPage.js
+const handleLogin = async (event) => {
+  event.preventDefault();
 
-    // Basic form validation
-    if (!email || !password) {
-      setError("Please fill out all fields.");
-      return;
+  if (!email || !password) {
+    setError("Please fill out all fields.");
+    return;
+  }
+
+  try {
+    const response = await axios.post("http://localhost:5000/login", {
+      email,
+      password
+    });
+
+    if (response.status === 200) {
+      // Store user data in localStorage
+      localStorage.setItem("userId", response.data.user.id);
+      localStorage.setItem("userType", response.data.user.user_type);
+      localStorage.setItem("userInterests", response.data.user.interests || 'coding');
+      
+      // Debug: Check what we're getting from the server
+      console.log("Login response:", response.data);
+      
+      navigate("/");
+      // Redirect based on user type
+      
     }
-
-    try {
-      // Send the POST request to the backend API
-      const response = await axios.post(
-        "http://localhost:5000/login", // Ensure the correct backend URL is used
-        { email, password }
-      );
-
-      if (response.status === 200) {
-        // Redirect to the home page after successful login
-        navigate("/home");
-      }
-    } catch (err) {
-      // Handle any errors (invalid login, etc.)
-      setError(err.response?.data?.message || "Login failed. Please try again.");
-    }
-  };
+  } catch (err) {
+    console.error("Login error:", err.response);
+    setError(err.response?.data?.message || "Login failed. Please try again.");
+  }
+};
 
   return (
     <div className="loginContent">

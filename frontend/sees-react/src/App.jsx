@@ -10,6 +10,7 @@ import Signup from "./pages/signup";
 import CreateEvent from "./pages/createEvent";
 import Dashboard from "./pages/orgDashboard";
 import Event from "./pages/eventPage";
+import LearnerDashboard from "./pages/LearnerDashboard"; // Add this import
 
 const App = () => {
   return (
@@ -25,6 +26,8 @@ const App = () => {
               <Route path="/createEvent" element={<CreateEvent />} />
               <Route path="/Dashboard" element={<Dashboard />} />
               <Route path="/Event/:id" element={<Event />} />
+              {/* Add the Learner Dashboard route */}
+              <Route path="/learner-dashboard" element={<LearnerDashboard />} />
             </Routes>
           </main>
           <Footer />

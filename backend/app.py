@@ -52,6 +52,21 @@ def register_event():
 def login():
     return log_in()  # Call log_in function from account.py
 
+# Add to your Flask app
+@app.route('/api/user/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"message": "User not found!"}), 404
+    
+    return jsonify({
+        "id": user.id,
+        "username": user.username,
+        "email": user.email,
+        "user_type": user.user_type,
+        "interests": user.interests
+    }), 200
+
 
 
 
