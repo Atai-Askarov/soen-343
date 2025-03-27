@@ -2,11 +2,12 @@ import stripe
 stripe.api_key = "sk_test_51R2FpKK8U1OF0xnbrxZ08CEyknFRuPgHGGv3cNBj0MuaJFXdAFI6u2qtGnH5BWV6tkhTSvP8CeN3FtNZWuwHZqM200DvnK061p"
   # Replace with your actual secret key
 
-def create_ticket_product(event_name, event_description):
+def create_ticket_product(event_name, event_description, active):
     try:
         product = stripe.Product.create(
             name=event_name,
-            description=event_description, 
+            description=event_description,
+            active = active
         )
         return product.id
     except stripe.error.StripeError as e:
@@ -22,7 +23,7 @@ def get_ticket_product(product_id):
             'name': product.name,
             'description': product.description,
             'active': product.active,
-            'metadata': product.metadata
+        
         }
     except stripe.error.StripeError as e:
         print(f"An error occurred: {e}")
@@ -39,8 +40,7 @@ def update_ticket_product(product_id, **kwargs):
             'id': updated_product.id,
             'name': updated_product.name,
             'description': updated_product.description,
-            'active': updated_product.active,
-            'metadata': updated_product.metadata
+            'active': updated_product.active
         }
     except stripe.error.StripeError as e:
         print(f"An error occurred: {e}")
@@ -57,8 +57,7 @@ def archive_ticket_product(product_id):
             'id': archived_product.id,
             'name': archived_product.name,
             'description': archived_product.description,
-            'active': archived_product.active,
-            'metadata': archived_product.metadata
+            'active': archived_product.active
         }
     except stripe.error.StripeError as e:
         print(f"An error occurred: {e}")
@@ -72,15 +71,15 @@ def archive_ticket_product(product_id):
     #student has a moderate discount
     #regular has no discount
     
-def create_ticket_price(product_id, amount, nickname, lookup_key, tax_behavior='exclusive'):
+def create_ticket_price(amount, nickname, product_id):
     try:
         price = stripe.Price.create(
-            product=product_id,
+            
             unit_amount=amount,
             currency="cad",
             nickname=nickname,
-            lookup_key=lookup_key,
-            tax_behavior=tax_behavior
+            product = product_id, 
+            active = True
         )
         return price.id
     except stripe.error.StripeError as e:
@@ -96,8 +95,7 @@ def get_ticket_price(price_id):
             'unit_amount': price.unit_amount,
             'currency': price.currency,
             'nickname': price.nickname,
-            'lookup_key': price.lookup_key,
-            'tax_behavior': price.tax_behavior
+            
         }
     except stripe.error.StripeError as e:
         print(f"An error occurred: {e}")
@@ -116,8 +114,6 @@ def archive_ticket_price(price_id):
             'unit_amount': archived_price.unit_amount,
             'currency': archived_price.currency,
             'nickname': archived_price.nickname,
-            'lookup_key': archived_price.lookup_key,
-            'tax_behavior': archived_price.tax_behavior,
             'active': archived_price.active
         }
     except stripe.error.StripeError as e:
@@ -145,7 +141,92 @@ def update_ticket_price(price_id, **kwargs):
         print(f"An error occurred: {e}")
         return None
     
-price = create_ticket_product("Rock Climbing", "Outdoors rock climbing", )
-price_object = get_ticket_product(price)
-deleted_price_object = archive_ticket_product(price)
-print(deleted_price_object)
+import stripe
+import time
+from typing import List, Optional
+
+def delete_stripe_products(
+    api_key: str,
+    product_ids: Optional[List[str]] = None,
+    delete_all: bool = True,
+    test_mode_only: bool = False,
+    batch_size: int = 100,
+    delay: float = 0.2
+) -> dict:
+    """
+    Delete multiple products from Stripe catalog
+    
+    Args:
+        api_key: Stripe secret API key
+        product_ids: Specific product IDs to delete (optional)
+        delete_all: Delete all products when True (use with caution!)
+        test_mode_only: Only affect test mode products
+        batch_size: Number of products to process per batch
+        delay: Seconds between API calls to avoid rate limits
+    
+    Returns:
+        Dictionary with results and error counts
+    """
+    stripe.api_key = api_key
+    results = {
+        'deleted': 0,
+        'skipped': 0,
+        'errors': 0,
+        'failed_ids': []
+    }
+
+    try:
+        if product_ids:
+            # Delete specific products
+            products = [stripe.Product.retrieve(pid) for pid in product_ids]
+        elif delete_all:
+            # List all products with pagination
+            products = stripe.Product.list(
+                limit=batch_size,
+                active=True,
+                expand=['data.default_price']
+            ).auto_paging_iter()
+        else:
+            raise ValueError("Must specify either product_ids or delete_all=True")
+
+        for product in products:
+            try:
+                # Skip live products in test_mode_only operation
+                if test_mode_only and product.livemode:
+                    results['skipped'] += 1
+                    continue
+
+                # Check for active prices
+                if product.default_price and stripe.Price.retrieve(
+                    product.default_price
+                ).active:
+                    results['skipped'] += 1
+                    continue
+
+                # Archive first (recommended best practice)
+                stripe.Product.modify(
+                    product.id,
+                    active=False
+                )
+                time.sleep(delay)
+
+                # Then delete
+                stripe.Product.delete(product.id)
+                results['deleted'] += 1
+                time.sleep(delay)
+
+            except stripe.error.StripeError as e:
+                results['errors'] += 1
+                results['failed_ids'].append(product.id)
+                print(f"Error processing {product.id}: {str(e)}")
+
+    except Exception as e:
+        print(f"Fatal error: {str(e)}")
+        results['errors'] += 1
+
+    return results
+delete_stripe_products(stripe.api_key)
+# price = create_ticket_product("Rock Climbing", "Outdoors rock climbing", )
+# price_object = get_ticket_product(price)
+# deleted_price_object = archive_ticket_product(price)
+# print(deleted_price_object)
