@@ -5,6 +5,7 @@ from account import db, sign_in, get_users, log_in
 from event import create_event, get_events, get_event_by_id #register_for_event
 from ticketdescription import create_ticket_description, get_ticket_desc, get_ticket_descriptions_by_event 
 from flask import Flask, request, jsonify
+from promotionPackage import db, create_promotion, get_promotion, get_all_promotions
 
 
 app = Flask(__name__)
@@ -31,6 +32,12 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 # Define Routes
+
+@app.route("/create_promotion", methods=["POST"])
+@cross_origin(origin='http://localhost:3000')
+def create_new_promotion():
+    return create_promotion()
+
 @app.route("/")
 def hello_world():
     return "<p>Event Registration System</p>"
