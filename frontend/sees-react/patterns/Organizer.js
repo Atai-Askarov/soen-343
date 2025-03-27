@@ -1,8 +1,7 @@
 import Stakeholder from './Stakeholder.js';
 import Event from './Observer/Event.js';
 import EventState from './Observer/EventState.js';
-import CommandFactory from './Command/Commands/CommandFactory.js';
-
+import EventRegistry from './Singleton/EventRegistry.js'
 /**
  * Organizer - Concrete implementation of Stakeholder
  * Represents individuals or organizations that organize events
@@ -22,6 +21,7 @@ class Organizer extends Stakeholder {
         super(stakeholderID, account, name, organization, role, contactInfo);
         this.organizedEvents = organizedEvents;
         this.commandFactory = new CommandFactory();
+        this.EventRegistry = EventRegistry.getInstance();
     }
 
     /**
@@ -77,7 +77,7 @@ class Organizer extends Stakeholder {
     }
     
     /**
-     * Submit an event for approval
+     * Submit an event for approval. It is added to the event registry
      * @param {Event} event - The event to submit for approval
      * @returns {boolean} Whether submission was successful
      */
@@ -94,23 +94,12 @@ class Organizer extends Stakeholder {
             return false;
         }
         
-        // Get a designated executive for this event
-        const executive = event.getDesignatedExecutive();
-        
-        if (!executive) {
-            console.log("No designated executive available for this event.");
-            return false;
-        }
-        
         // Update event status and assign executive
         event.status = "Waiting Approval";
-        event.executive = executive;
         
-        console.log(`Event "${event.getState().getName()}" submitted for approval to ${executive.name}`);
+        console.log(`Event "${event.getState().getName()}" submitted for approval`);
         
-        // Create and execute a command to submit the event
-        const submitCommand = this.commandFactory.createSubmitEventCommand(event);
-        submitCommand.execute();
+        this.EventRegistry.addEvent(event);
         
         return true;
     }
