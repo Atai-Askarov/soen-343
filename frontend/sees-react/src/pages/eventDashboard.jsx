@@ -33,6 +33,7 @@ const EventDashboard = () => {
           <p>Date: {event.eventdate}</p>
           <p>Location: {event.eventlocation}</p>
           <p>Description: {event.eventdescription}</p>
+          <a href={event.social_media_link}>📸 Share the event! {event.social_media_link}</a>
 
           {/* Buttons with links */}
           <div style={{ marginTop: "20px" }}>

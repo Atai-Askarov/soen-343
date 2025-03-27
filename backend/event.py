@@ -163,7 +163,8 @@ def get_event_by_id(event_id):
             "eventdescription": event.eventdescription,
             "speakerid": event.speakerid,
             "organizerid": event.organizerid,
-            "event_type": event.event_type
+            "event_type": event.event_type,
+            "social_media_link": event.social_media_link
         }
         
         # Return the event data as a JSON response
