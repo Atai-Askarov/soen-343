@@ -42,6 +42,7 @@ def add_user():
     return sign_in()
 
 @app.route("/users", methods=["GET"])
+@cross_origin(origin='http://localhost:3000')
 def users():
     return jsonify(get_users())
 
@@ -62,12 +63,6 @@ def event_by_id(event_id):
     return get_event_by_id(event_id)
 
 
-@app.route('/get_ticket_desc', methods=['GET'])
-@cross_origin(origin='http://localhost:3000')
-def get_all_ticket_desc():
-    return get_ticket_desc()
-
-
 @app.route('/get_tickets', methods=['GET'])
 @cross_origin(origin='http://localhost:3000')
 def get_all_tickets():
@@ -75,8 +70,8 @@ def get_all_tickets():
 
 @app.route('/get_ticket_desc', methods=['GET'])
 @cross_origin(origin='http://localhost:3000')
-def get_all_ticket_desc():
-    return get_ticket_desc()()
+def fetch_ticket_descriptions():
+    return get_ticket_desc()
 
 
 @app.route('/create_ticket_description', methods=['POST'])

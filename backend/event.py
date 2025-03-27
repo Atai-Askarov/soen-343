@@ -22,11 +22,10 @@ class Event(db.Model):
     __table_args__ = (
         db.UniqueConstraint('eventname', 'eventdate', 'eventlocation', name='unique_event'),
         {'extend_existing': True} )
+    
     # Relationships for speaker and organizer
     speaker = db.relationship('User', foreign_keys=[speakerid], backref='events_as_speaker', lazy=True)
     organizer = db.relationship('User', foreign_keys=[organizerid], backref='events_as_organizer', lazy=True)
-    
-    tickets = db.relationship('Ticket', backref='event', lazy=True)
 
     def __repr__(self):
         return f'<Event {self.eventname}>'
@@ -61,19 +60,6 @@ class Event(db.Model):
             raise e
 
 
-class Ticket(db.Model):
-    __tablename__ = 'tickets'
-
-    ticketid = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    eventid = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)  # Changed to 'id' to match events table
-    userid = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
-    user_email = db.Column(db.String(100), db.ForeignKey('users.email'), nullable=True)
-    
-    __table_args__ = {'extend_existing': True}  # Prevents conflicts with existing table definition
-
-    def __repr__(self):
-        return f'<Ticket {self.ticketid}>'
-
 def create_event():
     data = request.get_json()
     
@@ -106,7 +92,6 @@ def create_event():
             organizerid=data['organizerid'],
             event_type=data['event_type'],
             social_media_link=data.get('social_media_link')
-
         )
         
         return jsonify({
@@ -123,7 +108,6 @@ def create_event():
     except Exception as e:
         db.session.rollback()
         return jsonify({"message": f"Error: {str(e)}"}), 500
-
 
 
 def get_events():
@@ -188,7 +172,6 @@ def get_event_by_id(event_id):
         
     except Exception as e:
         return jsonify({"message": f"Error retrieving event: {str(e)}"}), 500
-
 
 
 # def register_for_event():
