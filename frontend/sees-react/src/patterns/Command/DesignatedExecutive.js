@@ -17,7 +17,16 @@ class DesignatedExecutive extends Admin {
      * Approve an event
      */
     approveEvent(event) {
-        console.log(`DesignatedExecutive ${this.adminId} approved the event: ${event.getDescription()}`);
+        console.log(`DesignatedExecutive ${this.adminId} approves the event: ${event.getDescription()}`);
+        command = this.requestCreateEventCommand(event);
+        this.system.executeCommand(command);
+    }
+    requestCreateEventCommand(event){ 
+        if(!hasPermission){
+            throw new PermissionDeniedException();
+        }
+        command = this.commandFactory.createEventCommand();
+        return command;
     }
 }
 

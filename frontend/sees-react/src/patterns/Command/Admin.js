@@ -1,5 +1,5 @@
 import System from '../System.js';
-
+import CommandFactory from './Commands/CommandFactory.js'
 /**
  * Admin - Abstract class for all admin types
  */
@@ -11,6 +11,7 @@ class Admin {
         this.adminId = adminId;
         this.permissions = permissions;
         this.system = new System(); // Each admin interacts with the system
+        this.commandFactory = new CommandFactory();
     }
 
     /**
