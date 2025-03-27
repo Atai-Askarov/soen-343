@@ -2,3 +2,4 @@
 /venv/*
 /backend/venv/*
 /.env
+.venv
