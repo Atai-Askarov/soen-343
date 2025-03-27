@@ -4,6 +4,7 @@ from sqlalchemy import exc
 
 class Ticket(db.Model):
     __tablename__ = 'tickets'
+    __table_args__ = {'extend_existing': True}  # Prevent duplicate definition
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userid = db.Column(db.Integer, nullable=False)
@@ -14,6 +15,7 @@ class Ticket(db.Model):
     
     event = db.relationship('Event', backref='tickets', lazy=True)
     description = db.relationship('TicketDescription', backref='tickets', lazy=True)
+
     
     def __repr__(self):
         return f'<Ticket {self.id}>'
