@@ -17,6 +17,8 @@ class Event(db.Model):
     speakerid = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     organizerid = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     event_type = db.Column(db.String(50), nullable=False)
+    social_media_link = db.Column(db.String(200), nullable=True)
+
     __table_args__ = (
         db.UniqueConstraint('eventname', 'eventdate', 'eventlocation', name='unique_event'),
         {'extend_existing': True} )
@@ -102,7 +104,9 @@ def create_event():
             eventdescription=data.get('eventdescription'),
             speakerid=data['speakerid'],
             organizerid=data['organizerid'],
-            event_type=data['event_type']
+            event_type=data['event_type'],
+            social_media_link=data.get('social_media_link')
+
         )
         
         return jsonify({
