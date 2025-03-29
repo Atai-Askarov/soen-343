@@ -45,7 +45,10 @@ const CreateEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if (formData.starttime && formData.endtime && formData.starttime > formData.endtime) {
+      alert("Error: Start time cannot be later than end time.");
+      return; // Stop form submission
+    }
     try {
       const response = await fetch('http://localhost:5000/create_event', {
         method: 'POST',
@@ -114,6 +117,7 @@ const CreateEvent = () => {
             value={formData.date}
             onChange={handleChange}
             required
+            min={new Date().toISOString().split("T")[0]} 
           />
         </label>
 
@@ -138,6 +142,7 @@ const CreateEvent = () => {
     onChange={handleChange}
     step="1"
     pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}"
+    min={formData.starttime}
   />
 </label>
 
