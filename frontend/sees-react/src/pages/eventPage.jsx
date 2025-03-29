@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import "./css/eventDashboard.css"; // Ensure you have your styles
+import "./css/eventPage.css";
 
 const Event = () => {
   const { eventId } = useParams(); 
@@ -41,15 +41,24 @@ const Event = () => {
   }
 
   return (
-    <div>
+    <div className="event-container">
       <h1>Event Page</h1>
       {event ? (
         <div>
-          <h2>{event.eventname}</h2>
-          <p>Type: {event.event_type}</p>
-          <p>Date: {event.eventdate}</p>
-          <p>Location: {event.eventlocation}</p>
-          <p>Description: {event.eventdescription}</p>
+          <div className="event-thumbnail">
+              <img
+                src={event.image || "/images/default.jpg"} // Use the event image if available, otherwise use the default image
+                alt={event.image ? event.name : "Default event thumbnail"}
+              />
+           </div>
+          <h1 className="event-name">{event.eventname}</h1>
+          <p className="event-type">{event.event_type}</p>
+          <h2 className="event-section-header">Date and Time</h2>
+          <p className="event-date">{event.eventdate}</p>
+          <h2 className="event-section-header">Event Location</h2>
+          <p className="event-location">{event.eventlocation}</p>
+          <h2 className="event-section-header">Event Description</h2>
+          <p className="event-description">{event.eventdescription}</p>
         </div>
       ) : (
         <p>Event not found.</p>

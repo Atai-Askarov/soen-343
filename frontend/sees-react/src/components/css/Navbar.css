@@ -71,3 +71,9 @@
 .sign-up a {
   color: white;
 }
+
+.logout-button{
+  text-decoration: none;
+  color: black;
+  background-color: white;
+}

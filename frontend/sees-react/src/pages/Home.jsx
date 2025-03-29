@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link,  } from "react-router-dom";
+import Button from "../components/Button";
 import "./css/home.css"; 
-import "./css/eventPage.css"; 
 
 const Home = () => {
   const [user, setUser] = useState(null);
@@ -99,17 +99,12 @@ const Home = () => {
                   <h1 className="event-name">Interested?</h1>
 
                   {/* Purchase Ticket Button */}
-                  <button
-                    type="button"
-                    className="purchase-ticket-button"
-                    onClick={() => handlePurchaseTicket(event.id)}
-                  >
-                    Purchase Ticket
-                  </button>
-                  <button>
-                    <Link to={`/eventpage/${event.eventid}`}>View More!</Link>
-                  </button>
-                  
+                  <Button type="button" className="purchase-ticket-button" onClick={() => handlePurchaseTicket(event.id)}> Purchase Ticket</Button>
+                  <Button type="button" className="view-more-button">
+                    <Link to={`/eventpage/${event.eventid}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                      View More!
+                    </Link>
+                  </Button>
                 </div>
               ))
             ) : (

@@ -16,6 +16,61 @@
 .content {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: left;
   padding: 20px;
+}
+
+/* Short Description */
+.event-type {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+/* Section Headers */
+.event-section-header {
+  font-size: 40px;
+  font-weight: bolder;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.event-speaker {
+  font-size: 16px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+/* Date, Location, Description */
+.event-date,
+.event-location,
+.event-description {
+  font-size: 16px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.event-description {
+  line-height: 1.6;
+}
+
+/* Purchase Ticket Button */
+.purchase-ticket-button {
+  background-color: #ff4d4d;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+/* Error Message */
+.error-message {
+  color: red;
+  text-align: center;
+  margin: 20px 0;
 }

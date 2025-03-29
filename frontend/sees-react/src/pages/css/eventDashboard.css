@@ -2,13 +2,13 @@
     display: inline-block;
     margin-right: 10px;
     padding: 10px 15px;
-    background-color: #007bff;
+    background-color: red;
     color: white;
     text-decoration: none;
     border-radius: 5px;
   }
   
   .btn:hover {
-    background-color: #0056b3;
+    background-color: darkred;
   }
   

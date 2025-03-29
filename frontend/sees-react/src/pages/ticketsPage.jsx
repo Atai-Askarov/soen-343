@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import './css/ticketPage.css';
 
 const TicketsPage = () => {
   const { eventId } = useParams();  // Get the event ID from the URL
@@ -63,37 +64,43 @@ const TicketsPage = () => {
   };
 
   return (
-    <div>
+    <div className="ticketsPage">
       <h2>Create Tickets for Event {eventId}</h2>
 
       {/* Error Message */}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {/* Ticket Creation Form */}
-      <input
-        type="text"
-        value={ticketName}
-        onChange={(e) => setTicketName(e.target.value)}
-        placeholder="Ticket Name"
-      />
+      <label className="tickets-label">Ticket Name: </label>
+        <input
+          type="text"
+          value={ticketName}
+          onChange={(e) => setTicketName(e.target.value)}
+          placeholder="Ticket Name"
+        />
+
+      <label className="tickets-label">Ticket Price:</label>
       <input
         type="number"
         value={ticketPrice}
         onChange={(e) => setTicketPrice(e.target.value)}
         placeholder="Ticket Price"
       />
+      <label className="tickets-label">Ticket Quantity:</label>
       <input
         type="number"
         value={ticketQuantity}
         onChange={(e) => setTicketQuantity(e.target.value)}
         placeholder="Quantity"
       />
+
+      <label className="tickets-label">Ticket Description:</label>
       <textarea
         value={ticketDescription}
         onChange={(e) => setTicketDescription(e.target.value)}
         placeholder="Description"
       ></textarea>
-      <button onClick={handleCreateTicket} disabled={loading}>
+      <button className="tickets-button" onClick={handleCreateTicket} disabled={loading}>
         {loading ? 'Creating...' : 'Create Ticket'}
       </button>
 
@@ -127,4 +134,3 @@ const TicketsPage = () => {
 };
 
 export default TicketsPage;
-

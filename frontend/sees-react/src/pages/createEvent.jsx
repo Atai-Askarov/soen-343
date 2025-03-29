@@ -206,7 +206,7 @@ const CreateEvent = () => {
             onChange={handleChange}
           />
         </label>
-        <button type="submit">Create Event</button>
+        <button className='create-button' type="submit">Create Event</button>
       </form>
     </div>
   );

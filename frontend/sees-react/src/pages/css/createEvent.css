@@ -1,6 +1,4 @@
-/* General styling */
-.createEvent,
-.Ticketing {
+.createEvent{
   max-width: 500px;
   margin: 50px auto;
   padding: 40px;
@@ -24,6 +22,7 @@ label {
   margin-bottom: 20px;
   font-weight: bold;
   color: #555;
+  width: 100%;
 }
 
 input,
@@ -43,7 +42,7 @@ textarea {
 }
 
 button {
-  background-color: #007bff;
+  background-color: red;
   color: white;
   border: none;
   cursor: pointer;
@@ -51,23 +50,8 @@ button {
   transition: background-color 0.3s;
 }
 
-button:hover {
-  background-color: #0056b3;
-}
-
-button:active {
-  background-color: #004494;
-}
-
 button:focus {
   outline: none;
-}
-
-input:focus,
-textarea:focus {
-  border-color: #007bff;
-  outline: none;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 @media (max-width: 600px) {
@@ -98,6 +82,18 @@ textarea:focus {
   background-color: #4CAF50;
   color: white;
   border-color: #4CAF50;
+}
+
+.create-button{
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
 }
 
 .form-group {
