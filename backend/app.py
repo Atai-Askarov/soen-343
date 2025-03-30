@@ -22,8 +22,9 @@ CORS(app, support_credentials=True)
 #})
 
 # Database Configuration
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://sql5768901:EDshaBtW7e@sql5.freesqldatabase.com/sql5768901"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://sql5770341:mP8Mx9h2IU@sql5.freesqldatabase.com:3306/sql5770341"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
 
 # Initialize the database
 db.init_app(app)
