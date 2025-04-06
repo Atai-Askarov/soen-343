@@ -12,8 +12,10 @@ const CreateEvent = () => {
     speakerid: "",
     event_type: "workshop",
     social_media_link: "",
+    venue_id: "",
   });
-
+  const [speakers, setSpeakers] = useState([]); // Store speakers here
+  const [venues, setVenues] = useState([]);
   const eventTypes = ["workshop", "webinar", "conference", "seminar"];
 
   // Get the current user (organizer) from localStorage
@@ -26,6 +28,34 @@ const CreateEvent = () => {
         organizerid: user.id, // Automatically set the organizer ID
       }));
     }
+
+    // Fetch speakers from the backend
+    const fetchSpeakers = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/users/by_role?role=speaker");
+        const data = await response.json();
+        if (response.ok) {
+          setSpeakers(data.users); // Assuming the response contains the users array
+        } else {
+          throw new Error(data.message || "Failed to fetch speakers");
+        }
+      } catch (error) {
+        console.error("Error fetching speakers:", error);
+      }
+    };
+    const fetchVenues = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/venues");
+        const data = await res.json();
+        if (res.ok) setVenues(data.venues);
+        else throw new Error(data.message || "Failed to fetch venues");
+      } catch (error) {
+        console.error("Error fetching venues:", error);
+      }
+    };
+
+    fetchSpeakers();
+    fetchVenues();
   }, []);
 
   const handleChange = (e) => {
@@ -65,7 +95,9 @@ const CreateEvent = () => {
           speakerid: formData.speakerid,
           organizerid: formData.organizerid,
           event_type: formData.event_type,
-          social_media_link: formData.social_media_link
+          social_media_link: formData.social_media_link,
+          venue_id: formData.venue_id,
+
         }),
       });
 
@@ -83,7 +115,8 @@ const CreateEvent = () => {
           description: "",
           speakerid: "",
           event_type: "workshop",
-          social_media_link: ""
+          social_media_link: "",
+          venue_id: "",
         });
       } else {
         throw new Error(data.message || 'Failed to create event');
@@ -177,15 +210,39 @@ const CreateEvent = () => {
         </label>
 
         <label>
-          Speaker ID:
-          <input
-            type="number"
+          Speaker:
+          <select
             name="speakerid"
             value={formData.speakerid}
             onChange={handleChange}
             required
-          />
+          >
+            <option value="">Select a Speaker to Invite</option>
+            {speakers.map(speaker => (
+              <option key={speaker.id} value={speaker.id}>
+                {speaker.username}
+              </option>
+            ))}
+          </select>
         </label>
+
+        <label>
+          Venue:
+          <select
+              name="venue_id"
+              value={formData.venue_id}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select a Venue</option>
+              {venues.map(venue => (
+                <option key={venue.id} value={venue.id}>
+                  {`${venue.name} — ${venue.address} | Capacity: ${venue.capacity} | Rate: $${venue.price_per_hour}/hr`}
+                </option>
+              ))}
+            </select>
+        </label>
+
 
         <label>
           Event Type:
@@ -202,6 +259,7 @@ const CreateEvent = () => {
             ))}
           </select>
         </label>
+
         <label>
           Social Media Link
           <input
@@ -211,7 +269,10 @@ const CreateEvent = () => {
             onChange={handleChange}
           />
         </label>
-        <button className='create-button' type="submit">Create Event</button>
+
+        <button className="create-button" type="submit">
+          Create Event
+        </button>
       </form>
     </div>
   );

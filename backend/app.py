@@ -1,9 +1,10 @@
 from flask import Flask, jsonify
 from flask_migrate import Migrate
 from flask_cors import CORS, cross_origin
-from account import db, sign_in, get_users, log_in
-from event import create_event, get_events, get_event_by_id #register_for_event
-from ticketdescription import create_ticket_description, get_ticket_desc, get_ticket_descriptions_by_event 
+from account import db, sign_in, get_users, log_in,get_users_by_role
+from event import create_event, get_events, get_event_by_id,get_events_by_organizer #register_for_event
+from ticketdescription import create_ticket_description, get_ticket_desc, get_ticket_descriptions_by_event
+from venue import create_venue, get_venues
 from tickets import get_tickets
 from flask import Flask, request, jsonify
 
@@ -85,9 +86,35 @@ def create_ticket_desc():
 def ticket_description_by_id(event_id):
     return get_ticket_descriptions_by_event(event_id)
 
-# @app.route("/register_event", methods=["POST"])
-# def register_event():
-#     return register_for_event()
+@app.route('/create_venue', methods=['POST'])
+@cross_origin(origin='http://localhost:3000')
+def create_venue_route():
+    return create_venue()
+
+@app.route('/venues', methods=['GET'])
+@cross_origin(origin='http://localhost:3000')
+def get_venues_route():
+    return get_venues()
+
+
+@app.route('/users/by_role', methods=['GET'])
+@cross_origin(origin='http://localhost:3000')
+def get_users_by_role_route():
+    role = request.args.get('role')  # Get role from query parameters
+    if not role:
+        return jsonify({"message": "Role parameter is required!"}), 400
+    
+    users = get_users_by_role(role)
+    if not users:
+        return jsonify({"message": f"No users found with the role: {role}"}), 404
+    
+    return jsonify({"users": users}), 200
+
+@app.route('/events/organizer/<int:organizer_id>', methods=['GET'])
+@cross_origin(origin='http://localhost:3000')
+def fetch_events_by_organizer(organizer_id):
+    return get_events_by_organizer(organizer_id)
+
 
 @app.route("/login", methods=["POST"])
 @cross_origin(origin='http://localhost:3000')

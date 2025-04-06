@@ -33,7 +33,7 @@ const Dashboard = () => {
     if (user) {
       const fetchEvents = async () => {
         try {
-          const response = await fetch(`http://127.0.0.1:5000/events?organizerid=${user.id}`);
+          const response = await fetch(`http://127.0.0.1:5000/events/organizer/${user.id}`);
           const data = await response.json();
           if (data.events) {
             setEvents(data.events);

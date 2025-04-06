@@ -103,7 +103,8 @@ const SignUpPage = () => {
           >
             <option value="organizer">Organizer</option>
             <option value="learner">Learner</option>
-            <option value="stakeholder">Stakeholder</option>
+            <option value="sponsor">Sponsor</option>
+            <option value="speaker">Speaker</option>
           </select>
 
           {/* Dropdown for Interests */}
