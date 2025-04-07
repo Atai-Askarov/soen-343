@@ -36,6 +36,16 @@ def get_users():
         "interests": user.interests
     } for user in users]
 
+def get_users_by_role(role):
+    users = User.query.filter_by(user_type=role).all()
+    return [{
+        "id": user.id,
+        "username": user.username,
+        "email": user.email,
+        "user_type": user.user_type,
+        "interests": user.interests
+    } for user in users]
+
 def sign_in():
     data = request.get_json()
     username = data.get("username")

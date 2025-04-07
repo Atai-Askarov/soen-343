@@ -15,7 +15,9 @@ import Event from "./pages/eventPage";
 import Checkout from './components/Checkout';
 import Success from './components/Success';
 import Canceled from './components/Canceled';
-
+import LandingPage from "./pages/LandingPage";
+import EventDashboard from "./pages/eventDashboard";
+import TicketsPage from "./pages/ticketsPage";
 import './css/normalize.css';
 import './css/global.css';
 const App = () => {
@@ -29,12 +31,16 @@ const App = () => {
               <Route path="/success.html" element={<Success />} />
               <Route path="/canceled.html" element={<Canceled />} />
               <Route path="/checkout" element={<Checkout />} />
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/createEvent" element={<CreateEvent />} />
               <Route path="/Dashboard" element={<Dashboard />} />
-              <Route path="/Event/:id" element={<Event />} />
+              <Route path="/eventpage/:eventId" element={<Event />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/eventDashboard/:eventId" element={<EventDashboard />} />
+              <Route path="/manage-ticketing/:eventId" element={<TicketsPage />} />
+              <Route path="/promotion/:eventId" element={<TicketsPage />} />
             </Routes>
           </main>
           <Footer />

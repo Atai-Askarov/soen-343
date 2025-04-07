@@ -4,6 +4,7 @@
   align-items: center;
   padding: 10px 20px;
   border-bottom: 2px solid lightgray;
+  z-index: 3;
 }
 
 .navbar-left {
@@ -12,34 +13,20 @@
 }
 
 .logo {
-  font-size: 20px;
-  font-weight: bold;
-  color: red;
-  margin-right: 15px;
-}
-
-.search-bar {
-  position: relative;
-}
-
-.search-bar input {
-  padding: 5px 25px;
-  border: 2px solid black;
-  border-radius: 15px;
-  font-size: 14px;
-  color: grey;
-  outline: none;
-}
-
-.search-bar::before {
-  content: "🔍";
   position: absolute;
-  left: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 14px;
-  color: grey;
+  top: 0px;
+  scale: 0.06;
 }
+
+.pookie-bears{
+  position: absolute;
+  top: 15px;
+  left: 80px;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  font-weight: bold;
+}
+
 
 .navbar-right ul {
   display: flex;
@@ -50,10 +37,11 @@
 }
 
 .nav-button {
-  border: 2px solid black;
+  background-color: white;
   padding: 5px 10px;
+  height: 20px;
   border-radius: 15px;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
 }
 
@@ -70,4 +58,10 @@
 
 .sign-up a {
   color: white;
+}
+
+.logout-button{
+  text-decoration: none;
+  color: black;
+  background-color: white;
 }
