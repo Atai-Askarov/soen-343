@@ -13,6 +13,8 @@ import Event from "./pages/eventPage";
 import LandingPage from "./pages/LandingPage";
 import EventDashboard from "./pages/eventDashboard";
 import TicketsPage from "./pages/ticketsPage";
+import SponsorView from "./pages/SponsorView";
+import SponsorPackages from "./pages/SponsorPackages";
 const App = () => {
   return (
     <Router>
@@ -31,6 +33,8 @@ const App = () => {
               <Route path="/eventDashboard/:eventId" element={<EventDashboard />} />
               <Route path="/manage-ticketing/:eventId" element={<TicketsPage />} />
               <Route path="/promotion/:eventId" element={<TicketsPage />} />
+              <Route path="/sponsor-view" element={<SponsorView />} />
+              <Route path="/sponsor/:eventId" element={<SponsorPackages />} />
             </Routes>
           </main>
           <Footer />
