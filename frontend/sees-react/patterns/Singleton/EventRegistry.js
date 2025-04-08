@@ -3,6 +3,9 @@
  */
 class EventRegistry {
     constructor() {
+      if (EventRegistry.instance) {
+        throw new Error("Use EventRegistry.getInstance() to get the singleton instance.");
+      }
       this.events = {};
     }
     
