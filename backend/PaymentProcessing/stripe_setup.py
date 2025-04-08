@@ -1,8 +1,9 @@
 import stripe
-stripe.api_key = "sk_test_51R2FpKK8U1OF0xnbrxZ08CEyknFRuPgHGGv3cNBj0MuaJFXdAFI6u2qtGnH5BWV6tkhTSvP8CeN3FtNZWuwHZqM200DvnK061p"
+key = "sk_test_51R2FpKK8U1OF0xnbrxZ08CEyknFRuPgHGGv3cNBj0MuaJFXdAFI6u2qtGnH5BWV6tkhTSvP8CeN3FtNZWuwHZqM200DvnK061p"
+stripe.api_key = key
   # Replace with your actual secret key
 
-def create_ticket_product(event_name, event_description, active):
+def create_ticket_product(event_name, event_description, active = True):
     try:
         product = stripe.Product.create(
             name=event_name,
@@ -72,16 +73,21 @@ def archive_ticket_product(product_id):
     #regular has no discount
     
 def create_ticket_price(amount, nickname, product_id):
+    prices = {}
     try:
-        price = stripe.Price.create(
-            
-            unit_amount=amount,
-            currency="cad",
-            nickname=nickname,
-            product = product_id, 
-            active = True
-        )
-        return price.id
+        if amount in prices:
+            return prices[amount]
+        else:
+            price = stripe.Price.create(
+                
+                unit_amount=amount,
+                currency="cad",
+                nickname=nickname,
+                product = product_id, 
+                active = True
+            )
+            prices[amount] = price.id
+            return price.id
     except stripe.error.StripeError as e:
         print(f"An error occurred: {e}")
         return None
@@ -225,8 +231,8 @@ def delete_stripe_products(
         results['errors'] += 1
 
     return results
-delete_stripe_products(stripe.api_key)
 # price = create_ticket_product("Rock Climbing", "Outdoors rock climbing", )
 # price_object = get_ticket_product(price)
 # deleted_price_object = archive_ticket_product(price)
 # print(deleted_price_object)
+delete_stripe_products(key)

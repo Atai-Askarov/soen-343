@@ -138,3 +138,18 @@ def get_ticket_descriptions_by_event(event_id):
     
     except Exception as e:
         return jsonify({"message": f"Error retrieving ticket descriptions for event {event_id}: {str(e)}"}), 500
+    
+if __name__ == "__main__":
+    # This code will only run if the file is executed directly
+    # id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    # price = db.Column(db.Numeric(10, 2), nullable=False)
+    # name = db.Column(db.String(255), nullable=False)
+    # description = db.Column(db.Text, nullable=True)
+    # active = db.Column(db.Boolean, default=True)
+    # ticketlimit = db.Column(db.Integer, nullable=False)
+    # eventid = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False) 
+
+
+    desc = "go habs go"
+    create_ticket_description(20.00, "Habs discount", desc, 40, 1 )
+    

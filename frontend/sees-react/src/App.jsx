@@ -1,9 +1,7 @@
 // src/App.jsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, BrowserRouter } from "react-router-dom";
-import ReactDOM from 'react-dom';
 import "./App.css";
-
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Login from "./pages/login";
@@ -13,8 +11,8 @@ import CreateEvent from "./pages/createEvent";
 import Dashboard from "./pages/orgDashboard";
 import Event from "./pages/eventPage";
 import Checkout from './components/Checkout';
-import Success from './components/Success';
-import Canceled from './components/Canceled';
+import Success from "./pages/Success";
+import Canceled from "./pages/Canceled";
 import LandingPage from "./pages/LandingPage";
 import EventDashboard from "./pages/eventDashboard";
 import TicketsPage from "./pages/ticketsPage";
@@ -28,8 +26,8 @@ const App = () => {
           <Navbar />
           <main className="main-content">
             <Routes>
-              <Route path="/success.html" element={<Success />} />
-              <Route path="/canceled.html" element={<Canceled />} />
+              <Route path="/success" element={<Success />} />
+              <Route path="/canceled" element={<Canceled />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<Login />} />
@@ -41,6 +39,7 @@ const App = () => {
               <Route path="/eventDashboard/:eventId" element={<EventDashboard />} />
               <Route path="/manage-ticketing/:eventId" element={<TicketsPage />} />
               <Route path="/promotion/:eventId" element={<TicketsPage />} />
+              <Route path = "/purchase/${ticket.id}" element =  {<Checkout/>}/>
             </Routes>
           </main>
           <Footer />
@@ -49,5 +48,4 @@ const App = () => {
     </BrowserRouter>
   );
 };
-ReactDOM.render(<App />, document.getElementById('root'));
 export default App;

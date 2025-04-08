@@ -1,16 +1,23 @@
-from flask import Flask, jsonify
+from flask import Flask, render_template, jsonify, request, send_from_directory, redirect
 from flask_migrate import Migrate
 from flask_cors import CORS, cross_origin
 from account import db, sign_in, get_users, log_in,get_users_by_role
 from event import create_event, get_events, get_event_by_id,get_events_by_organizer #register_for_event
 from ticketdescription import create_ticket_description, get_ticket_desc, get_ticket_descriptions_by_event
 from venue import create_venue, get_venues
-from tickets import get_tickets
+from tickets import create_ticket, get_tickets
 from flask import Flask, request, jsonify
+
+import stripe
+import json
+import os
+from dotenv import load_dotenv, find_dotenv
 
 
 app = Flask(__name__)
 CORS(app, support_credentials=True)
+stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
+stripe.api_version = '2020-08-27'
 
 
 # Configure CORS to allow all routes from your React app
@@ -32,6 +39,71 @@ db.init_app(app)
 
 # Initialize Flask-Migrate
 migrate = Migrate(app, db)
+
+
+
+# Fetch the Checkout Session to display the JSON result on the success page
+@app.route('/checkout-session', methods=['GET'])
+def get_checkout_session():
+    id = request.args.get('sessionId')
+    checkout_session = stripe.checkout.Session.retrieve(id)
+    return jsonify(checkout_session)
+
+
+@app.route('/create-checkout-session', methods=['POST'])
+def create_checkout_session():
+    try:
+        # Create a new ticket first
+        ticket_response = create_ticket()
+        if ticket_response[1] != 201:
+            return ticket_response
+
+        ticket_data = ticket_response[0].json
+
+        # Now create the Stripe Checkout session
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[{
+                'price': ticket_data['price_id'],
+                'quantity': 1,
+            }],
+            mode='payment',
+            success_url='http://localhost:3000/success',
+            cancel_url='http://localhost:3000/canceled',
+            metadata={'product_id': ticket_data['product_id']}  # Store product ID in metadata
+        )
+        return jsonify({'url': checkout_session.url})
+    except Exception as e:
+        return jsonify(error=str(e)), 403
+
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    payload = request.data
+    sig_header = request.headers.get('Stripe-Signature')
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, stripe.api_key
+        )
+    except ValueError as e:
+        return 'Invalid payload', 400
+    except stripe.error.SignatureVerificationError as e:
+        return 'Invalid signature', 400
+
+    if event['type'] == 'checkout.session.expired':
+        session = event['data']['object']
+        product_id = session['metadata']['product_id']
+        
+        try:
+            # Archive the product
+            stripe.Product.modify(
+                product_id,
+                active=False
+            )
+        except Exception as e:
+            print(f"Error archiving product: {str(e)}")
+
+    return '', 200
 
 # Define Routes
 @app.route("/")
@@ -64,7 +136,11 @@ def get_all_events():
 def event_by_id(event_id):
     return get_event_by_id(event_id)
 
-
+@app.route ('/post_ticket', methods = ["POST"])
+@cross_origin(origin='http://localhost:3000')
+def post_ticket():
+    return create_ticket()
+    
 @app.route('/get_tickets', methods=['GET'])
 @cross_origin(origin='http://localhost:3000')
 def get_all_tickets():

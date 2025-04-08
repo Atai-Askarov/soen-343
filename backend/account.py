@@ -84,6 +84,7 @@ def log_in():
     user = User.query.filter_by(email=email).first()
     if user:
         if user.password == password:  # Direct comparison for plain text passwords
+            
             return jsonify({
                 "message": "Login successful!",
                 "user": {

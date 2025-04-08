@@ -1,13 +1,35 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams} from "react-router-dom";
 import "./css/eventPage.css";
-
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 const Event = () => {
   const { eventId } = useParams(); 
   const [event, setEvent] = useState(null);
   const [ticketDescriptions, setTicketDescriptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  const handlePurchase = async (ticket) => {
+    try {
+      const response = await axios.post("http://localhost:5000/create-checkout-session", {
+        userid: JSON.parse(localStorage.getItem('user')).id,
+        eventid: ticket.eventid,
+        descid: ticket.id,
+        name: ticket.name,
+        description: ticket.description,
+        price: parseFloat(ticket.price),
+        priceId: ticket.priceId  // Make sure you have this priceId available
+      });
+  
+      // Redirect to Stripe Checkout
+      window.location.href = response.data.url;
+    } catch (error) {
+      console.error("Error creating checkout session:", error.response?.data || error.message);
+    }
+  };
+  
 
   useEffect(() => {
     const fetchEventDetails = async () => {
@@ -73,7 +95,7 @@ const Event = () => {
                 <h4>{ticket.name}</h4>
                 <p><strong>Price:</strong> ${ticket.price}</p>
                 <p><strong>Description:</strong> {ticket.description || "No description available"}</p>
-                <Link to={`/purchase/${ticket.id}`} className="btn">Purchase Ticket</Link>
+                <button onClick={() => {handlePurchase(ticket)}}>Purchase Ticket</button>
               </div>
             ))}
           </div>

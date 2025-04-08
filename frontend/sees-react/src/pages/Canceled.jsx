@@ -10,7 +10,7 @@ const Canceled = () => {
         </header>
         <div className="sr-payment-summary completed-view">
           <h1>Your payment was canceled</h1>
-          <Link to="/">Restart demo</Link>
+          <Link to="/Home">Back to my home page</Link>
         </div>
       </div>
       <div className="sr-content">
