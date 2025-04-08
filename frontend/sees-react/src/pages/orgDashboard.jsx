@@ -21,6 +21,8 @@ const Dashboard = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const popupRef = useRef(null);  // Reference to popup
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 }); // Store popup position
+  const [view, setView] = useState(Views.WEEK);
+  const [date, setDate] = useState(new Date());
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -61,7 +63,9 @@ const Dashboard = () => {
     id: event.eventid,
     title: event.eventname,
     start: new Date(`${event.eventstarttime}`),
-    end: new Date(`${event.eventendtime}`)
+    end: new Date(`${event.eventendtime}`),
+    description: event.eventdescription,
+    
   }));
 
   // Handle clicking on an event to show the popup
@@ -138,8 +142,14 @@ const Dashboard = () => {
           startAccessor="start"
           endAccessor="end"
           style={{ height: 500, width: "100%" }}
-          views={['month', 'week', 'day']}
-          defaultView={Views.MONTH}
+          views={[Views.MONTH, Views.WEEK, Views.DAY]}
+          defaultView={view}
+          view={view} // Include the view prop
+          date={date} // Include the date prop
+          onView={(view) => setView(view)}
+          onNavigate={(date) => {
+              setDate(new Date(date));
+          }}
           onSelectEvent={handleEventClick} 
         />
       </div>
@@ -163,8 +173,7 @@ const Dashboard = () => {
   >
     <h3>Event Details</h3>
     <p><strong>Name:</strong> {selectedEvent.title}</p>
-    <p><strong>Start Time:</strong> {selectedEvent.start.toLocaleString()}</p>
-    <p><strong>End Time:</strong> {selectedEvent.end.toLocaleString()}</p>
+    <p><strong>Description:</strong> {selectedEvent.description}</p>
   </div>
 )}
 

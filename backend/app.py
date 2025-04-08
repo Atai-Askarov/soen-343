@@ -4,8 +4,9 @@ from flask_cors import CORS, cross_origin
 from account import db, sign_in, get_users, log_in,get_users_by_role
 from event import create_event, get_events, get_event_by_id,get_events_by_organizer #register_for_event
 from ticketdescription import create_ticket_description, get_ticket_desc, get_ticket_descriptions_by_event
-from venue import create_venue, get_venues
+from venue import create_venue, get_venues, get_venue_by_id
 from tickets import get_tickets
+from budget_items import create_budget_item, get_budget_items_by_event, delete_budget_item
 from flask import Flask, request, jsonify
 
 
@@ -96,6 +97,10 @@ def create_venue_route():
 def get_venues_route():
     return get_venues()
 
+@app.route('/venues/<int:venue_id>', methods=['GET'])
+@cross_origin(origin='http://localhost:3000')
+def get_venue_by_id_route(venue_id):
+    return get_venue_by_id(venue_id)
 
 @app.route('/users/by_role', methods=['GET'])
 @cross_origin(origin='http://localhost:3000')
@@ -115,6 +120,20 @@ def get_users_by_role_route():
 def fetch_events_by_organizer(organizer_id):
     return get_events_by_organizer(organizer_id)
 
+@app.route('/create_budget_item', methods=['POST'])
+@cross_origin(origin='http://localhost:3000')
+def create_budget_item_route():
+    return create_budget_item()
+
+@app.route('/budget_items/<int:event_id>', methods=['GET'])
+@cross_origin(origin='http://localhost:3000')
+def fetch_budget_items_by_event(event_id):
+    return get_budget_items_by_event(event_id)
+
+@app.route('/delete_budget_item/<int:item_id>', methods=['DELETE'])
+@cross_origin(origin='http://localhost:3000')
+def delete_budget_item_route(item_id):
+    return delete_budget_item(item_id)
 
 @app.route("/login", methods=["POST"])
 @cross_origin(origin='http://localhost:3000')
