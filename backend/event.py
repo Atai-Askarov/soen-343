@@ -183,7 +183,31 @@ def get_event_by_id(event_id):
         
     except Exception as e:
         return jsonify({"message": f"Error retrieving event: {str(e)}"}), 500
-    
+
+def fetch_event_by_id(event_id):
+    try:
+        event = Event.query.get(event_id)
+        if not event:
+            return None
+
+        return {
+            "eventid": event.id,
+            "eventname": event.eventname,
+            "eventdate": event.eventdate,
+            "eventstarttime": event.eventstarttime,
+            "eventendtime": event.eventendtime,
+            "eventlocation": event.eventlocation,
+            "eventdescription": event.eventdescription,
+            "speakerid": event.speakerid,
+            "organizerid": event.organizerid,
+            "event_type": event.event_type,
+            "social_media_link": event.social_media_link,
+            "event_img": event.event_img,
+            "venue_id": event.venue_id
+        }
+    except Exception as e:
+        return {"message": f"Error retrieving event: {str(e)}"}, 500
+
 def get_events_by_organizer(organizer_id):
     """Retrieve events for a specific organizer (user) from the database."""
     try:

@@ -12,7 +12,7 @@ const EventDashboard = () => {
   useEffect(() => {
     const fetchEventDetails = async () => {
       try {
-        const eventResponse = await fetch(`http://127.0.0.1:5000/events/${eventId}`);
+        const eventResponse = await fetch(`http://127.0.0.1:3000/events/${eventId}`);
         const eventData = await eventResponse.json();
         setEvent(eventData); // Set the event data
       } catch (error) {
