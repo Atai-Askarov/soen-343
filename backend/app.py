@@ -15,23 +15,23 @@ from dotenv import load_dotenv
 # Import the sponsorship blueprint
 from sponsorship import sponsorship_bp
 
-# ───── ENV & APP INIT ─────────────────────────
+# ───── ENVIRONMENT & APP INITIALIZATION ─────────────────────────
 load_dotenv()
 app = Flask(__name__)
 CORS(app, support_credentials=True)
 
-# ───── DB CONFIG ──────────────────────────────
+# ───── DATABASE CONFIGURATION ─────────────────────────────────────
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://sql5770341:mP8Mx9h2IU@sql5.freesqldatabase.com:3306/sql5770341"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# ───── INIT DB & MIGRATE ──────────────────────
+# Initialize the database and migration
 db.init_app(app)
 migrate = Migrate(app, db)
 
-# Register the sponsorship blueprint (it handles /packages and /sponsorship routes)
+# Register the sponsorship blueprint (it handles /packages and /sponsorship endpoints)
 app.register_blueprint(sponsorship_bp)
 
-# ───── ROUTES ─────────────────────────────────
+# ───── ROUTES ─────────────────────────────────────────────────────
 @app.route("/")
 def home():
     return "<p>Event Registration System</p>"
@@ -97,10 +97,10 @@ def get_users_by_role_route():
     role = request.args.get("role")
     if not role:
         return jsonify({"message": "Role parameter is required!"}), 400
-    users = get_users_by_role(role)
-    if not users:
+    users_list = get_users_by_role(role)
+    if not users_list:
         return jsonify({"message": f"No users found with the role: {role}"}), 404
-    return jsonify({"users": users}), 200
+    return jsonify({"users": users_list}), 200
 
 @app.route("/events/organizer/<int:organizer_id>", methods=["GET"])
 @cross_origin(origin='http://localhost:3000')
@@ -154,8 +154,9 @@ def send_email_via_blast():
         print(f"❌ Error in /emailSending: {e}")
         return jsonify({"error": str(e)}), 500
 
-# ───── MAIN ───────────────────────────────────
+# ───── MAIN ─────────────────────────────────────────────────────
 if __name__ == "__main__":
     with app.app_context():
+        # For development, create tables if they do not exist.
         db.create_all()
     app.run(debug=True, host="0.0.0.0", port=5000)

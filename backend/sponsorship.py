@@ -1,14 +1,13 @@
 # sponsorship.py
 from flask import Blueprint, request, jsonify
 from account import db
-from datetime import datetime
 
 # Create a Blueprint for sponsorship and package operations
 sponsorship_bp = Blueprint('sponsorship', __name__)
 
-# ─── Models ───────────────────────────────────────────────────
+# ─── Models ─────────────────────────────────────────────────────
 class SponsorshipPackage(db.Model):
-    __tablename__ = 'packages'  # table name is "packages"
+    __tablename__ = 'packages'  # Table name is "packages"
     id = db.Column(db.Integer, primary_key=True)
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
@@ -35,8 +34,8 @@ class Sponsorship(db.Model):
         self.package_id = package_id
         self.event_id = event_id
 
-# ─── Routes ───────────────────────────────────────────────────
-# Route: Create a sponsorship package (for an event organizer)
+# ─── Routes ─────────────────────────────────────────────────────
+# Route: Create a sponsorship package (for event organizers)
 @sponsorship_bp.route("/packages", methods=["POST"])
 def create_package():
     data = request.get_json()
@@ -45,11 +44,11 @@ def create_package():
         return jsonify({"message": "Missing required fields"}), 400
     try:
         pkg = SponsorshipPackage(
-            event_id = data['event_id'],
-            name = data['name'],
-            width = data['width'],
-            height = data['height'],
-            price = float(data['price'])
+            event_id=data['event_id'],
+            name=data['name'],
+            width=data['width'],
+            height=data['height'],
+            price=float(data['price'])
         )
         db.session.add(pkg)
         db.session.commit()
@@ -93,19 +92,19 @@ def create_sponsorship():
     if not all(field in data for field in required_fields):
         return jsonify({"message": "Missing required fields"}), 400
     try:
-        # Check if the sponsor has already sponsored this package for the event
+        # Check if sponsor has already sponsored this package for this event.
         existing = Sponsorship.query.filter_by(
-            sponsor_id = data['sponsor_id'],
-            package_id = data['package_id'],
-            event_id = data['event_id']
+            sponsor_id=data['sponsor_id'],
+            package_id=data['package_id'],
+            event_id=data['event_id']
         ).first()
         if existing:
             return jsonify({"message": "You have already sponsored this package for this event"}), 409
 
         sponsorship = Sponsorship(
-            sponsor_id = data['sponsor_id'],
-            package_id = data['package_id'],
-            event_id = data['event_id']
+            sponsor_id=data['sponsor_id'],
+            package_id=data['package_id'],
+            event_id=data['event_id']
         )
         db.session.add(sponsorship)
         db.session.commit()
