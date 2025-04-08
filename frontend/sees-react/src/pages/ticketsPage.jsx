@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import './css/ticketPage.css';
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import "./css/ticketPage.css";
 
 const TicketsPage = () => {
-  const { eventId } = useParams();  // Get the event ID from the URL
-  const [ticketName, setTicketName] = useState('');
-  const [ticketPrice, setTicketPrice] = useState('');
-  const [ticketQuantity, setTicketQuantity] = useState('');
-  const [ticketDescription, setTicketDescription] = useState('');
+  const { eventId } = useParams(); // Get the event ID from the URL
+  const [ticketName, setTicketName] = useState("");
+  const [ticketPrice, setTicketPrice] = useState("");
+  const [ticketQuantity, setTicketQuantity] = useState("");
+  const [ticketDescription, setTicketDescription] = useState("");
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleCreateTicket = async () => {
     // Prepare ticket data to send to backend
@@ -19,45 +19,51 @@ const TicketsPage = () => {
       name: ticketName,
       description: ticketDescription,
       ticketlimit: parseInt(ticketQuantity),
-      eventid: parseInt(eventId),  // The eventId comes from the URL
+      eventid: parseInt(eventId), // The eventId comes from the URL
     };
 
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
       // Send the POST request to the backend to create the ticket
-      const response = await fetch(`http://localhost:5000/create_ticket_description`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `http://localhost:5000/create_ticket_description`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newTicket),
         },
-        body: JSON.stringify(newTicket),
-      });
+      );
 
       const result = await response.json();
 
       if (response.ok) {
         // Ticket created successfully, add it to the list
-        setTickets([...tickets, {
-          id: result.ticket_desc_id,
-          name: result.name,
-          description: result.description,
-          price: result.price,
-          ticketlimit: result.ticketlimit,
-          eventid: result.eventid,
-        }]);
+        setTickets([
+          ...tickets,
+          {
+            id: result.ticket_desc_id,
+            name: result.name,
+            description: result.description,
+            price: result.price,
+            ticketlimit: result.ticketlimit,
+            eventid: result.eventid,
+          },
+        ]);
 
         // Reset the form
-        setTicketName('');
-        setTicketPrice('');
-        setTicketQuantity('');
-        setTicketDescription('');
+        setTicketName("");
+        setTicketPrice("");
+        setTicketQuantity("");
+        setTicketDescription("");
       } else {
-        setError(result.message || 'Failed to create ticket.');
+        setError(result.message || "Failed to create ticket.");
       }
     } catch (error) {
-      setError('An error occurred while creating the ticket.');
+      setError("An error occurred while creating the ticket.");
     } finally {
       setLoading(false);
     }
@@ -68,16 +74,16 @@ const TicketsPage = () => {
       <h2>Create Tickets for Event {eventId}</h2>
 
       {/* Error Message */}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
       {/* Ticket Creation Form */}
       <label className="tickets-label">Ticket Name: </label>
-        <input
-          type="text"
-          value={ticketName}
-          onChange={(e) => setTicketName(e.target.value)}
-          placeholder="Ticket Name"
-        />
+      <input
+        type="text"
+        value={ticketName}
+        onChange={(e) => setTicketName(e.target.value)}
+        placeholder="Ticket Name"
+      />
 
       <label className="tickets-label">Ticket Price:</label>
       <input
@@ -100,8 +106,12 @@ const TicketsPage = () => {
         onChange={(e) => setTicketDescription(e.target.value)}
         placeholder="Description"
       ></textarea>
-      <button className="tickets-button" onClick={handleCreateTicket} disabled={loading}>
-        {loading ? 'Creating...' : 'Create Ticket'}
+      <button
+        className="tickets-button"
+        onClick={handleCreateTicket}
+        disabled={loading}
+      >
+        {loading ? "Creating..." : "Create Ticket"}
       </button>
 
       {/* Created Tickets List */}
@@ -114,11 +124,11 @@ const TicketsPage = () => {
             <div
               key={ticket.id}
               style={{
-                border: '2px solid #ccc',
-                padding: '15px',
-                margin: '10px 0',
-                borderRadius: '10px',
-                backgroundColor: ticket.active ? '#e0f7fa' : '#fff', // Light blue if active
+                border: "2px solid #ccc",
+                padding: "15px",
+                margin: "10px 0",
+                borderRadius: "10px",
+                backgroundColor: ticket.active ? "#e0f7fa" : "#fff", // Light blue if active
               }}
             >
               <h4>{ticket.name}</h4>

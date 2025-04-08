@@ -12,7 +12,9 @@ const EventDashboard = () => {
   useEffect(() => {
     const fetchEventDetails = async () => {
       try {
-        const eventResponse = await fetch(`http://127.0.0.1:5000/events/${eventId}`);
+        const eventResponse = await fetch(
+          `http://127.0.0.1:5000/events/${eventId}`,
+        );
         const eventData = await eventResponse.json();
         setEvent(eventData); // Set the event data
       } catch (error) {
@@ -36,29 +38,51 @@ const EventDashboard = () => {
 
   return (
     <div>
-      {loading ? <p>Loading...</p> : event ? (
+      {loading ? (
+        <p>Loading...</p>
+      ) : event ? (
         <div className="event-details-dashboard">
           <div className="event-details-card">
             <div className="event-card-body">
               <div className="event-details-img">
-                <img className="event-img-dashboard" src={event.event_img} alt={event.eventname} />
+                <img
+                  className="event-img-dashboard"
+                  src={event.event_img}
+                  alt={event.eventname}
+                />
               </div>
               <div className="event-details-info">
-            <h2>{event.eventname}</h2>
-                <p><strong>Type:</strong> {event.event_type}</p>
-                <p><strong>Date:</strong> {event.eventdate}</p>
-                <p><strong>Location:</strong> {event.eventlocation}</p>
-                <p><strong>Description:</strong> {event.eventdescription}</p>
-                <a href={event.social_media_link} className="share-link">📸 {event.social_media_link}</a>
+                <h2>{event.eventname}</h2>
+                <p>
+                  <strong>Type:</strong> {event.event_type}
+                </p>
+                <p>
+                  <strong>Date:</strong> {event.eventdate}
+                </p>
+                <p>
+                  <strong>Location:</strong> {event.eventlocation}
+                </p>
+                <p>
+                  <strong>Description:</strong> {event.eventdescription}
+                </p>
+                <a href={event.social_media_link} className="share-link">
+                  📸 {event.social_media_link}
+                </a>
               </div>
             </div>
           </div>
 
           {/* Buttons with links */}
           <div className="side-menu">
-            <Link to={`/manage-ticketing/${eventId}`} className="menu-item">Manage Ticketing</Link>
-            <Link to={`/promotion/${eventId}`} className="menu-item">Promotion</Link>
-            <Link to={`/budgeting/${eventId}`} className="menu-item">Budgeting</Link>
+            <Link to={`/manage-ticketing/${eventId}`} className="menu-item">
+              Manage Ticketing
+            </Link>
+            <Link to={`/promotion/${eventId}`} className="menu-item">
+              Promotion
+            </Link>
+            <Link to={`/budgeting/${eventId}`} className="menu-item">
+              Budgeting
+            </Link>
           </div>
 
           {/* Dashboard for Analytics */}
@@ -107,5 +131,3 @@ const EventDashboard = () => {
 };
 
 export default EventDashboard;
-
-

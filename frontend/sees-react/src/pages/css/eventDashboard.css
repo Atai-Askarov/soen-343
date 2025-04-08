@@ -15,8 +15,8 @@
   border-radius: 15px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
-  margin-left:220px;
-  margin-right:20px;
+  margin-left: 220px;
+  margin-right: 20px;
 }
 
 .event-details-card h2 {
@@ -57,7 +57,7 @@
 
 .event-details-info a.share-link {
   font-size: 1rem;
-  color: #007BFF;
+  color: #007bff;
   text-decoration: none;
 }
 

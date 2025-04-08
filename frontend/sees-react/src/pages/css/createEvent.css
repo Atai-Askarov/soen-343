@@ -1,4 +1,4 @@
-.createEvent{
+.createEvent {
   max-width: 500px;
   margin: 50px auto;
   padding: 40px;
@@ -79,12 +79,12 @@ button:focus {
 }
 
 .location-btn.active {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
-  border-color: #4CAF50;
+  border-color: #4caf50;
 }
 
-.create-button{
+.create-button {
   background-color: red;
   color: white;
   border: none;

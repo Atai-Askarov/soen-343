@@ -3,9 +3,8 @@ import { useParams, Link } from "react-router-dom";
 import "./css/eventPage.css";
 import Chatbox from "../components/Chatbox.jsx";
 
-
 const Event = () => {
-  const { eventId } = useParams(); 
+  const { eventId } = useParams();
   const [event, setEvent] = useState(null);
   const [ticketDescriptions, setTicketDescriptions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,11 +13,15 @@ const Event = () => {
   useEffect(() => {
     const fetchEventDetails = async () => {
       try {
-        const eventResponse = await fetch(`http://127.0.0.1:5000/events/${eventId}`);
+        const eventResponse = await fetch(
+          `http://127.0.0.1:5000/events/${eventId}`,
+        );
         const eventData = await eventResponse.json();
         setEvent(eventData); // Set the event details
 
-        const ticketResponse = await fetch(`http://127.0.0.1:5000/ticket-descriptions/${eventId}`);
+        const ticketResponse = await fetch(
+          `http://127.0.0.1:5000/ticket-descriptions/${eventId}`,
+        );
         const ticketData = await ticketResponse.json();
         if (ticketData.ticket_descriptions) {
           setTicketDescriptions(ticketData.ticket_descriptions); // Set the ticket descriptions
@@ -42,17 +45,17 @@ const Event = () => {
     return <p>{error}</p>;
   }
 
-  return (  
+  return (
     <div className="event-container-page">
       <h1>Event Page</h1>
       {event ? (
         <div>
           <div className="event-thumbnail-page">
-              <img
-                src={event.event_img || "/images/default.jpg"} // Use the event image if available, otherwise use the default image
-                alt={event.event_img ? event.name : "Default event thumbnail"}
-              />
-           </div>
+            <img
+              src={event.event_img || "/images/default.jpg"} // Use the event image if available, otherwise use the default image
+              alt={event.event_img ? event.name : "Default event thumbnail"}
+            />
+          </div>
           <h1 className="event-name-page">{event.eventname}</h1>
           <p className="event-type-page">{event.event_type}</p>
           <h2 className="event-section-header">Date and Time</h2>
@@ -70,13 +73,28 @@ const Event = () => {
       <div>
         <h1>Ticket Options</h1>
         {ticketDescriptions.length > 0 ? (
-          <div className="ticket-list" style={{ display: "flex", flexDirection: "row", gap: "20px",contentAlign: "center" }}>
+          <div
+            className="ticket-list"
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: "20px",
+              contentAlign: "center",
+            }}
+          >
             {ticketDescriptions.map((ticket) => (
               <div key={ticket.id} className="ticket-card">
                 <h4>{ticket.name}</h4>
-                <p><strong>Price:</strong> ${ticket.price}</p>
-                <p><strong>Description:</strong> {ticket.description || "No description available"}</p>
-                <Link to={`/purchase/${ticket.id}`} className="btn">Purchase Ticket</Link>
+                <p>
+                  <strong>Price:</strong> ${ticket.price}
+                </p>
+                <p>
+                  <strong>Description:</strong>{" "}
+                  {ticket.description || "No description available"}
+                </p>
+                <Link to={`/purchase/${ticket.id}`} className="btn">
+                  Purchase Ticket
+                </Link>
               </div>
             ))}
           </div>
@@ -92,4 +110,3 @@ const Event = () => {
 };
 
 export default Event;
-
