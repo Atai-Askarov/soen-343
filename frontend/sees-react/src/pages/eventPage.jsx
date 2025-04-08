@@ -43,24 +43,24 @@ const Event = () => {
   }
 
   return (  
-    <div className="event-container">
+    <div className="event-container-page">
       <h1>Event Page</h1>
       {event ? (
         <div>
-          <div className="event-thumbnail">
+          <div className="event-thumbnail-page">
               <img
-                src={event.image || "/images/default.jpg"} // Use the event image if available, otherwise use the default image
-                alt={event.image ? event.name : "Default event thumbnail"}
+                src={event.event_img || "/images/default.jpg"} // Use the event image if available, otherwise use the default image
+                alt={event.event_img ? event.name : "Default event thumbnail"}
               />
            </div>
-          <h1 className="event-name">{event.eventname}</h1>
-          <p className="event-type">{event.event_type}</p>
+          <h1 className="event-name-page">{event.eventname}</h1>
+          <p className="event-type-page">{event.event_type}</p>
           <h2 className="event-section-header">Date and Time</h2>
-          <p className="event-date">{event.eventdate}</p>
+          <p className="event-date-page">{event.eventdate}</p>
           <h2 className="event-section-header">Event Location</h2>
-          <p className="event-location">{event.eventlocation}</p>
+          <p className="event-location-page">{event.eventlocation}</p>
           <h2 className="event-section-header">Event Description</h2>
-          <p className="event-description">{event.eventdescription}</p>
+          <p className="event-description-page">{event.eventdescription}</p>
         </div>
       ) : (
         <p>Event not found.</p>
@@ -70,12 +70,11 @@ const Event = () => {
       <div>
         <h1>Ticket Options</h1>
         {ticketDescriptions.length > 0 ? (
-          <div className="ticket-list">
+          <div className="ticket-list" style={{ display: "flex", flexDirection: "row", gap: "20px",contentAlign: "center" }}>
             {ticketDescriptions.map((ticket) => (
               <div key={ticket.id} className="ticket-card">
                 <h4>{ticket.name}</h4>
                 <p><strong>Price:</strong> ${ticket.price}</p>
-                <p><strong>Ticket Limit:</strong> {ticket.ticketlimit}</p>
                 <p><strong>Description:</strong> {ticket.description || "No description available"}</p>
                 <Link to={`/purchase/${ticket.id}`} className="btn">Purchase Ticket</Link>
               </div>

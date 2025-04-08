@@ -18,6 +18,9 @@ class Event(db.Model):
     organizerid = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     event_type = db.Column(db.String(50), nullable=False)
     social_media_link = db.Column(db.String(200), nullable=True)
+    event_img = db.Column(db.String(255), nullable=True, default="/images/default.jpg") 
+    venue_id = db.Column(db.Integer, db.ForeignKey('venue.id'), nullable=True)
+
 
     __table_args__ = (
         db.UniqueConstraint('eventname', 'eventdate', 'eventlocation', name='unique_event'),
@@ -26,6 +29,7 @@ class Event(db.Model):
     # Relationships for speaker and organizer
     speaker = db.relationship('User', foreign_keys=[speakerid], backref='events_as_speaker', lazy=True)
     organizer = db.relationship('User', foreign_keys=[organizerid], backref='events_as_organizer', lazy=True)
+    venue = db.relationship('Venue', backref='events', lazy=True)
 
     def __repr__(self):
         return f'<Event {self.eventname}>'
@@ -65,7 +69,7 @@ def create_event():
     
     required_fields = [
         'eventname', 'eventdate', 'eventstarttime', 'eventendtime',
-        'eventlocation', 'organizerid', 'event_type', 'speakerid'
+        'eventlocation', 'organizerid', 'event_type', 'speakerid', 'venue_id'
     ]
     
     if not all(field in data for field in required_fields):
@@ -91,7 +95,9 @@ def create_event():
             speakerid=data['speakerid'],
             organizerid=data['organizerid'],
             event_type=data['event_type'],
-            social_media_link=data.get('social_media_link')
+            social_media_link=data.get('social_media_link'),
+            event_img=data.get('event_img', "/images/default.jpg"),
+            venue_id=data.get('venue_id')
         )
         
         return jsonify({
@@ -133,7 +139,10 @@ def get_events():
                 "eventdescription": event.eventdescription,
                 "speakerid": event.speakerid,
                 "organizerid": event.organizerid,
-                "event_type": event.event_type
+                "event_type": event.event_type,
+                "event_img": event.event_img,
+                "social_media_link": event.social_media_link,
+                "venue_id": event.venue_id
             })
         
         # Return events as a dictionary, which Flask will automatically jsonify
@@ -164,7 +173,9 @@ def get_event_by_id(event_id):
             "speakerid": event.speakerid,
             "organizerid": event.organizerid,
             "event_type": event.event_type,
-            "social_media_link": event.social_media_link
+            "social_media_link": event.social_media_link,
+            "event_img": event.event_img,
+            "venue_id": event.venue_id
         }
         
         # Return the event data as a JSON response
@@ -173,55 +184,61 @@ def get_event_by_id(event_id):
     except Exception as e:
         return jsonify({"message": f"Error retrieving event: {str(e)}"}), 500
 
+def fetch_event_by_id(event_id):
+    try:
+        event = Event.query.get(event_id)
+        if not event:
+            return None
 
-# def register_for_event():
-#     """Register a user for an event using email"""
-#     data = request.get_json()
-    
-#     if 'email' not in data or 'eventid' not in data:
-#         return jsonify({"message": "Email and Event ID are required!"}), 400
-    
-#     try:
-#         user = User.query.filter_by(email=data['email']).first()
-#         if not user:
-#             return jsonify({"message": "User not found!"}), 404
-        
-#         event = Event.query.get(data['eventid'])
-#         if not event:
-#             return jsonify({"message": "Event not found!"}), 404
-        
-#         existing = db.session.query(Ticket).filter(
-#             Ticket.user_email == data['email'],
-#             Ticket.eventid == data['eventid']
-#         ).first()
-        
-#         if existing:
-#             return jsonify({
-#                 "message": "Already registered for this event!",
-#                 "ticketid": existing.ticketid
-#             }), 409
+        return {
+            "eventid": event.id,
+            "eventname": event.eventname,
+            "eventdate": event.eventdate,
+            "eventstarttime": event.eventstarttime,
+            "eventendtime": event.eventendtime,
+            "eventlocation": event.eventlocation,
+            "eventdescription": event.eventdescription,
+            "speakerid": event.speakerid,
+            "organizerid": event.organizerid,
+            "event_type": event.event_type,
+            "social_media_link": event.social_media_link,
+            "event_img": event.event_img,
+            "venue_id": event.venue_id
+        }
+    except Exception as e:
+        return {"message": f"Error retrieving event: {str(e)}"}, 500
 
-#         ticket = Ticket(
-#             eventid=data['eventid'],
-#             user_email=data['email'],
-#             userid=user.id
-#         )
+def get_events_by_organizer(organizer_id):
+    """Retrieve events for a specific organizer (user) from the database."""
+    try:
+        # Fetch events for the specific organizer from the database
+        events = Event.query.filter_by(organizerid=organizer_id).all()
         
-#         db.session.add(ticket)
-#         db.session.commit()
+        # If no events are found, return an empty list
+        if not events:
+            return {"message": "No events found for this organizer."}, 404
         
-#         return jsonify({
-#             "message": "Registration successful!",
-#             "ticketid": ticket.ticketid,
-#             "event": event.eventname,
-#             "user": user.username,
-#             "email": user.email,
-#             "timestamp": datetime.utcnow().isoformat()
-#         }), 201
+        # Serialize events into a list of dictionaries
+        events_list = []
+        for event in events:
+            events_list.append({
+                "eventid": event.id,  # Use 'id' instead of 'eventid'
+                "eventname": event.eventname,
+                "eventdate": event.eventdate,
+                "eventstarttime": event.eventstarttime,
+                "eventendtime": event.eventendtime,
+                "eventlocation": event.eventlocation,
+                "eventdescription": event.eventdescription,
+                "speakerid": event.speakerid,
+                "organizerid": event.organizerid,
+                "event_type": event.event_type,
+                "event_img": event.event_img,
+                "social_media_link": event.social_media_link,
+                "venue_id": event.venue_id
+            })
         
-#     except exc.IntegrityError as e:
-#         db.session.rollback()
-#         return jsonify({"message": "Database error during registration", "error": str(e)}), 500
-#     except Exception as e:
-#         db.session.rollback()
-#         return jsonify({"message": f"Registration error: {str(e)}"}), 500
+        # Return the events list as a dictionary, which Flask will automatically jsonify
+        return {"events": events_list}, 200
+        
+    except Exception as e:
+        return {"message": f"Error retrieving events for this organizer: {str(e)}"}, 500

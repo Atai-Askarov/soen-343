@@ -13,10 +13,8 @@ const localizer = momentLocalizer(moment);
 const Dashboard = () => {
   const [user, setUser] = useState(null);
   const [events, setEvents] = useState([]);
-  const [campaigns, setCampaigns] = useState([
-    { id: 1, name: "Event Newsletter", status: "Ongoing" },
-    { id: 2, name: "New Subscribers", status: "Done" },
-  ]);
+  const [selectedEventId, setSelectedEventId]= useState("");
+  const [campaigns, setCampaigns] = useState([ ]);
   const [loading, setLoading] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const popupRef = useRef(null);  // Reference to popup
@@ -33,7 +31,7 @@ const Dashboard = () => {
     if (user) {
       const fetchEvents = async () => {
         try {
-          const response = await fetch(`http://127.0.0.1:5000/events?organizerid=${user.id}`);
+          const response = await fetch(`http://127.0.0.1:5000/events/organizer/${user.id}`);
           const data = await response.json();
           if (data.events) {
             setEvents(data.events);
@@ -48,13 +46,52 @@ const Dashboard = () => {
     }
   }, [user]);
 
-  const handleAddCampaign = () => {
+  // Handle adding a campaign
+  const handleAddCampaign = async () => {
+    if (!selectedEventId) {
+      alert("Please select an event before adding a campaign.");
+      return;
+    }
+  
+    const selectedEvent = events.find(event => event.eventid === parseInt(selectedEventId));
+  
     const newCampaign = {
       id: campaigns.length + 1,
-      name: `New Campaign ${campaigns.length + 1}`,
-      status: "Pending",
+      name: `${selectedEvent.eventname}`,
+      status: "Sending",
+      eventId: selectedEvent.eventid,
     };
+  
     setCampaigns([...campaigns, newCampaign]);
+    setSelectedEventId(""); // Reset the selection
+  
+    try {
+      // Sending the eventId to the backend using a GET request
+      const response = await fetch(`http://localhost:5000/emailSending?eventId=${selectedEvent.eventid}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        console.log("✅ Email sent successfully!", data);
+        alert(`Email sent for event: ${selectedEvent.eventname}`);
+        setCampaigns((prevCampaigns) =>
+          prevCampaigns.map((c) =>
+            c.eventId === selectedEvent.eventid ? { ...c, status: "Sent" } : c
+          )
+        );
+      
+      } else {
+        console.error("❗ Error sending email:", data);
+        alert(`Failed to send email: ${data.message || "Unknown error"}`);
+      }
+    } catch (error) {
+      console.error("❗ Network error:", error);
+      alert("Failed to connect to the server.");
+    }
   };
 
   const eventList = events.map(event => ({
@@ -169,8 +206,25 @@ const Dashboard = () => {
 )}
 
 
+      {/* Campaign Section */}
       <div className="campaigns-section">
         <h2 className="section-header">My Email Campaigns</h2>
+        
+        {/* Event Selector for Campaign */}
+        <label>
+          Select an Event for New Campaign:
+          <select value={selectedEventId} onChange={(e) => setSelectedEventId(e.target.value)}>
+            <option value="">-- Select Event --</option>
+            {events.map((event) => (
+              <option key={event.eventid} value={event.eventid}>
+                {event.eventname}
+              </option>
+            ))}
+          </select>
+        </label>
+        <Button type="button" onClick={handleAddCampaign}>New Campaign</Button>
+
+        {/* Campaigns Table */}
         <table className="campaigns-table">
           <thead>
             <tr>
@@ -189,7 +243,6 @@ const Dashboard = () => {
         </table>
       </div>
 
-      <Button type="button" onClick={handleAddCampaign}>New Campaign</Button>
     </div>
   );
 };

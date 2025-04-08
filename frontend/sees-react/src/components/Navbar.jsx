@@ -27,7 +27,9 @@ const Navbar = () => {
         case "learner":
           return (
             <>
-              
+               <li className="nav-button">
+                <Link to="/home">Home</Link>
+              </li>
               <li className="nav-button">
                 <Link to="/myevents">My Events</Link>
               </li>
@@ -59,6 +61,9 @@ const Navbar = () => {
         case "speaker":
           return (
             <>
+               <li className="nav-button">
+                <Link to="/home">Home</Link>
+              </li>
 
               <li className="nav-button">
                 <Link to="/my-events">My Events</Link>
@@ -68,6 +73,7 @@ const Navbar = () => {
         case "admin":
           return (
             <>
+
               <li className="nav-button">
                 <Link to="/admin-dashboard">Admin Dashboard</Link>
               </li>
@@ -86,9 +92,11 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-left">
-        <div className="logo">Logo</div>
-        <div className="search-bar">
-          <input type="text" placeholder="Find Events" />
+        <div style={{ display: "flex", alignItems: "row" }}>
+        <div className="logo">
+        <img className="image" src="https://cdn-icons-png.flaticon.com/512/2938/2938245.png" alt="placeholder" />
+        </div>
+        <div className="pookie-bears">POOKIE <br></br> BEARS</div>
         </div>
       </div>
       <div className="navbar-right">
@@ -96,12 +104,10 @@ const Navbar = () => {
           {user ? (
             // If the user is logged in, show these options
             <>
-              <li className="nav-button">
-                <Link to="/home">Home</Link>
-              </li>
+
               {renderUserLinks()}
-              <li className="nav-button" onClick={handleLogout}>
-                <button className="logout-button">Logout</button>
+              <li className="nav-button" style={{alignItems:"center"}} onClick={handleLogout}>
+                Logout
               </li>
             </>
           ) : (
@@ -110,7 +116,7 @@ const Navbar = () => {
               <li className="nav-button">
                 <Link to="login">Login</Link>
               </li>
-              <li className="nav-button sign-up">
+              <li className="nav-button ">
                 <Link to="signup">Sign Up</Link>
               </li>
             </>
