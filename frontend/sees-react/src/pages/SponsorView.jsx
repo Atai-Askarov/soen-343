@@ -1,3 +1,4 @@
+// src/pages/SponsorView.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./css/eventDashboard.css";
@@ -45,12 +46,17 @@ const SponsorView = () => {
             </div>
             <div className="event-details-info">
               <h2>{ev.eventname}</h2>
-              <p><strong>Date:</strong> {ev.eventdate}</p>
-              <p><strong>Location:</strong> {ev.eventlocation}</p>
-              <p><strong>Description:</strong> {ev.eventdescription}</p>
+              <p>
+                <strong>Date:</strong> {ev.eventdate}
+              </p>
+              <p>
+                <strong>Location:</strong> {ev.eventlocation}
+              </p>
+              <p>
+                <strong>Description:</strong> {ev.eventdescription}
+              </p>
             </div>
           </div>
-
           <div style={{ marginTop: 15 }}>
             <button className="menu-item" onClick={() => goToSponsorshipPage(ev.eventid)}>
               Sponsor This Event

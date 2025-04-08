@@ -1,3 +1,4 @@
+# app.py
 from flask import Flask, jsonify, request
 from flask_migrate import Migrate
 from flask_cors import CORS, cross_origin
@@ -10,6 +11,9 @@ from sendEmail import Director, Builder, send_email
 from datetime import datetime
 import os
 from dotenv import load_dotenv
+
+# Import the sponsorship blueprint
+from sponsorship import sponsorship_bp
 
 # ───── ENV & APP INIT ─────────────────────────
 load_dotenv()
@@ -24,22 +28,12 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 migrate = Migrate(app, db)
 
-# ───── MODELS ─────────────────────────────────
-class Sponsorship(db.Model):
-    __tablename__ = 'sponsorships'
-    id = db.Column(db.Integer, primary_key=True)
-    event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)
-    sponsor_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    package = db.Column(db.String(50), nullable=False)
-
-    def __init__(self, event_id, sponsor_id, package):
-        self.event_id = event_id
-        self.sponsor_id = sponsor_id
-        self.package = package
+# Register the sponsorship blueprint (it handles /packages and /sponsorship routes)
+app.register_blueprint(sponsorship_bp)
 
 # ───── ROUTES ─────────────────────────────────
 @app.route("/")
-def hello_world():
+def home():
     return "<p>Event Registration System</p>"
 
 @app.route("/add_user", methods=["POST"])
@@ -118,32 +112,6 @@ def fetch_events_by_organizer(organizer_id):
 def login():
     return log_in()
 
-@app.route("/sponsorship", methods=["POST"])
-@cross_origin(origin='http://localhost:3000')
-def create_sponsorship():
-    data = request.get_json()
-    event_id = data.get("event_id")
-    sponsor_id = data.get("sponsor_id")
-    package = data.get("package")
-
-    if not all([event_id, sponsor_id, package]):
-        return jsonify({"message": "Champs manquants"}), 400
-
-    try:
-        existing = Sponsorship.query.filter_by(event_id=event_id, sponsor_id=sponsor_id).first()
-        if existing:
-            return jsonify({"message": "Vous sponsorisez déjà cet événement"}), 409
-
-        new_sponsorship = Sponsorship(event_id=event_id, sponsor_id=sponsor_id, package=package)
-        db.session.add(new_sponsorship)
-        db.session.commit()
-
-        return jsonify({"message": "Sponsorship enregistré ✅"}), 201
-
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"message": f"Erreur serveur : {str(e)}"}), 500
-
 @app.route("/emailSending", methods=["GET"])
 @cross_origin(origin='http://localhost:3000')
 def send_email_via_blast():
@@ -186,7 +154,7 @@ def send_email_via_blast():
         print(f"❌ Error in /emailSending: {e}")
         return jsonify({"error": str(e)}), 500
 
-# ───── MAIN ────────────────────────────────────
+# ───── MAIN ───────────────────────────────────
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
