@@ -1,10 +1,11 @@
 import Account from './Account.js';
+import Observer from './Observer/Observer.js';
 
 /**
  * Attendee - Abstract class for event attendees
  * Uses composition to encapsulate an Account object
  */
-class Attendee {
+class Attendee extends Observer{
     /**
      * Create a new Attendee
      * @param {Account} account - The associated account
