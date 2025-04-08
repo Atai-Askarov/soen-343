@@ -27,7 +27,7 @@ const Navbar = () => {
         case "learner":
           return (
             <>
-              <li className="nav-button">
+               <li className="nav-button">
                 <Link to="/home">Home</Link>
               </li>
               <li className="nav-button">
@@ -41,6 +41,7 @@ const Navbar = () => {
         case "sponsor":
           return (
             <>
+
               <li className="nav-button">
                 <Link to="/myevents">Sponsored Events</Link>
               </li>
@@ -60,7 +61,7 @@ const Navbar = () => {
         case "speaker":
           return (
             <>
-              <li className="nav-button">
+               <li className="nav-button">
                 <Link to="/home">Home</Link>
               </li>
 
@@ -72,6 +73,7 @@ const Navbar = () => {
         case "admin":
           return (
             <>
+
               <li className="nav-button">
                 <Link to="/admin-dashboard">Admin Dashboard</Link>
               </li>
@@ -91,16 +93,10 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="navbar-left">
         <div style={{ display: "flex", alignItems: "row" }}>
-          <div className="logo">
-            <img
-              className="image"
-              src="https://cdn-icons-png.flaticon.com/512/2938/2938245.png"
-              alt="placeholder"
-            />
-          </div>
-          <div className="pookie-bears">
-            POOKIE <br></br> BEARS
-          </div>
+        <div className="logo">
+        <img className="image" src="https://cdn-icons-png.flaticon.com/512/2938/2938245.png" alt="placeholder" />
+        </div>
+        <div className="pookie-bears">POOKIE <br></br> BEARS</div>
         </div>
       </div>
       <div className="navbar-right">
@@ -108,12 +104,9 @@ const Navbar = () => {
           {user ? (
             // If the user is logged in, show these options
             <>
+
               {renderUserLinks()}
-              <li
-                className="nav-button"
-                style={{ alignItems: "center" }}
-                onClick={handleLogout}
-              >
+              <li className="nav-button" style={{alignItems:"center"}} onClick={handleLogout}>
                 Logout
               </li>
             </>
@@ -135,3 +128,5 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+

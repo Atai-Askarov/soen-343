@@ -18,14 +18,15 @@
   scale: 0.06;
 }
 
-.pookie-bears {
+.pookie-bears{
   position: absolute;
   top: 15px;
   left: 80px;
   color: white;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: bold;
 }
+
 
 .navbar-right ul {
   display: flex;
@@ -59,7 +60,7 @@
   color: white;
 }
 
-.logout-button {
+.logout-button{
   text-decoration: none;
   color: black;
   background-color: white;

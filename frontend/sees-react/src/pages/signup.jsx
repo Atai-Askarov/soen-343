@@ -29,7 +29,7 @@ const SignUpPage = () => {
     const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
     if (!passwordRegex.test(password)) {
       alert(
-        "Password must be at least 8 characters long, contain at least one number, one lowercase and one uppercase letter.",
+        "Password must be at least 8 characters long, contain at least one number, one lowercase and one uppercase letter."
       );
       return;
     }

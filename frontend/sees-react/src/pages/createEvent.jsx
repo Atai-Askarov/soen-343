@@ -23,7 +23,7 @@ const CreateEvent = () => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const user = JSON.parse(storedUser);
-      setFormData((prevState) => ({
+      setFormData(prevState => ({
         ...prevState,
         organizerid: user.id, // Automatically set the organizer ID
       }));
@@ -32,9 +32,7 @@ const CreateEvent = () => {
     // Fetch speakers from the backend
     const fetchSpeakers = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:5000/users/by_role?role=speaker",
-        );
+        const response = await fetch("http://localhost:5000/users/by_role?role=speaker");
         const data = await response.json();
         if (response.ok) {
           setSpeakers(data.users); // Assuming the response contains the users array
@@ -62,34 +60,30 @@ const CreateEvent = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
-      [name]: value,
+      [name]: value
     }));
   };
 
   const handleLocationChange = (location) => {
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
-      location,
+      location
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (
-      formData.starttime &&
-      formData.endtime &&
-      formData.starttime > formData.endtime
-    ) {
+    if (formData.starttime && formData.endtime && formData.starttime > formData.endtime) {
       alert("Error: Start time cannot be later than end time.");
       return; // Stop form submission
     }
     try {
-      const response = await fetch("http://localhost:5000/create_event", {
-        method: "POST",
+      const response = await fetch('http://localhost:5000/create_event', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           eventname: formData.name,
@@ -103,6 +97,7 @@ const CreateEvent = () => {
           event_type: formData.event_type,
           social_media_link: formData.social_media_link,
           venue_id: formData.venue_id,
+
         }),
       });
 
@@ -124,11 +119,11 @@ const CreateEvent = () => {
           venue_id: "",
         });
       } else {
-        throw new Error(data.message || "Failed to create event");
+        throw new Error(data.message || 'Failed to create event');
       }
     } catch (error) {
       alert(`Error: ${error.message}`);
-      console.error("Submission error:", error);
+      console.error('Submission error:', error);
     }
   };
 
@@ -155,49 +150,49 @@ const CreateEvent = () => {
             value={formData.date}
             onChange={handleChange}
             required
-            min={new Date().toISOString().split("T")[0]}
+            min={new Date().toISOString().split("T")[0]} 
           />
         </label>
 
         <label>
-          Start Time:
-          <input
-            type="time"
-            name="starttime"
-            value={formData.starttime}
-            onChange={handleChange}
-            step="1" // Allows seconds
-            pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}" // Ensures HH:MM:SS format
-          />
-        </label>
+  Start Time:
+  <input
+    type="time"
+    name="starttime"
+    value={formData.starttime}
+    onChange={handleChange}
+    step="1" // Allows seconds
+    pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}" // Ensures HH:MM:SS format
+  />
+</label>
 
-        <label>
-          End Time:
-          <input
-            type="time"
-            name="endtime"
-            value={formData.endtime}
-            onChange={handleChange}
-            step="1"
-            pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}"
-            min={formData.starttime}
-          />
-        </label>
+<label>
+  End Time:
+  <input
+    type="time"
+    name="endtime"
+    value={formData.endtime}
+    onChange={handleChange}
+    step="1"
+    pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}"
+    min={formData.starttime}
+  />
+</label>
 
         <div className="form-group">
           <label>Location:</label>
           <div className="location-buttons">
             <button
               type="button"
-              className={`location-btn ${formData.location === "Montreal" ? "active" : ""}`}
-              onClick={() => handleLocationChange("Montreal")}
+              className={`location-btn ${formData.location === 'Montreal' ? 'active' : ''}`}
+              onClick={() => handleLocationChange('Montreal')}
             >
               Montreal
             </button>
             <button
               type="button"
-              className={`location-btn ${formData.location === "Laval" ? "active" : ""}`}
-              onClick={() => handleLocationChange("Laval")}
+              className={`location-btn ${formData.location === 'Laval' ? 'active' : ''}`}
+              onClick={() => handleLocationChange('Laval')}
             >
               Laval
             </button>
@@ -223,7 +218,7 @@ const CreateEvent = () => {
             required
           >
             <option value="">Select a Speaker to Invite</option>
-            {speakers.map((speaker) => (
+            {speakers.map(speaker => (
               <option key={speaker.id} value={speaker.id}>
                 {speaker.username}
               </option>
@@ -234,19 +229,20 @@ const CreateEvent = () => {
         <label>
           Venue:
           <select
-            name="venue_id"
-            value={formData.venue_id}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select a Venue</option>
-            {venues.map((venue) => (
-              <option key={venue.id} value={venue.id}>
-                {`${venue.name} — ${venue.address} | Capacity: ${venue.capacity} | Rate: $${venue.price_per_hour}/hr`}
-              </option>
-            ))}
-          </select>
+              name="venue_id"
+              value={formData.venue_id}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select a Venue</option>
+              {venues.map(venue => (
+                <option key={venue.id} value={venue.id}>
+                  {`${venue.name} — ${venue.address} | Capacity: ${venue.capacity} | Rate: $${venue.price_per_hour}/hr`}
+                </option>
+              ))}
+            </select>
         </label>
+
 
         <label>
           Event Type:
@@ -256,7 +252,7 @@ const CreateEvent = () => {
             onChange={handleChange}
             required
           >
-            {eventTypes.map((type) => (
+            {eventTypes.map(type => (
               <option key={type} value={type}>
                 {type.charAt(0).toUpperCase() + type.slice(1)}
               </option>

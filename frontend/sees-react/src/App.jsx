@@ -28,16 +28,11 @@ const App = () => {
               <Route path="/Dashboard" element={<Dashboard />} />
               <Route path="/eventpage/:eventId" element={<Event />} />
               <Route path="/home" element={<Home />} />
-              <Route
-                path="/eventDashboard/:eventId"
-                element={<EventDashboard />}
-              />
-              <Route
-                path="/manage-ticketing/:eventId"
-                element={<TicketsPage />}
-              />
+              <Route path="/eventDashboard/:eventId" element={<EventDashboard />} />
+              <Route path="/manage-ticketing/:eventId" element={<TicketsPage />} />
               <Route path="/promotion/:eventId" element={<TicketsPage />} />
             </Routes>
+
           </main>
           <Footer />
         </div>

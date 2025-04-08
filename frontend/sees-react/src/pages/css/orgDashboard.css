@@ -53,8 +53,8 @@
 }
 
 .calendar-section {
-  width: 100%; /* Make sure the calendar section is responsive */
-  overflow-x: auto; /* Allow horizontal scroll if needed */
+  width: 100%;  /* Make sure the calendar section is responsive */
+  overflow-x: auto;  /* Allow horizontal scroll if needed */
 }
 
 .react-big-calendar {
@@ -62,11 +62,11 @@
 }
 
 .rbc-btn-group button {
-  font-size: 12px; /* Make the text smaller */
-  padding: 5px 10px; /* Reduce padding for smaller buttons */
-  margin: 2px; /* Optional: add a little spacing between buttons */
-  border-radius: 3px; /* Optional: add rounded corners */
-  width: 70px;
+  font-size: 12px;  /* Make the text smaller */
+  padding: 5px 10px;  /* Reduce padding for smaller buttons */
+  margin: 2px;  /* Optional: add a little spacing between buttons */
+  border-radius: 3px;  /* Optional: add rounded corners */
+  width: 70px; 
 }
 
 .event-popup {
