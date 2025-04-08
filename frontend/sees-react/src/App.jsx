@@ -18,6 +18,8 @@ import EventDashboard from "./pages/eventDashboard";
 import TicketsPage from "./pages/ticketsPage";
 import './css/normalize.css';
 import './css/global.css';
+import SponsorView from "./pages/SponsorView";
+import SponsorPackages from "./pages/SponsorPackages";
 const App = () => {
   return (
     <BrowserRouter>
@@ -39,7 +41,8 @@ const App = () => {
               <Route path="/eventDashboard/:eventId" element={<EventDashboard />} />
               <Route path="/manage-ticketing/:eventId" element={<TicketsPage />} />
               <Route path="/promotion/:eventId" element={<TicketsPage />} />
-              <Route path = "/purchase/${ticket.id}" element =  {<Checkout/>}/>
+              <Route path="/sponsor-view" element={<SponsorView />} />
+              <Route path="/sponsor/:eventId" element={<SponsorPackages />} />
             </Routes>
           </main>
           <Footer />
