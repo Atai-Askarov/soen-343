@@ -1,4 +1,3 @@
-// src/App.jsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
@@ -35,6 +34,7 @@ const App = () => {
               <Route path="/promotion/:eventId" element={<TicketsPage />} />
               <Route path="/budget/:eventId" element={<Budget />} />
             </Routes>
+
           </main>
           <Footer />
         </div>

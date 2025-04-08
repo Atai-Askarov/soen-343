@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 from flask_migrate import Migrate
 from flask_cors import CORS, cross_origin
-from account import db, sign_in, get_users, log_in,get_users_by_role, get_all_user_emails
+from account import db, sign_in, get_users, log_in,get_users_by_role, get_all_user_emails, User
 from event import create_event, get_events, get_event_by_id,get_events_by_organizer, fetch_event_by_id #register_for_event
 from ticketdescription import create_ticket_description, get_ticket_desc, get_ticket_descriptions_by_event
 from venue import create_venue, get_venues, get_venue_by_id
@@ -11,20 +11,22 @@ from flask import Flask, request, jsonify
 from sendEmail import Director, Builder, send_email
 import os
 from dotenv import load_dotenv
-load_dotenv()
+from flask_socketio import SocketIO, join_room, leave_room, emit
+from dotenv import load_dotenv
 
+load_dotenv()
 app = Flask(__name__)
 CORS(app, support_credentials=True)
 
 
 # Configure CORS to allow all routes from your React app
-#CORS(app, resources={
-   # r"/*": {
-    #    "origins": ["http://localhost:3000"],
-     #   "methods": ["GET", "POST", "PUT", "DELETE"],
-      #  "allow_headers": ["Content-Type"]
-    #}
-#})
+CORS(app, resources={
+   r"/*": {
+       "origins": ["http://localhost:3000"],
+       "methods": ["GET", "POST", "PUT", "DELETE"],
+       "allow_headers": ["Content-Type"]
+    }
+})
 
 # Database Configuration
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://sql5770341:mP8Mx9h2IU@sql5.freesqldatabase.com:3306/sql5770341"
@@ -199,7 +201,73 @@ def send_email_via_blast():
 
     
 
+# SocketIO Event Handlers for Real-Time Chat
+socketio = SocketIO(app, cors_allowed_origins="http://localhost:3000")
+
+@socketio.on('connect')
+def handle_connect():
+    print('Client connected:', request.sid)
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('Client disconnected:', request.sid)
+
+@socketio.on('join')
+def handle_join(data):
+    room = data['room']
+    user_id = data.get('userId')
+    username = data.get('username', 'Guest')
+    join_room(room)
+    with app.app_context():
+        user = db.session.query(User).filter_by(id=user_id).first()
+        if user:
+            # Validate username
+            if user.username != username:
+                print(f'Username mismatch for user ID {user_id}: expected {user.username}, got {username}')
+                emit('receiveMessage', {'user': 'System', 'message': 'Invalid user'}, room=room)
+                return
+            print(f'Client {request.sid} (User ID: {user_id}, Username: {username}) joined room: {room}')
+            emit('receiveMessage', {'user': 'System', 'message': f'{username} has joined the room!'}, room=room)
+        else:
+            print(f'Client (invalid user ID: {user_id}) joined room: {room}')
+            emit('receiveMessage', {'user': 'System', 'message': 'A user has joined the room!'}, room=room)
+
+@socketio.on('leave')
+def handle_leave(data):
+    room = data['room']
+    user_id = data.get('userId')
+    username = data.get('username', 'Guest')
+    leave_room(room)
+    with app.app_context():
+        user = db.session.query(User).filter_by(id=user_id).first()
+        if user and user.username == username:
+            print(f'Client {request.sid} (User ID: {user_id}, Username: {username}) left room: {room}')
+            emit('receiveMessage', {'user': 'System', 'message': f'{username} has left the room!'}, room=room)
+        else:
+            print(f'Client (invalid user ID: {user_id}) left room: {room}')
+            emit('receiveMessage', {'user': 'System', 'message': 'A user has left the room!'}, room=room)
+
+@socketio.on('sendMessage')
+def handle_send_message(data):
+    room = data['room']
+    message = data['message']
+    user_id = data.get('userId')
+    username = data.get('username', 'Guest')
+    with app.app_context():
+        user = db.session.query(User).filter_by(id=user_id).first()
+        if user:
+            # Validate username
+            if user.username != username:
+                print(f'Username mismatch for user ID {user_id}: expected {user.username}, got {username}')
+                emit('receiveMessage', {'user': 'System', 'message': 'Invalid user'}, room=room)
+                return
+            print(f'Message from {username} in room {room}: {message}')
+            emit('receiveMessage', {'user': username, 'message': message}, room=room)
+        else:
+            print(f'Message from invalid user ID {user_id} in room {room}: {message}')
+            emit('receiveMessage', {'user': 'Guest', 'message': message}, room=room)
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()  # Create tables if they don't exist
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    socketio.run(app, debug=True, host="0.0.0.0", port=5000)

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import "./css/eventPage.css";
+import Chatbox from "../components/Chatbox.jsx";
+
 
 const Event = () => {
   const { eventId } = useParams(); 
@@ -40,8 +42,9 @@ const Event = () => {
     return <p>{error}</p>;
   }
 
-  return (
+  return (  
     <div className="event-container-page">
+      <h1>Event Page</h1>
       {event ? (
         <div>
           <div className="event-thumbnail-page">
@@ -80,6 +83,9 @@ const Event = () => {
         ) : (
           <p>No ticketing options available for this event.</p>
         )}
+      </div>
+      <div>
+        <Chatbox eventId={eventId} />
       </div>
     </div>
   );

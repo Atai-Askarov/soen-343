@@ -57,7 +57,6 @@ const Home = () => {
         <p className="home-image-text-subtitle">Your Event Management Platform </p>
       </div>
       <div className="content">
-
         {user ? (
           <div>
             <h1>Welcome back, {user.username}!</h1>
