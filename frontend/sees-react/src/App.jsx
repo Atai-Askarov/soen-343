@@ -1,4 +1,3 @@
-// src/App.jsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
@@ -13,6 +12,7 @@ import Event from "./pages/eventPage";
 import LandingPage from "./pages/LandingPage";
 import EventDashboard from "./pages/eventDashboard";
 import TicketsPage from "./pages/ticketsPage";
+
 const App = () => {
   return (
     <Router>
@@ -32,6 +32,7 @@ const App = () => {
               <Route path="/manage-ticketing/:eventId" element={<TicketsPage />} />
               <Route path="/promotion/:eventId" element={<TicketsPage />} />
             </Routes>
+
           </main>
           <Footer />
         </div>

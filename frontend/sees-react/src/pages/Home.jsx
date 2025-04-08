@@ -45,7 +45,6 @@ const Home = () => {
       </div>
       <div className="content">
         <h1>Upcoming Events</h1>
-
         {user ? (
           <div>
             <p>Welcome, {user.username}!</p>
