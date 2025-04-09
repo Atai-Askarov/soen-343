@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaTag, FaUserTie, FaLinkedin } from 'react-icons/fa';
 import EventQuestionsSection from '../components/EventAttendee/EventQuestionsSection';
+import EventHeader from '../components/EventAttendee/EventHeader';
+import EventSidebar from '../components/EventAttendee/EventSideBar';
 import './css/eventPageAttendee.css';
 
 const EventPage = () => {
@@ -22,6 +23,7 @@ const EventPage = () => {
     }
   }, []);
   
+  // Fetch event details
   useEffect(() => {
     const fetchEventDetails = async () => {
       setLoading(true);
@@ -72,16 +74,6 @@ const EventPage = () => {
     }
   }, [id, user, event]);
   
-  // Format date for display
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString();
-  };
-  
-  // Format time for display
-  const formatTime = (dateTimeString) => {
-    return new Date(dateTimeString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  };
-  
   if (loading) {
     return (
       <div className="event-page-container">
@@ -105,80 +97,29 @@ const EventPage = () => {
     );
   }
   
-  const isEventUpcoming = new Date(event.eventdate) > new Date();
-  
   return (
     <div className="event-page-container">
-      {/* Header and main content remain unchanged */}
-      <div className="event-header">
-        <div className="header-image" 
-          style={{backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url(${event.event_img || 'https://via.placeholder.com/1200x400?text=Event+Banner'})`}}>
-          <div className="header-content">
-            <h1>{event.eventname}</h1>
-            <div className="event-status-badge">
-              {isEventUpcoming ? 'Upcoming Event' : 'Past Event'}
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Event Header */}
+      <EventHeader event={event} />
       
       <div className="event-content">
         <div className="event-main">
-          {/* Main content remains unchanged */}
+          {/* Main content area */}
           <div className="event-detail-card">
-            {/* Event details remain unchanged */}
+            {/* Event details - could be further modularized if desired */}
           </div>
           
+          {/* Q&A Section */}
           <EventQuestionsSection eventId={id} />
         </div>
         
-        <div className="event-sidebar">
-          <div className="organizer-card">
-            <h3>Organized By</h3>
-            <div className="organizer-info">
-              <span>Organizer #{event.organizerid}</span>
-            </div>
-          </div>
-          
-          {event.social_media_link && (
-            <div className="social-card">
-              <h3>Connect</h3>
-              <a href={event.social_media_link} target="_blank" rel="noopener noreferrer" className="social-link">
-                Event Social Media
-              </a>
-            </div>
-          )}
-          
-          {/* New section for similar interest attendees */}
-          {user && (
-            <div className="similar-interests-card">
-              <h3>People With Similar Interests</h3>
-              
-              {loadingSimilar ? (
-                <div className="loading-similar">
-                  <div className="spinner-small"></div>
-                  <p>Finding similar attendees...</p>
-                </div>
-              ) : similarAttendees.length === 0 ? (
-                <p className="no-similar">No other attendees with similar interests found.</p>
-              ) : (
-                <div className="similar-attendees-list">
-                  {similarAttendees.map(attendee => (
-                    <div key={attendee.id} className="similar-attendee">
-                      <div className="attendee-info">
-                        <span className="attendee-name">{attendee.username}</span>
-                        <span className="attendee-interest">{attendee.sharedInterest}</span>
-                      </div>
-                      <button className="linkedin-btn" title="Connect on LinkedIn">
-                        <FaLinkedin className="linkedin-icon" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+        {/* Sidebar with organizer info and similar interests */}
+        <EventSidebar 
+          event={event} 
+          user={user} 
+          loadingSimilar={loadingSimilar} 
+          similarAttendees={similarAttendees} 
+        />
       </div>
     </div>
   );
