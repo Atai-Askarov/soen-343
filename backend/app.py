@@ -5,7 +5,7 @@ from account import db, sign_in, get_users, log_in,get_users_by_role, get_all_us
 from event import create_event, get_events, get_event_by_id,get_events_by_organizer, fetch_event_by_id #register_for_event
 from ticketdescription import create_ticket_description, get_ticket_desc, get_ticket_descriptions_by_event
 from venue import create_venue, get_venues, get_venue_by_id
-from tickets import get_tickets, create_ticket
+from tickets import get_tickets, get_tickets_by_user, create_ticket
 from budget_items import create_budget_item, get_budget_items_by_event, delete_budget_item
 from flask import Flask, request, jsonify
 from sendEmail import Director, Builder, send_email
@@ -174,7 +174,13 @@ def event_by_id(event_id):
 def get_all_tickets():
     return get_tickets()
 
-@app.route("/get_ticket_desc", methods=["GET"])
+@app.route('/get_tickets_by_user/<int:user_id>', methods=['GET'])
+@cross_origin(origin='http://localhost:3000')
+def get_tickets_by_user_route(user_id):
+    return get_tickets_by_user(user_id)
+
+
+@app.route('/get_ticket_desc', methods=['GET'])
 @cross_origin(origin='http://localhost:3000')
 def fetch_ticket_descriptions():
     return get_ticket_desc()
@@ -278,6 +284,8 @@ def fetch_budget_items_by_event(event_id):
 @cross_origin(origin='http://localhost:3000')
 def delete_budget_item_route(item_id):
     return delete_budget_item(item_id)
+
+
 
 @app.route("/login", methods=["POST"])
 @cross_origin(origin='http://localhost:3000')
