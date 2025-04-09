@@ -1,5 +1,5 @@
 /* Container for each event */
-.event-container {
+.home-event-container {
     border-radius: 15px; /* Rounded edges */
     margin: 20px 0; /* Space between events */
     padding: 15px;
@@ -15,11 +15,11 @@
   }
   
   /* Hover effect */
-  .event-container:hover {
+  .home-event-container:hover {
     transform: translateY(-5px) scale(1.05);
 }
 
-.event-container::after {
+.home-event-container::after {
     content: ""; 
     position: absolute;
     top: 0;
@@ -29,13 +29,13 @@
     background: rgba(0, 0, 0, 0); /* Transparent by default */
 }
 
-.event-container:hover::after {
+.home-event-container:hover::after {
     background: rgba(0, 0, 0, 0.4); /* Slight dark overlay on hover */
 }
 
   
   /* Event name */
-  .event-container .event-name {
+  .home-event-container .home-event-name {
     position: absolute; /* Position content above the image */
     bottom: 100px; /* Align the text to the bottom */
     color: white;
@@ -44,17 +44,17 @@
     text-align: start;
   }
 
-  .event-container:hover .event-name {
+  .home-event-container:hover .home-event-name {
     position: absolute;
     top: 10px;
   }
-  .event-description,
-  .event-speaker,
-  .event-type{
+  .home-event-description,
+  .home-event-speaker,
+  .home-event-type{
     opacity: 0;
   }
 
-  .event-container:hover .event-type {
+  .home-event-container:hover .home-event-type {
     position: absolute;
     bottom: 90px; /* Align the text to the bottom */
     color: white;
@@ -64,17 +64,17 @@
     opacity: 1; /* Make it visible on hover */}
 
 
-  .event-container:hover .event-description {
+  .home-event-container:hover .home-event-description {
     position: absolute;
-    bottom: 160px; /* Align the text to the bottom */
+    top: 35%; /* Align the text to the bottom */
     text-align: start;
     color: white;
-    padding: 5px;
+    padding: 0px;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8); /* Add a little shadow for better readability */
     z-index: 2; /* Make sure it's above other content */
     opacity: 1; /* Make it visible on hover */}
 
-    .event-container:hover .event-speaker {
+    .home-event-container:hover .home-event-speaker {
       position: absolute;
       bottom: 50px; /* Align the text to the bottom */
       color: white;
@@ -86,7 +86,7 @@
 
 
   /* Styling for event type, date, and location */
-  .event-location {
+  .home-event-location {
     position: absolute;
     bottom: 50px; /* Align the text to the bottom */
     color: white;
@@ -95,12 +95,12 @@
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8); /* Add a little shadow for better readability */
     z-index: 2;
   }
-  .event-container:hover .event-location {
+  .home-event-container:hover .home-event-location {
     position: absolute;
     top: 80px;
   }
 
-  .event-date {
+  .home-event-date {
     position: absolute;
     bottom: 10px; /* Align the text to the bottom */
     color: white;
@@ -109,7 +109,7 @@
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8); /* Add a little shadow for better readability */
     z-index: 2;
   }
-  .event-container:hover .event-date {
+  .home-event-container:hover .home-event-date {
     position: absolute;
     top: 120px;
   }

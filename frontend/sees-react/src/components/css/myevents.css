@@ -1,0 +1,79 @@
+.my-events {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+.events-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;  /* Space between each event item */
+}
+
+.event-item {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: 40%;
+    width: 60%;
+}
+
+.event-content {
+    display: flex;
+    gap: 20px;  /* Space between the image, event info, and ticket info */
+}
+
+.event-image-div {
+    position: relative;
+    width: 30%;  
+    height: 200px;    /* Ensures the div takes up the full width of its parent */
+    overflow: hidden; /* Hides any part of the image that exceeds the div's bounds */
+    border-radius: 20px; /* Optional: to round the corners of the container */
+}
+
+.event-image {
+    width: 100%;      /* Ensures the image takes up the full width of the div */
+    height: 100%;     /* Ensures the image takes up the full height of the div */
+    object-fit: cover; /* Makes the image cover the div while maintaining the aspect ratio */
+    object-position: center; /* Optional: centers the image if it is cropped */
+}
+.event-details {
+    flex: 1;  /* Allow event details to take up remaining space */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: left;
+}
+
+.ticket-info {
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 8px;
+    width: 200px;
+    flex-shrink: 0;  /* Prevent shrinking of ticket info */
+}
+
+.ticket-info h3 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.ticket-info p {
+    margin: 5px 0;
+    font-size: 1em;
+}
+
+.event-details h4 {
+    margin-bottom: 10px;
+}
+
+.event-details p {
+    margin: 5px 0;
+}
+
+.event-details strong {
+    font-weight: bold;
+}

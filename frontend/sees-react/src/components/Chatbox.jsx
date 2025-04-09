@@ -131,7 +131,7 @@ const Chatbox = () => {
           <p>Logged in as: {user?.username || 'Unknown'}</p>
         </div>
           {messages.map((msg, index) => (
-            <div key={index}>
+            <div className="chat-messages" key={index}>
               <strong>{msg.user}:</strong> {msg.message}
             </div>
           ))}
