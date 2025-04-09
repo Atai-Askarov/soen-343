@@ -15,6 +15,7 @@ import LandingPage from "./pages/LandingPage";
 import EventDashboard from "./pages/eventDashboard";
 import TicketsPage from "./pages/ticketsPage";
 import Budget from "./pages/budget";
+import MyEventsLearner from "./pages/myEventsLearner";
 import ManageEvents from "./pages/ManageEvents"
 import EventDetail from './pages/EventDetails';
 import ReviewEvent from "./pages/ReviewEvent";
@@ -48,6 +49,8 @@ const App = () => {
               <Route path="/sponsor/:eventId" element={<SponsorPackages />} />
               <Route path="/event-details/:id" element={<EventDetail />} />
               <Route path="/review-event/:commandId" element={<ReviewEvent />} />
+
+              <Route path="/myevents" element={<MyEventsLearner />} />
 
             </Routes>
 

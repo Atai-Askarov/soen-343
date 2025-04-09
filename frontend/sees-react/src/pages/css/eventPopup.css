@@ -66,10 +66,10 @@
 
   .event-container:hover .event-description {
     position: absolute;
-    bottom: 160px; /* Align the text to the bottom */
+    top: 35%; /* Align the text to the bottom */
     text-align: start;
     color: white;
-    padding: 5px;
+    padding: 0px;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8); /* Add a little shadow for better readability */
     z-index: 2; /* Make sure it's above other content */
     opacity: 1; /* Make it visible on hover */}
