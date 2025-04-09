@@ -65,7 +65,7 @@ const TicketsPage = () => {
 
   return (
     <div className="ticketsPage">
-      <h2>Create Tickets for Event {eventId}</h2>
+      <h2>Create Tickets Descriptions{eventId}</h2>
 
       {/* Error Message */}
       {error && <p style={{ color: 'red' }}>{error}</p>}

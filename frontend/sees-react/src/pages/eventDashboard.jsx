@@ -74,11 +74,11 @@ const EventDashboard = () => {
                 <img className="event-img-dashboard" src={event.event_img} alt={event.eventname} />
               </div>
               <div className="event-details-info">
-                <h2>{event.eventname}</h2>
-                <p><strong>Type:</strong> {event.event_type}</p>
-                <p><strong>Date:</strong> {event.eventdate}</p>
-                <p><strong>Location:</strong> {event.eventlocation}</p>
-                <p><strong>Description:</strong> {event.eventdescription}</p>
+            <h2>{event.eventname}</h2>
+                <p><strong>Type:</strong> {event.event_type}<br></br>
+                <strong>Date:</strong> {event.eventdate}<br></br>
+                <strong>Location:</strong> {event.eventlocation}<br></br>
+                <strong>Description:</strong> {event.eventdescription}</p>
                 <a href={event.social_media_link} className="share-link">📸 {event.social_media_link}</a>
               </div>
             </div>
@@ -86,9 +86,11 @@ const EventDashboard = () => {
 
           {/* Buttons with links */}
           <div className="side-menu">
+          <Link to={`/eventDashboard/${eventId}`} className="menu-item">Analytics</Link>
             <Link to={`/manage-ticketing/${eventId}`} className="menu-item">Manage Ticketing</Link>
             <Link to={`/promotion/${eventId}`} className="menu-item">Promotion</Link>
-            <Link to={`/budgeting/${eventId}`} className="menu-item">Budgeting</Link>
+            <Link to={`/budget/${eventId}`} className="menu-item">Budgeting</Link>
+            <Link to={`/sponsorships/${eventId}`} className="menu-item">Sponsorships</Link>
           </div>
 
           {/* Dashboard for Analytics */}

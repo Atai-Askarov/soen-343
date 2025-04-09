@@ -106,18 +106,18 @@ const Navbar = () => {
             <>
 
               {renderUserLinks()}
-              <li className="nav-button" style={{alignItems:"center"}} onClick={handleLogout}>
-                Logout
+              <li className="logout-button" style={{alignItems:"center", color: "white"}} onClick={handleLogout}>
+                LOGOUT
               </li>
             </>
           ) : (
             // If the user is not logged in, show these options
             <>
               <li className="nav-button">
-                <Link to="login">Login</Link>
+                <Link to="login">LOGIN</Link>
               </li>
               <li className="nav-button ">
-                <Link to="signup">Sign Up</Link>
+                <Link to="signup">SIGN UP</Link>
               </li>
             </>
           )}
