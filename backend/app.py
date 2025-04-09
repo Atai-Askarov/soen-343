@@ -1,8 +1,9 @@
+from datetime import datetime
 from flask import Flask, jsonify
 from flask_migrate import Migrate
 from flask_cors import CORS, cross_origin
 from account import db, sign_in, get_users, log_in,get_users_by_role, get_all_user_emails, get_user_by_id
-from event import create_event, get_events, get_event_by_id,get_events_by_organizer, fetch_event_by_id #register_for_event
+from event import create_event, get_events, get_event_by_id,get_events_by_organizer, fetch_event_by_id, update_event, delete_event #register_for_event
 from ticketdescription import create_ticket_description, get_ticket_desc, get_ticket_descriptions_by_event
 from venue import create_venue, get_venues
 from tickets import get_tickets
@@ -70,6 +71,11 @@ def get_user_by_id_route(user_id):
 @cross_origin(origin='http://localhost:3000')
 def event_by_id(event_id):
     return get_event_by_id(event_id)
+
+@app.route('/events/<int:event_id>', methods=['PUT'])
+@cross_origin(origin='http://localhost:3000')
+def update_events(event_id):
+    return update_event(event_id)
 
 
 @app.route('/get_tickets', methods=['GET'])
@@ -180,6 +186,11 @@ def send_email_via_blast():
     except Exception as e:
         print(f"❌ Error in /emailSending: {e}")
         return jsonify({"error": str(e)}), 500
+
+@app.route('/events/<int:event_id>', methods=['DELETE'])
+@cross_origin(origin='http://localhost:3000')
+def delete_events(event_id):
+    return delete_event(event_id)
 
 
     

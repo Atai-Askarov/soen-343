@@ -10,9 +10,137 @@ const EventDashboard = () => {
   const [user, setUser] = useState(null); // State to hold the user data
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
-
+  const eventTypes = ["workshop", "webinar", "conference", "seminar"];
+  const getTimeInputValue = (dateStr, timeStr) => {
+    if (!dateStr || !timeStr) return ""; // early return for invalid values
+  
+    const combined = `${dateStr}T${timeStr}`;
+    const d = new Date(combined);
+  
+    if (isNaN(d.getTime())) return ""; // invalid date object
+  
+    return d.toISOString().split("T")[1].slice(0, 8);
+  };
+  
   const handleSave = async () => {
-  }
+    console.log("Edited Event before validation:", editedEvent);
+  
+    const normalizeDate = (input) => {
+      const date = new Date(input);
+      if (isNaN(date.getTime())) return null;
+      return date.toISOString().split("T")[0]; // "YYYY-MM-DD"
+    };
+  
+    const normalizeDateTime = (input) => {
+      const date = new Date(input);
+      if (isNaN(date.getTime())) return null;
+      return date.toISOString().split(".")[0]; // "YYYY-MM-DDTHH:MM:SS"
+    };
+  
+    const requiredFields = {
+      eventname: editedEvent.eventname,
+      event_type: editedEvent.event_type,
+      eventdate: editedEvent.eventdate,
+      eventstarttime: editedEvent.eventstarttime,
+      eventendtime: editedEvent.eventendtime,
+      eventlocation: editedEvent.eventlocation,
+      eventdescription: editedEvent.eventdescription,
+      social_media_link: editedEvent.social_media_link
+    };
+  
+    const emptyFields = Object.entries(requiredFields).filter(
+      ([_, value]) => !value || String(value).trim() === ""
+    );
+  
+    if (emptyFields.length > 0) {
+      const fieldNames = emptyFields.map(([key]) => key).join(", ");
+      console.warn(`Blocked save — missing fields: ${fieldNames}`);
+      alert(`Please fill in the required fields: ${fieldNames}`);
+      return;
+    }
+  
+    // Normalize date and time
+    const normalizedDate = normalizeDate(editedEvent.eventdate);
+    const normalizedStart = normalizeDateTime(`${editedEvent.eventdate} ${editedEvent.eventstarttime}`);
+    const normalizedEnd = normalizeDateTime(`${editedEvent.eventdate} ${editedEvent.eventendtime}`);
+  
+    if (!normalizedDate || !normalizedStart || !normalizedEnd) {
+      alert("Invalid date or time format.");
+      return;
+    }
+  
+    // ⛔ Check: eventdate cannot be before today
+    const today = new Date().toISOString().split("T")[0];
+    if (normalizedDate < today) {
+      alert("Event date cannot be before today.");
+      return;
+    }
+  
+    // ⛔ Check: end time cannot be before start time
+    const startTime = new Date(normalizedStart);
+    const endTime = new Date(normalizedEnd);
+  
+    if (endTime <= startTime) {
+      alert("End time must be after start time.");
+      return;
+    }
+  
+    try {
+      const payload = {
+        ...editedEvent,
+        eventdate: normalizedDate,
+        eventstarttime: normalizedStart,
+        eventendtime: normalizedEnd,
+      };
+  
+      const response = await fetch(`http://127.0.0.1:5000/events/${eventId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to update event.");
+      }
+  
+      const updatedEvent = await response.json();
+      setEvent(updatedEvent);
+      setEditedEvent(updatedEvent);
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error saving event:", error);
+      setError("Error saving event data.");
+    }
+  };
+  
+  
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this event?");
+    if (!confirmDelete) return;
+  
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/events/${eventId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to delete event.");
+      }
+  
+      alert("Event deleted successfully!");
+      window.location.href = "/"; // Redirect after deletion (you can change this)
+    } catch (error) {
+      console.error("Error deleting event:", error);
+      alert("An error occurred while deleting the event.");
+    }
+  };
+  
+  
   const handleEditToggle = () => {
     if (!isEditing) {
       setEditedEvent(event); // Pre-fill on first click
@@ -75,13 +203,28 @@ const EventDashboard = () => {
                 <img className="event-img-dashboard" src={event.event_img} alt={event.eventname} />
               </div>
               <div className="event-details-info">
-            <h2>{event.eventname}</h2>
+            <h2>{isEditing ? (
+                    <input 
+                      value={editedEvent.eventname}
+                      onChange={e => setEditedEvent({ ...editedEvent, eventname: e.target.value })}
+                    />
+                  ) : (
+                    event.eventname
+                  )}</h2>
             <p><strong>Type:</strong> 
                   {isEditing ? (
-                    <input 
-                      value={editedEvent.event_type}
-                      onChange={e => setEditedEvent({ ...editedEvent, event_type: e.target.value })}
-                    />
+                    <select
+  value={editedEvent.event_type}
+  onChange={e => setEditedEvent({ ...editedEvent, event_type: e.target.value })}
+>
+  <option value="">-- Select Event Type --</option>
+  {eventTypes.map((type) => (
+    <option key={type} value={type}>
+      {type.charAt(0).toUpperCase() + type.slice(1)}
+    </option>
+  ))}
+</select>
+
                   ) : (
                     event.event_type
                   )}
@@ -103,32 +246,52 @@ const EventDashboard = () => {
 <p><strong>Start Time:</strong> {
   isEditing ? (
     <input
-      type="time"
-      value={editedEvent.eventstarttime}
-      onChange={e => setEditedEvent({
-        ...editedEvent,
-        eventstarttime: e.target.value
-      })}
-    />
+  type="time"
+  step="1"
+  value={
+    isEditing
+      ? getTimeInputValue(editedEvent.eventdate, editedEvent.eventstarttime)
+      : ""
+  }
+  onChange={(e) =>
+    setEditedEvent({
+      ...editedEvent,
+      eventstarttime: e.target.value,
+    })
+  }
+/>
+
   ) : (
-    event.eventstarttime
+    new Date(event.eventstarttime).toISOString().split("T")[1].slice(0, 8)
   )
 }</p>
+
 
 <p><strong>End Time:</strong> {
   isEditing ? (
     <input
-      type="time"
-      value={editedEvent.eventendtime}
-      onChange={e => setEditedEvent({
-        ...editedEvent,
-        eventendtime: e.target.value
-      })}
-    />
+  type="time"
+  step="1"
+  value={
+    isEditing
+      ? getTimeInputValue(editedEvent.eventdate, editedEvent.eventendtime)
+      : ""
+  }
+  onChange={(e) =>
+    setEditedEvent({
+      ...editedEvent,
+      eventendtime: e.target.value,
+    })
+  }
+/>
+
   ) : (
-    event.eventendtime
+    new Date(event.eventendtime).toISOString().split("T")[1].slice(0, 8)
   )
 }</p>
+
+
+
 
                 <p><strong>Location:</strong> {
                   isEditing ? (
@@ -191,7 +354,11 @@ const EventDashboard = () => {
 
 
             {isEditing && (
-              <button onClick={handleSave}>Save Changes</button>
+              <><button onClick={handleSave}>Save Changes</button>
+                  <button onClick={handleDelete} style={{ marginLeft: "10px", backgroundColor: "#e74c3c", color: "white" }}>
+                    Delete Event
+                  </button>
+              </>
             )}
           </div>
 
