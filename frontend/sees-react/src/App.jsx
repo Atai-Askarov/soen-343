@@ -15,11 +15,15 @@ import LandingPage from "./pages/LandingPage";
 import EventDashboard from "./pages/eventDashboard";
 import TicketsPage from "./pages/ticketsPage";
 import Budget from "./pages/budget";
+import MyEventsLearner from "./pages/myEventsLearner";
 import ManageEvents from "./pages/ManageEvents"
 import EventDetail from './pages/EventDetails';
 import ReviewEvent from "./pages/ReviewEvent";
+import EventPageAttendee from './pages/EventPageAttendee'
+// import './css/global.css';
 import SponsorView from "./pages/SponsorView";
 import SponsorPackages from "./pages/SponsorPackages";
+import ManageQA from "./pages/ManageQA"
 const App = () => {
   return (
     <BrowserRouter>
@@ -47,6 +51,9 @@ const App = () => {
               <Route path="/event-details/:id" element={<EventDetail />} />
               <Route path="/review-event/:commandId" element={<ReviewEvent />} />
 
+              <Route path="/myevents" element={<MyEventsLearner />} />
+              <Route path="/event-attendee/:id" element={<EventPageAttendee />} />
+              <Route path="/manage-qa/:eventId" element={<ManageQA />} />
             </Routes>
 
           </main>

@@ -6,7 +6,7 @@
     margin-bottom: 10px;
     background-color: #f9f9f9;
     border-radius: 20px;
-    width: 400px;
+    width: 350px;
     margin-left: 50%;
     transform: translateX(-50%);
   }
@@ -14,7 +14,7 @@
   .form-chat {
     display: flex;
     gap: 10px;
-    width: 430px;
+    width: 370px;
     margin-left: 50%;
     transform: translateX(-50%);
   }
@@ -30,15 +30,20 @@
     height: 50px;
     background-color: rgb(56, 56, 246);
   }
+
+  .send:hover {
+    background-color: #f0f0f0; /* Lighten on hover */
+  }
   .input-container{
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 10px;
   }
 
   .floating-btn {
     position: fixed;
-    bottom: 40px;
+    bottom: 50px;
     right: 20px;
     background-color: white; /* Blue button */
     color: #007bff;
@@ -52,12 +57,23 @@
     z-index: 1000; /* Make sure it stays above other content */
   }
 
+  .floating-btn:hover {
+    background-color: #f0f0f0; /* Lighten on hover */
+  }
+
   /* Chatbox container positioning (next to the floating button) */
 .chatbox-container {
   position: fixed;
-  bottom: 40px;
+  bottom: 50px;
   right: 100px;
 }
 
-
+.chat-messages {
+  text-align: start;
+  max-height: 300px;
+  margin-bottom: 10px;
+  word-wrap: break-word; /* Ensures long words wrap */
+  overflow-wrap: break-word; /* Newer standard for word wrapping */
+  white-space: normal; 
+}
   

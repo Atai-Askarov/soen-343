@@ -97,7 +97,7 @@ const Event = () => {
                 <h4>{ticket.name}</h4>
                 <p><strong>Price:</strong> ${ticket.price}</p>
                 <p><strong>Description:</strong> {ticket.description || "No description available"}</p>
-                <button onClick={() => {handlePurchase(ticket)}}>Purchase Ticket</button>
+                <button className="ticket-card-button" onClick={() => {handlePurchase(ticket)}}>Purchase Ticket</button>
                 </div>
               </div>
             ))}

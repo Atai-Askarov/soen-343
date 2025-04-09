@@ -152,7 +152,7 @@
   margin: 8px 0;
 }
 
-.ticket-card .btn {
+.ticket-card-button {
   position: relative;
   bottom: 0px;
   display: inline-block;
@@ -163,9 +163,10 @@
   font-size: 16px;
   text-decoration: none;
   transition: background-color 0.3s ease;
+  width: 55%;
 }
 
-.ticket-card .btn:hover {
+.ticket-card-button:hover {
   background-color: #49a09d;
 }
 
