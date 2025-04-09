@@ -21,6 +21,28 @@ const EventDashboard = () => {
   
     return d.toISOString().split("T")[1].slice(0, 8);
   };
+  const handleUpdateSubscribers = async () => {
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/eventEmailUpdate/${eventId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(`❌ Error: ${errorData.error || "Failed to send email"}`);
+        return;
+      }
+  
+      const data = await response.json();
+      alert(data.message || "✅ Email sent successfully!");
+    } catch (error) {
+      console.error("❌ Network error:", error);
+      alert("Something went wrong while trying to send the emails.");
+    }
+  };
   
   const handleSave = async () => {
     console.log("Edited Event before validation:", editedEvent);
@@ -289,10 +311,6 @@ const EventDashboard = () => {
     new Date(event.eventendtime).toISOString().split("T")[1].slice(0, 8)
   )
 }</p>
-
-
-
-
                 <p><strong>Location:</strong> {
                   isEditing ? (
                     <input 
@@ -360,7 +378,16 @@ const EventDashboard = () => {
                   </button>
               </>
             )}
+            <div className="PromotionButtons">
+            <button onClick={handleUpdateSubscribers}>
+              Re-send Event Details via Email
+            </button>
+            <button>
+              Share Resources to Everyone via Email
+            </button>
+            </div>
           </div>
+
 
           {/* Buttons with links */}
           <div className="side-menu">

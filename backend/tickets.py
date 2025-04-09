@@ -56,6 +56,12 @@ def create_ticket():
         db.session.rollback()
         return jsonify({"message": f"Error creating ticket: {str(e)}"}), 500
 
+def get_users_by_event(event_id):
+    """Get all users who have tickets for a specific event"""
+    users = Ticket.query.filter_by(eventid=event_id).all()
+    user_ids = [ticket.userid for ticket in users]
+    return user_ids
+
 def get_tickets():
     try:
         tickets = Ticket.query.all()

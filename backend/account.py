@@ -49,6 +49,13 @@ def get_users_by_role(role):
 def get_all_user_emails():
     users = User.query.all()
     return [user.email for user in users]
+def get_user_emails_from_array(user_ids):
+    if not user_ids:
+        return []
+    users = User.query.filter(User.id.in_(user_ids)).all()
+    return [user.email for user in users]
+
+    
 def sign_in():
     data = request.get_json()
     username = data.get("username")

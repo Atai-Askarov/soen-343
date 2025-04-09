@@ -2,11 +2,11 @@ from datetime import datetime
 from flask import Flask, jsonify
 from flask_migrate import Migrate
 from flask_cors import CORS, cross_origin
-from account import db, sign_in, get_users, log_in,get_users_by_role, get_all_user_emails, get_user_by_id
-from event import create_event, get_events, get_event_by_id,get_events_by_organizer, fetch_event_by_id, update_event, delete_event #register_for_event
+from account import db, sign_in, get_users, log_in,get_users_by_role, get_all_user_emails, get_user_by_id, get_user_emails_from_array, get_user_by_id
+from event import * #register_for_event
 from ticketdescription import create_ticket_description, get_ticket_desc, get_ticket_descriptions_by_event
 from venue import create_venue, get_venues
-from tickets import get_tickets
+from tickets import get_tickets,get_users_by_event
 from flask import Flask, request, jsonify
 from sendEmail import Director, Builder, send_email
 import os
@@ -192,7 +192,60 @@ def send_email_via_blast():
 def delete_events(event_id):
     return delete_event(event_id)
 
+@app.route('/eventEmailUpdate/<int:event_id>', methods=['GET'])
+@cross_origin(origin='http://localhost:3000')
+def event_email_update(event_id):
+    if not event_id:
+            return jsonify({"error": "Missing eventId"}), 400
+    try:
+        users = get_users_by_event(event_id)
+        print("✅ Users fetched:", users)
+        emails = get_user_emails_from_array(users)
+        print("✅ User emails:", emails)
 
+        event = fetch_event_by_id(event_id)
+        if not event:
+            return jsonify({"error": f"No event found for ID {event_id}"}), 404
+
+        event_data = {
+        "eventId": event["eventid"],
+        "eventName": event["eventname"],
+        "eventDate": event["eventdate"].strftime("%B %d, %Y"),
+        "eventStartTime": event["eventstarttime"].strftime("%I:%M %p"),
+        "eventEndTime": event["eventendtime"].strftime("%I:%M %p"),
+        "eventLocation": event["eventlocation"],
+        "eventType": event["event_type"],
+        "eventDescription": event["eventdescription"],
+        "eventOrganizer": event["organizerid"],  # You could join with user table for name
+        "eventImg": event["event_img"],
+        "socialMediaLink": event["social_media_link"]
+        }
+
+        director = Director(event_data)
+        builder = Builder()
+        email_html = director.construct(builder)
+
+        print("✅ Email HTML generated")
+
+        subject = event.get("eventname")
+        print("✅ Email subject:", subject)
+
+        # Make sure all components are not None
+        if not email_html:
+            return jsonify({"error": "Email content could not be generated"}), 500
+        if not subject:
+            return jsonify({"error": "Missing email subject"}), 500
+        if not emails:
+            return jsonify({"error": "No recipients found"}), 404
+
+
+        send_email(emails, subject, email_html)
+
+        return jsonify({"message": "✅ Email campaign sent successfully."}), 200
+
+    except Exception as e:
+        print(f"❌ Error in /emailSending: {e}")
+        return jsonify({"error": str(e)}), 500
     
 
 if __name__ == "__main__":

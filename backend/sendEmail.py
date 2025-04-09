@@ -139,8 +139,17 @@ def send_email(to_emails, event_name, html_content):
     from_password = os.getenv("EMAIL_PASSWORD")
 
     # Safety check for required values
-    if not all([from_email, from_password, to_emails, event_name, html_content]):
-        raise ValueError("❌ Missing required email fields.")
+    if not from_email:
+        raise ValueError("❌ Missing sender email (from_email).")
+    if not from_password:
+        raise ValueError("❌ Missing sender email password (from_password).")
+    if not to_emails:
+        raise ValueError("❌ No recipient emails provided (to_emails).")
+    if not event_name:
+        raise ValueError("❌ Missing event name (event_name).")
+    if not html_content:
+        raise ValueError("❌ Missing email content (html_content).")
+
 
     if isinstance(to_emails, str):
         to_emails = [to_emails]
