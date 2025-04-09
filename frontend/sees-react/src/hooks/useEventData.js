@@ -16,13 +16,20 @@ export default function useEventData() {
     try {
       const response = await fetch('http://127.0.0.1:5000/events');
       const data = await response.json();
-      const eventsData = data.events || [];
+      const rawEventsData = data.events || [];
+      
+      // Normalize event data structure - map "eventid" to "id" for consistent access
+      const eventsData = rawEventsData.map(event => ({
+        ...event,
+        id: event.eventid // Ensure every event has an "id" property
+      }));
+      
       setEvents(eventsData);
       
       // Extract unique locations and types for filters
       const locations = [...new Set(eventsData.map(event => event.eventlocation))];
       const types = [...new Set(eventsData.map(event => event.event_type))];
-      
+
       setLocationFilter(locations);
       setTypeFilter(types);
       setLoading(false);

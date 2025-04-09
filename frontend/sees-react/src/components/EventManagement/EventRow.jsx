@@ -9,8 +9,21 @@ const EventRow = ({ event, handleEventClick, handleFunctionClick }) => {
   // For regular events, check if the event is upcoming
   const isUpcoming = !isPending && new Date(event.eventdate) > new Date();
   
+  // Get the correct event ID, handling different naming conventions
+  const getEventId = () => {
+    // Try all possible ID field names
+    return event.id || event.eventid || event.event_id || '';
+  };
+  
   return (
-    <tr onClick={() => handleEventClick(event.id)}>
+    <tr onClick={() => {
+      const id = getEventId();
+      if (id) {
+        handleEventClick(id);
+      } else {
+        console.error('Event is missing ID:', event);
+      }
+    }}>
       <td className="event-name">
         {event.eventname}
         {isPending && <span className="pending-badge">PENDING</span>}
@@ -26,7 +39,7 @@ const EventRow = ({ event, handleEventClick, handleFunctionClick }) => {
       <td className="management-buttons">
         {!isPending && (
           <ManagementButtons 
-            eventId={event.id} 
+            eventId={getEventId()} 
             handleFunctionClick={handleFunctionClick} 
           />
         )}
@@ -35,7 +48,10 @@ const EventRow = ({ event, handleEventClick, handleFunctionClick }) => {
             className="view-event-button"
             onClick={(e) => {
               e.stopPropagation();
-              handleEventClick(event.id);
+              const id = getEventId();
+              if (id) {
+                handleEventClick(id);
+              }
             }}
           >
             <FaEye /> <span>Review</span>

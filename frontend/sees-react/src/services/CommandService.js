@@ -54,7 +54,7 @@ class CommandService {
         let executableCommand;
         switch (command.type) {
           case 'CreateEvent':
-            const { CreateEventCommand } = await import('../patterns/commands/CreateEventCommand');
+            const { CreateEventCommand } = await import('../components/Command/CreateEventCommand');
             executableCommand = new CreateEventCommand(command.eventData);
             break;
           // Add cases for other command types as needed

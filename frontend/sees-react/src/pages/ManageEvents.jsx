@@ -43,10 +43,10 @@ const ManageEvents = () => {
     const fetchPendingEvents = async () => {
       try {
         const commands = await commandService.getCommands();
-        // Filter commands for CreateEventCommand type with status "pending"
-        const pendingEventCommands = commands.filter(cmd => 
-          cmd.type === 'CreateEventCommand' && cmd.status === 'pending'
-        );
+        // Filter commands for CreateEvent type with status "pending"
+const pendingEventCommands = commands.filter(cmd => 
+  cmd.type === 'CreateEvent' && cmd.status === 'pending'
+);
         
         // Transform commands to match event structure
         const formattedPendingEvents = pendingEventCommands.map(cmd => ({
@@ -70,7 +70,8 @@ const ManageEvents = () => {
     
     fetchPendingEvents();
   }, []);
-  
+  console.log("Start allEvents:", filteredEvents.map(e => ({ id: e.id, name: e.eventname })));
+
   // Combine regular and pending events
   const allEvents = [...filteredEvents, ...pendingEvents.filter(pending => {
     // Apply the same filters as regular events
@@ -88,13 +89,21 @@ const ManageEvents = () => {
     
     return matchesSearch && matchesLocation && matchesType && matchesStatus;
   })];
+  console.log("Final allEvents:", allEvents.map(e => ({ id: e.id, name: e.eventname })));
 
-  // Navigation functions
   const handleEventClick = (eventId) => {
-    if (eventId.toString().startsWith('pending-')) {
+    if (!eventId) {
+      console.error('Event ID is undefined');
+      return;
+    }
+    
+    const eventIdStr = String(eventId);
+    
+    if (eventIdStr.startsWith('pending-')) {
       // Extract original command ID from the formatted ID
-      const commandId = eventId.replace('pending-', '');
-      navigate(`/admin/pending-events/${commandId}`);
+      const commandId = eventIdStr.replace('pending-', '');
+      // Use a DEDICATED route for pending event review
+      navigate(`/review-event/${commandId}`);
     } else {
       navigate(`/event-details/${eventId}`);
     }

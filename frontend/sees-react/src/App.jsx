@@ -15,7 +15,7 @@ import TicketsPage from "./pages/ticketsPage";
 import Budget from "./pages/budget";
 import ManageEvents from "./pages/ManageEvents"
 import EventDetail from './pages/EventDetails';
-
+import ReviewEvent from "./pages/ReviewEvent";
 const App = () => {
   return (
     <Router>
@@ -37,6 +37,7 @@ const App = () => {
               <Route path="/budget/:eventId" element={<Budget />} />
               <Route path ="/manage-events" element = {<ManageEvents/>}/>
               <Route path="/event-details/:id" element={<EventDetail />} />
+              <Route path="/review-event/:commandId" element={<ReviewEvent />} />
 
             </Routes>
 

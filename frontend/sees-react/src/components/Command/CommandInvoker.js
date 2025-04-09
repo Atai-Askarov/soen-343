@@ -9,6 +9,7 @@ export class CommandInvoker {
     
     addCommand(command) {
       this.commandQueue.push(command);
+      command.status = 'pending';
       return this;
     }
     
