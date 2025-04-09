@@ -424,6 +424,50 @@ def post_answer(question_id):
     """Answer a question"""
     return answer_question(question_id)
 
+# For findint users with similar interests
+@app.route('/events/<int:event_id>/similar-interests/<int:user_id>', methods=['GET'])
+@cross_origin(origin='http://localhost:3000')
+def find_similar_interest_attendees(event_id, user_id):
+    """Find attendees with similar interests for an event"""
+    try:
+        # Get the current user's interests
+        current_user = User.query.get(user_id)
+        if not current_user or not current_user.interests:
+            return jsonify({"message": "User not found or has no interests", "similar_attendees": []}), 200
+            
+        user_interests = current_user.interests.lower().split(',')
+        
+        # Find tickets for this event
+        from tickets import Ticket
+        ticket_users = db.session.query(Ticket.userid).filter_by(eventid=event_id).distinct().all()
+        user_ids = [t[0] for t in ticket_users]
+        
+        # Find users with similar interests who are attending this event
+        similar_attendees = []
+        for uid in user_ids:
+            if uid == user_id:  # Skip the current user
+                continue
+                
+            attendee = User.query.get(uid)
+            if not attendee or not attendee.interests:
+                continue
+                
+            attendee_interests = attendee.interests.lower().split(',')
+            shared_interests = set(user_interests) & set(attendee_interests)
+            
+            if shared_interests:
+                similar_attendees.append({
+                    "id": attendee.id,
+                    "username": attendee.username,
+                    "sharedInterest": list(shared_interests)[0].capitalize()  # Just use the first shared interest
+                })
+                
+        return jsonify({"similar_attendees": similar_attendees}), 200
+        
+    except Exception as e:
+        print(f"Error finding similar attendees: {str(e)}")
+        return jsonify({"message": f"Error: {str(e)}", "similar_attendees": []}), 500
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()  # Create tables if they don't exist

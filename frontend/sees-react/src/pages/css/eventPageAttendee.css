@@ -128,7 +128,7 @@
   }
   
   .favorite-active {
-    color: #ef4444;
+    color: #61ef44;
   }
   
   .full-width {
@@ -709,4 +709,114 @@
     gap: 0.5rem;
   }
 }
+
+/* Add these styles to the existing CSS file */
+
+/* Similar Interests Section */
+.similar-interests-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
   }
+  
+  .similar-interests-card h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.75rem;
+  }
+  
+  .loading-similar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0;
+  }
+  
+  .spinner-small {
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-top-color: #4c1d95;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 0.5rem;
+  }
+  
+  .no-similar {
+    color: #666;
+    font-style: italic;
+    text-align: center;
+    padding: 0.5rem 0;
+  }
+  
+  .similar-attendees-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .similar-attendee {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    background-color: #f9fafb;
+    transition: background-color 0.2s;
+  }
+  
+  .similar-attendee:hover {
+    background-color: #f3f4f6;
+  }
+  
+  .attendee-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .attendee-name {
+    font-weight: 500;
+    color: #4c1d95;
+  }
+  
+  .attendee-interest {
+    font-size: 0.85rem;
+    color: #6b7280;
+  }
+  
+  .linkedin-btn {
+    background: none !important;
+    border: none !important;
+    color: #0077b5 !important;  /* LinkedIn blue color */
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+  }
+  
+  .linkedin-btn:hover {
+    background-color: rgba(0, 119, 181, 0.1) !important; /* LinkedIn blue with opacity */
+    transform: scale(1.05);
+  }
+  
+  .linkedin-icon {
+    font-size: 1.2rem;
+    color: #0077b5 !important;  /* Force LinkedIn blue color */
+  }
+  
+  @keyframes spin {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
