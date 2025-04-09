@@ -105,6 +105,7 @@ def create_sponsorship():
     try:
         # Check if sponsor has already sponsored this package for this event.
 
+
         existing = Sponsorship.query.filter_by(
             sponsor_id=data['sponsor_id'],
             package_id=data['package_id'],
@@ -113,6 +114,7 @@ def create_sponsorship():
         if existing:
             return jsonify({"message": "You have already sponsored this package for this event"}), 409
 
+        
         # Create Stripe product and price
         stripe_product_id = promotion.create_promotion_package_product(
             width = int(str(data['width'])[:-2]), height = int(str(data['height'])[:-2]), name = data['name'],  event_id = data['event_id']
@@ -120,7 +122,7 @@ def create_sponsorship():
         print(data['price'])
         
         stripe_price_id = price.create_ticket_price(
-            amount = data['price'], nickname = data['name'], product_id = stripe_product_id
+            amount = data['price'] * 100, nickname = data['name'], product_id = stripe_product_id
         )
         
         sponsorship = Sponsorship(
