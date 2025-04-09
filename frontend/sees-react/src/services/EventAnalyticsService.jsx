@@ -19,31 +19,36 @@ const eventAnalyticsService = {
      * @returns {Promise<Object>} - Object containing all analytics data
      */
     async getEventAnalytics(eventId) {
-      try {
-        // Fetch event details and ticket descriptions in parallel
-        const [eventData, ticketDescriptions] = await Promise.all([
-          this.fetchEventDetails(eventId),
-          this.fetchTicketDescriptions(eventId)
-        ]);
-
-        // TODO: When backend endpoint /tickets/${eventId} is implemented, 
-        // add this to Promise.all above and remove this empty array
-        const ticketSales = [];
-      
-        return {
-            event: eventData,
-            ticketSales: {
-              title: "Ticket Sales",
-              content: <TicketSalesChart data={this.processTicketSalesData(ticketSales, ticketDescriptions).chartData} />
-            },
-            attendeeNumbers: {
-              title: "Attendee Numbers",
-              content: <AttendeeNumbersChart data={this.processAttendeeData(ticketSales).chartData} />
-            },
-            eventViews: {
-              title: "Event Views",
-              content: <EventViewsChart data={this.generatePlaceholderViewsData().chartData} />
-            },
+        try {
+            // Fetch event details, ticket descriptions, and ticket sales in parallel
+            const [eventData, ticketDescriptions, ticketSales] = await Promise.all([
+                this.fetchEventDetails(eventId),
+                this.fetchTicketDescriptions(eventId),
+                this.fetchTicketSales(eventId)
+            ]);
+    
+        
+          let attendanceData = null;
+          try {
+            attendanceData = await this.fetchAttendanceData(eventId);
+          } catch (error) {
+            console.log("Could not fetch attendance data:", error.message);
+          }
+          
+          return {
+              event: eventData,
+              ticketSales: {
+                title: "Ticket Sales",
+                content: <TicketSalesChart data={this.processTicketSalesData(ticketSales, ticketDescriptions).chartData} />
+              },
+              attendeeNumbers: {
+                  title: "Attendee Numbers",
+                  content: <AttendeeNumbersChart data={this.processAttendeeData(ticketSales, attendanceData).chartData} />
+                },
+              eventViews: {
+                title: "Event Views",
+                content: <EventViewsChart data={this.generatePlaceholderViewsData().chartData} />
+              },
             ticketTypes: {
               title: "Ticket Types",
               content: <TicketTypeChart data={this.processTicketTypeData(ticketDescriptions, ticketSales).chartData} />
@@ -78,7 +83,43 @@ const eventAnalyticsService = {
       const response = await fetch(`http://127.0.0.1:5000/events/${eventId}`);
       return await response.json();
     },
-  
+
+/**
+ * Process attendee data for charts
+ * @param {Array} ticketSales - Ticket sales data (for fallback calculations)
+ * @param {Object} attendanceData - Real attendance data from backend (optional)
+ */
+processAttendeeData(ticketSales, attendanceData = null) {
+    // First check if we have real attendance data
+    if (attendanceData && attendanceData.total_registered) {
+      console.log("Using real attendance data");
+      return {
+        chartData: [
+          { 
+            name: 'Current', 
+            registered: attendanceData.total_registered, 
+            attended: attendanceData.total_attended 
+          }
+        ],
+        totalRegistered: attendanceData.total_registered,
+        totalAttended: attendanceData.total_attended,
+        attendanceRate: attendanceData.attendance_rate || 0
+      };
+    }
+    
+    // Fall back to placeholder data if no real data available
+    console.log("Using placeholder attendance data");
+    return {
+      chartData: [
+        { name: 'Week 1', registered: 50, attended: 42 },
+        { name: 'Week 2', registered: 75, attended: 65 },
+        { name: 'Week 3', registered: 90, attended: 70 },
+        { name: 'Week 4', registered: 85, attended: 73 }
+      ],
+      totalRegistered: ticketSales.length,
+      totalAttended: Math.floor(ticketSales.length * 0.85) // Estimated 85% attendance
+    };
+  },
     /**
      * Fetch ticket descriptions for an event
      */
@@ -123,64 +164,64 @@ const eventAnalyticsService = {
     /**
      * Process attendee data
      */
-    processAttendeeData(ticketSales) {
-      // You'll need attendance data in your backend to make this accurate
-      // This is just a placeholder based on tickets
-      return {
-        chartData: [
-          { name: 'Week 1', registered: 50, attended: 42 },
-          { name: 'Week 2', registered: 75, attended: 65 },
-          { name: 'Week 3', registered: 90, attended: 70 },
-          { name: 'Week 4', registered: 85, attended: 73 }
-        ],
-        totalRegistered: ticketSales.length,
-        totalAttended: Math.floor(ticketSales.length * 0.85) // Estimated 85% attendance
-      };
-    },
+    async fetchAttendanceData(eventId) {
+        try {
+          const response = await fetch(`http://127.0.0.1:5000/attendance/${eventId}`);
+          if (!response.ok) {
+            throw new Error(`HTTP error ${response.status}`);
+          }
+          const data = await response.json();
+          return data;
+        } catch (error) {
+          console.error(`Error fetching attendance data: ${error.message}`);
+          // Return null instead of throwing to fail more gracefully
+          return null;
+        }
+      },
   
     /**
      * Process ticket type data
      */
     processTicketTypeData(ticketDescriptions, ticketSales) {
-      // Count sales by ticket type
-      const salesByType = {};
-      
-      ticketSales.forEach(ticket => {
-        const description = ticketDescriptions.find(desc => desc.id === ticket.ticket_desc_id);
-        if (description) {
-          salesByType[description.name] = (salesByType[description.name] || 0) + 1;
-        }
-      });
-      
-      // Format for chart display
-      const chartData = Object.keys(salesByType).map(name => ({
-        name,
-        value: salesByType[name]
-      }));
-      
-      return {
-        chartData,
-        breakdown: Object.keys(salesByType).map(name => ({
+        // Count sales by ticket type
+        const salesByType = {};
+        
+        ticketSales.forEach(ticket => {
+          // Adjust field name to match what the backend returns
+          const description = ticketDescriptions.find(desc => desc.id === ticket.descid);
+          if (description) {
+            salesByType[description.name] = (salesByType[description.name] || 0) + 1;
+          }
+        });
+        
+        // Format for chart display
+        const chartData = Object.keys(salesByType).map(name => ({
           name,
-          count: salesByType[name],
-          percentage: Math.round((salesByType[name] / ticketSales.length) * 100)
-        }))
-      };
-    },
+          value: salesByType[name]
+        }));
+        
+        return {
+          chartData,
+          breakdown: Object.keys(salesByType).map(name => ({
+            name,
+            count: salesByType[name],
+            percentage: Math.round((salesByType[name] / ticketSales.length) * 100)
+          }))
+        };
+      },
   
     /**
      * Calculate revenue sources
      */
     calculateRevenueSources(ticketSales, ticketDescriptions) {
-      // In reality, we'll have multiple revenue sources in your database
-      // For now, we'll just use ticket sales data
-      
+    
       const ticketRevenue = ticketSales.reduce((sum, ticket) => {
-        const description = ticketDescriptions.find(desc => desc.id === ticket.ticket_desc_id);
+        // Change ticket.ticket_desc_id to ticket.descid to match backend
+        const description = ticketDescriptions.find(desc => desc.id === ticket.descid);
         return sum + (description ? description.price : 0);
       }, 0);
       
-      // Add placeholder data for other revenue sources
+      //TODO REMOVE THIS HARD CODED placeholder data for other revenue sources
       return {
         chartData: [
           { name: 'Ticket Sales', value: ticketRevenue },

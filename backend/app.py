@@ -5,13 +5,15 @@ from account import db, sign_in, get_users, log_in,get_users_by_role, get_all_us
 from event import create_event, get_events, get_event_by_id,get_events_by_organizer, fetch_event_by_id #register_for_event
 from ticketdescription import create_ticket_description, get_ticket_desc, get_ticket_descriptions_by_event
 from venue import create_venue, get_venues
-from tickets import get_tickets
+from tickets import get_tickets, get_tickets_by_event
 from flask import Flask, request, jsonify
 from sendEmail import Director, Builder, send_email
 import os
 from dotenv import load_dotenv
 from flask_socketio import SocketIO, join_room, leave_room, emit
 from dotenv import load_dotenv
+from attendance import get_attendance_by_event
+
 
 load_dotenv()
 app = Flask(__name__)
@@ -90,6 +92,50 @@ def create_ticket_desc():
 @cross_origin(origin='http://localhost:3000')
 def ticket_description_by_id(event_id):
     return get_ticket_descriptions_by_event(event_id)
+
+## ENDPOINT FOR ANALYTICS
+@app.route('/tickets/<int:event_id>', methods=['GET'])
+@cross_origin(origin='http://localhost:3000')
+def tickets_by_event(event_id):
+    """Get all tickets for a specific event."""
+    return get_tickets_by_event(event_id)
+
+@app.route('/attendance/<int:event_id>', methods=['GET'])
+@cross_origin(origin='http://localhost:3000')
+def attendance_by_event(event_id):
+    """Get attendance data for a specific event."""
+    return get_attendance_by_event(event_id)
+
+# Additional attendance endpoints to implement
+@app.route('/attendance/checkin', methods=['POST'])
+@cross_origin(origin='http://localhost:3000')
+def checkin_attendee():
+    """Record an attendee checking in to an event."""
+    from attendance import check_in_attendee
+    return check_in_attendee()
+
+@app.route('/attendance/batch-checkin', methods=['POST'])
+@cross_origin(origin='http://localhost:3000')
+def batch_checkin():
+    """Check in multiple attendees at once."""
+    from attendance import batch_check_in
+    return batch_check_in()
+
+@app.route('/attendance/<int:attendance_id>', methods=['PUT'])
+@cross_origin(origin='http://localhost:3000')
+def update_attendance_record(attendance_id):
+    """Update an attendance record."""
+    from attendance import update_attendance
+    return update_attendance(attendance_id)
+
+@app.route('/attendance/stats', methods=['GET'])
+@cross_origin(origin='http://localhost:3000')
+def attendance_statistics():
+    """Get attendance statistics across events."""
+    event_id = request.args.get('event_id')
+    from attendance import get_attendance_statistics
+    return get_attendance_statistics(event_id)
+
 
 @app.route('/create_venue', methods=['POST'])
 @cross_origin(origin='http://localhost:3000')

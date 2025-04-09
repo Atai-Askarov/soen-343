@@ -6,6 +6,9 @@ class Ticket(db.Model):
     __tablename__ = 'tickets'
     __table_args__ = {'extend_existing': True}  # Prevent duplicate definition
     
+   #*** FIELD REQUIRED FOR ANALYTICS: 
+    purchase_date = db.Column(db.DateTime(timezone=True), default=db.func.current_timestamp())
+   #***
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userid = db.Column(db.Integer, nullable=False)
     eventid = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)
@@ -33,12 +36,20 @@ def create_ticket():
         }), 400
     
     try:
+        # Always set purchase_date to current time if not provided
+        if 'purchase_date' not in data or data['purchase_date'] is None:
+            from datetime import datetime
+            purchase_date = datetime.utcnow()
+        else:
+            purchase_date = data['purchase_date']
+        
         new_ticket = Ticket(
             userid=data['userid'],
             eventid=data['eventid'],
             descid=data['descid'],
             product_stripe_id=data['product_stripe_id'],
-            price_stripe_id=data['price_stripe_id']
+            price_stripe_id=data['price_stripe_id'],
+            purchase_date=purchase_date
         )
         
         db.session.add(new_ticket)
@@ -46,7 +57,8 @@ def create_ticket():
         
         return jsonify({
             "message": "Ticket created successfully!",
-            "ticket_id": new_ticket.id
+            "ticket_id": new_ticket.id,
+            "purchase_date": new_ticket.purchase_date.isoformat()
         }), 201
         
     except exc.IntegrityError as e:
@@ -55,7 +67,6 @@ def create_ticket():
     except Exception as e:
         db.session.rollback()
         return jsonify({"message": f"Error creating ticket: {str(e)}"}), 500
-
 def get_tickets():
     try:
         tickets = Ticket.query.all()
@@ -66,7 +77,8 @@ def get_tickets():
             'eventid': ticket.eventid,
             'descid': ticket.descid,
             'product_stripe_id': ticket.product_stripe_id,
-            'price_stripe_id': ticket.price_stripe_id
+            'price_stripe_id': ticket.price_stripe_id,
+            'purchase_date': ticket.purchase_date.isoformat() if ticket.purchase_date else None
         } for ticket in tickets]
         
         return jsonify({'status': 'success', 'tickets': ticket_list})
@@ -85,7 +97,8 @@ def get_ticket_by_id(ticket_id):
             'eventid': ticket.eventid,
             'descid': ticket.descid,
             'product_stripe_id': ticket.product_stripe_id,
-            'price_stripe_id': ticket.price_stripe_id
+            'price_stripe_id': ticket.price_stripe_id,
+            'purchase_date': ticket.purchase_date.isoformat() if ticket.purchase_date else None
         }
         
         return jsonify(ticket_data), 200
@@ -96,14 +109,15 @@ def get_tickets_by_event(event_id):
     try:
         tickets = Ticket.query.filter_by(eventid=event_id).all()
         if not tickets:
-            return jsonify({"message": f"No tickets found for event ID {event_id}."}), 404
+            return jsonify({"tickets": []}), 200  # Return empty array instead of 404 for analytics
         
         ticket_list = [{
             'id': ticket.id,
             'userid': ticket.userid,
             'descid': ticket.descid,
             'product_stripe_id': ticket.product_stripe_id,
-            'price_stripe_id': ticket.price_stripe_id
+            'price_stripe_id': ticket.price_stripe_id,
+            'purchase_date': ticket.purchase_date.isoformat() if ticket.purchase_date else None
         } for ticket in tickets]
         
         return jsonify({"tickets": ticket_list}), 200
