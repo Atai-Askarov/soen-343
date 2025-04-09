@@ -75,6 +75,20 @@ def sign_in():
     except Exception as e:
         return jsonify({"message": str(e)}), 400
 
+def get_user_by_id(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    if user:
+        user_data= {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "user_type": user.user_type,
+            "interests": user.interests
+        }
+        return jsonify(user_data), 200
+    else:
+        return jsonify({"message": "User not found!"}), 404
+
 def log_in():
     data = request.get_json()
     email = data.get("email")

@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 from flask_migrate import Migrate
 from flask_cors import CORS, cross_origin
-from account import db, sign_in, get_users, log_in,get_users_by_role, get_all_user_emails
+from account import db, sign_in, get_users, log_in,get_users_by_role, get_all_user_emails, get_user_by_id
 from event import create_event, get_events, get_event_by_id,get_events_by_organizer, fetch_event_by_id #register_for_event
 from ticketdescription import create_ticket_description, get_ticket_desc, get_ticket_descriptions_by_event
 from venue import create_venue, get_venues
@@ -61,6 +61,10 @@ def create_new_event():
 @cross_origin(origin='http://localhost:3000')
 def get_all_events():
     return get_events()
+@app.route("/usersid/<int:user_id>", methods=["GET"])
+@cross_origin(origin='http://localhost:3000')
+def get_user_by_id_route(user_id):
+    return get_user_by_id(user_id)
 
 @app.route('/events/<int:event_id>', methods=['GET'])
 @cross_origin(origin='http://localhost:3000')
