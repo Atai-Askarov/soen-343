@@ -5,6 +5,7 @@
   padding: 10px 20px;
   border-bottom: 2px solid lightgray;
   z-index: 3;
+  background-color: black;
 }
 
 .navbar-left {
@@ -37,21 +38,24 @@
 }
 
 .nav-button {
-  background-color: white;
-  padding: 5px 10px;
+  background-color: black;
+  border-style: solid;
+  border-color: white;
+  padding: 8px 20px;
   height: 20px;
-  border-radius: 15px;
+  border-radius: 20px;
   font-size: 16px;
   cursor: pointer;
+  border-width: 1px;
+
 }
 
 .nav-button a {
   text-decoration: none;
-  color: black;
+  color: white;
 }
 
 .sign-up {
-  background-color: red;
   color: white;
   border: none;
 }
@@ -61,7 +65,12 @@
 }
 
 .logout-button{
-  text-decoration: none;
-  color: black;
-  background-color: white;
+  border-style: solid;
+  border-color: white;
+  padding: 8px 20px;
+  height: 20px;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-width: 1px;
 }

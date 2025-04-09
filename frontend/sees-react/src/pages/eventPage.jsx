@@ -43,10 +43,9 @@ const Event = () => {
   }
 
   return (  
-    <div className="event-container-page">
-      <h1>Event Page</h1>
+    <div className="event-page">
       {event ? (
-        <div>
+        <div className="event-container-page">
           <div className="event-thumbnail-page">
               <img
                 src={event.event_img || "/images/default.jpg"} // Use the event image if available, otherwise use the default image
@@ -65,18 +64,20 @@ const Event = () => {
       ) : (
         <p>Event not found.</p>
       )}
-
+      
       {/* Ticket Options Section */}
-      <div>
+      <div className="ticket-options">
         <h1>Ticket Options</h1>
         {ticketDescriptions.length > 0 ? (
           <div className="ticket-list" style={{ display: "flex", flexDirection: "row", gap: "20px",contentAlign: "center" }}>
             {ticketDescriptions.map((ticket) => (
               <div key={ticket.id} className="ticket-card">
+                <div className="ticket-writing">
                 <h4>{ticket.name}</h4>
                 <p><strong>Price:</strong> ${ticket.price}</p>
                 <p><strong>Description:</strong> {ticket.description || "No description available"}</p>
                 <Link to={`/purchase/${ticket.id}`} className="btn">Purchase Ticket</Link>
+                </div>
               </div>
             ))}
           </div>
@@ -84,7 +85,7 @@ const Event = () => {
           <p>No ticketing options available for this event.</p>
         )}
       </div>
-      <div>
+      <div className="chatbox-container">
         <Chatbox eventId={eventId} />
       </div>
     </div>
