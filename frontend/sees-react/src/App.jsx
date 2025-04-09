@@ -25,6 +25,9 @@ import EventPageAttendee from './pages/EventPageAttendee'
 import SponsorView from "./pages/SponsorView";
 import SponsorPackages from "./pages/SponsorPackages";
 import ManageQA from "./pages/ManageQA"
+import ManageAttendees from "./pages/ManagementEvents/ManageAttendees";
+import ManageAnalytics from "./pages/ManagementEvents/ManageAnalytics";
+import ManageFinancials from "./pages/ManagementEvents/ManageFinancials";
 const App = () => {
   return (
     <BrowserRouter>
@@ -55,8 +58,21 @@ const App = () => {
               <Route path="/myevents" element={<MyEventsLearner />} />
               <Route path="/event-attendee/:id" element={<EventPageAttendee />} />
               <Route path="/manage-qa/:eventId" element={<ManageQA />} />
+              //Routes just for management
+              <Route  path="/events/:eventId/attendees" element={<ManageAttendees />} />
+              <Route path="/events/:eventId/analytics" element={<ManageAnalytics />} />
+              <Route path="/events/:eventId/financials" element={<ManageFinancials/>} />
+
+              {/* 
+            <Route path="/events/:eventId/financials" element={<Budget />} />
+            <Route path="/events/:eventId/promotions" element={<Promotion />} />
+            <Route path="/events/:eventId/resources" element={<Resources />} />
+            <Route path="/events/:eventId/networking" element={<Networking />} /> */}
+
             </Routes>
 
+          
+            
           </main>
           <Footer />
         </div>

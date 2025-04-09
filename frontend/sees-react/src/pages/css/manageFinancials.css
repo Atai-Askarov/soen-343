@@ -1,0 +1,40 @@
+/* Main dashboard container */
+.financials-dashboard {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    color: #333;
+  }
+  
+  /* Dashboard header */
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .header-left h1 {
+    font-size: 2rem;
+    margin: 0;
+    color: #2d3748;
+  }
+  
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  

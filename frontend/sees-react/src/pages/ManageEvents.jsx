@@ -111,9 +111,16 @@ const pendingEventCommands = commands.filter(cmd =>
   
   const handleFunctionClick = (eventId, functionType, e) => {
     e.stopPropagation();
+    
     // Don't allow function clicks on pending events
     if (!eventId.toString().startsWith('pending-')) {
-      navigate(`/events/${eventId}/${functionType}`);
+      // Find the event object with the matching ID
+      const eventData = events.find(event => event.id === eventId || event.eventid === eventId);
+      
+      // Pass event data as state in navigation
+      navigate(`/events/${eventId}/${functionType}`, { 
+        state: { eventData }
+      });
     }
   };
 
