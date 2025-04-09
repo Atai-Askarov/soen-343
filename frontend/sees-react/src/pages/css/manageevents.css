@@ -500,4 +500,56 @@
 .events-table tr:hover {
   background-color: rgba(0, 0, 0, 0.02);
 }
+}/* Adjust chart container sizes */
+.chart-container {
+  position: relative;
+  height: 300px; /* Fixed height for all charts */
+  width: 100%;
+  max-width: 500px; /* Prevent too wide charts */
+  margin: 0 auto; /* Center charts in their containers */
+}
+
+/* Make the analytics cards more compact */
+.analytics-card {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+/* Improve grid layout */
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Special handling for wide card */
+.analytics-card.wide {
+  grid-column: 1 / -1; /* Make it span full width */
+}
+
+/* Chart title spacing */
+.card-header {
+  margin-bottom: 1rem;
+}
+
+.card-header h2 {
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-icon {
+  color: #4c1d95;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .chart-container {
+    height: 250px;
+  }
 }

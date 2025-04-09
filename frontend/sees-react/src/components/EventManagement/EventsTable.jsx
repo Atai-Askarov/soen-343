@@ -1,5 +1,6 @@
 import React from 'react';
 import EventRow from './EventRow';
+import { FaUserFriends } from 'react-icons/fa';
 
 const EventsTable = ({ filteredEvents, handleEventClick, handleFunctionClick }) => {
   return (
@@ -22,7 +23,15 @@ const EventsTable = ({ filteredEvents, handleEventClick, handleFunctionClick }) 
               event={event}
               handleEventClick={handleEventClick}
               handleFunctionClick={handleFunctionClick}
-            />
+            >
+              <button 
+                className="table-action-btn attendees-btn"
+                onClick={(e) => handleFunctionClick(event.id, 'attendees', e)}
+                disabled={event.isPending}
+              >
+                <FaUserFriends className="action-icon" /> Attendees
+              </button>
+            </EventRow>
           ))}
         </tbody>
       </table>
