@@ -70,6 +70,21 @@ const Navbar = () => {
               </li>
             </>
           );
+        case "executive":
+          return(<>
+            <li className="nav-button">
+             <Link to="/home">Home</Link>
+           </li>
+           <li className="nav-button">
+             <Link to="/admin-dashboard">Admin Dashboard</Link>
+           </li>
+
+           <li className="nav-button">
+             <Link to="/manage-events">Manage Events</Link>
+           </li>
+         </>
+
+          )
         case "admin":
           return (
             <>
