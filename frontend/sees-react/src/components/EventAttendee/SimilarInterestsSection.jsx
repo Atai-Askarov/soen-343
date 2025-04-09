@@ -26,7 +26,7 @@ const SimilarInterestsSection = ({ loading, attendees }) => {
           {attendees.map(attendee => (
             <div key={attendee.id} className="similar-attendee">
               <div className="attendee-info">
-                <span className="attendee-name">{attendee.username}</span>
+                <span className="attendee-name">{attendee.username} - </span>
                 <span className="attendee-interest">
                   {attendee.sharedInterest}
                 </span>
