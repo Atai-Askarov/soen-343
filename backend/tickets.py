@@ -1,7 +1,9 @@
 from flask import request, jsonify
 from account import db
 from sqlalchemy import exc
-
+import PaymentProcessing.stripe_setup as pp
+import requests
+import json
 class Ticket(db.Model):
     __tablename__ = 'tickets'
     __table_args__ = {'extend_existing': True}  # Prevent duplicate definition
@@ -24,11 +26,8 @@ class Ticket(db.Model):
         return f'<Ticket {self.id}>'
 
 def create_ticket():
-    """Create a new ticket"""
     data = request.get_json()
-    
-    required_fields = ['userid', 'eventid', 'descid', 'product_stripe_id', 'price_stripe_id']
-    
+    required_fields = ['userid', 'eventid', 'descid', 'name', 'description', 'price']
     if not all(field in data for field in required_fields):
         return jsonify({
             "message": "All fields are required!",
@@ -43,27 +42,27 @@ def create_ticket():
         else:
             purchase_date = data['purchase_date']
         
+        product_id = pp.create_ticket_product(event_name=data["name"], event_description=data["description"])
+        price_id = pp.create_ticket_price(int(float(data["price"]) * 100), data["name"], product_id)
+         
         new_ticket = Ticket(
             userid=data['userid'],
             eventid=data['eventid'],
             descid=data['descid'],
-            product_stripe_id=data['product_stripe_id'],
-            price_stripe_id=data['price_stripe_id'],
-            purchase_date=purchase_date
+            product_stripe_id=product_id,
+            price_stripe_id=price_id
         )
-        
         db.session.add(new_ticket)
         db.session.commit()
         
         return jsonify({
             "message": "Ticket created successfully!",
             "ticket_id": new_ticket.id,
-            "purchase_date": new_ticket.purchase_date.isoformat()
+            "purchase_date": new_ticket.purchase_date.isoformat(),
+            "product_id": product_id,
+            "price_id": price_id
         }), 201
         
-    except exc.IntegrityError as e:
-        db.session.rollback()
-        return jsonify({"message": "Database integrity error!", "error": str(e)}), 500
     except Exception as e:
         db.session.rollback()
         return jsonify({"message": f"Error creating ticket: {str(e)}"}), 500
