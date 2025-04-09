@@ -89,7 +89,7 @@ def create_ticket_price(amount, nickname, product_id):
             prices[amount] = price.id
             return price.id
     except stripe.error.StripeError as e:
-        print(f"An error occurred: {e}")
+        print(f"An error occurred: {e} + ghvhjbknlm;")
         return None
     
 def get_ticket_price(price_id):
@@ -235,4 +235,4 @@ def delete_stripe_products(
 # price_object = get_ticket_product(price)
 # deleted_price_object = archive_ticket_product(price)
 # print(deleted_price_object)
-delete_stripe_products(key)
+# delete_stripe_products(key)

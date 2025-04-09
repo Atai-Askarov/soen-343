@@ -5,14 +5,16 @@ from account import db, sign_in, get_users, log_in, get_users_by_role, get_all_u
 from event import create_event, get_events, get_event_by_id, get_events_by_organizer, fetch_event_by_id
 from ticketdescription import create_ticket_description, get_ticket_desc, get_ticket_descriptions_by_event
 from venue import create_venue, get_venues
-from tickets import get_tickets
+from tickets import get_tickets, create_ticket
 from sendEmail import Director, Builder, send_email
 from datetime import datetime
 import os
 from dotenv import load_dotenv
+from stripe.error import StripeError, CardError, InvalidRequestError, AuthenticationError, APIConnectionError, RateLimitError
+
 
 # Import the sponsorship blueprint
-from sponsorship import sponsorship_bp
+from sponsorship import sponsorship_bp, create_sponsorship
 
 # ───── ENVIRONMENT & APP INITIALIZATION ─────────────────────────
 load_dotenv()
@@ -48,28 +50,47 @@ def get_checkout_session():
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
     try:
-        # Create a new ticket first
-        ticket_response = create_ticket()
-        if ticket_response[1] != 201:
-            return ticket_response
-
-        ticket_data = ticket_response[0].json
-
-        # Now create the Stripe Checkout session
+        data = request.get_json()
+        product_type = data.get("product_type")
+        price_id = None
+        
+        # Handle ticket or sponsorship data
+        if product_type == "ticket":
+            ticket_response = create_ticket()
+            if ticket_response[1] != 201:
+                return jsonify({"error": "Ticket creation failed"}), 400
+            ticket_data = ticket_response[0].json
+            price_id = ticket_data.get("price_id")
+        else:
+            sponsorship_response = create_sponsorship()
+            if sponsorship_response[1] != 201:
+                return jsonify({"error": "Sponsorship creation failed"}), 400
+            sponsorship_data = sponsorship_response[0].get_json()
+            price_id = sponsorship_data.get("sponsorship", {}).get("stripe_price_id") if product_type != "ticket" else product.get("ticket", {}).get("stripe_price_id")
+        
+        # Extract the price_id depending on the product type
+        
+        if not price_id:
+            return jsonify({"error": "Price ID missing for the product"}), 400
+        
+        # Create the Stripe Checkout session
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=['card'],
             line_items=[{
-                'price': ticket_data['price_id'],
+                'price': price_id,
                 'quantity': 1,
             }],
             mode='payment',
             success_url='http://localhost:3000/success',
             cancel_url='http://localhost:3000/canceled',
-            metadata={'product_id': ticket_data['product_id']}  # Store product ID in metadata
         )
-        return jsonify({'url': checkout_session.url})
+        
+        # Return the URL for redirection
+        return jsonify({'url': checkout_session.url}), 200
+        
     except Exception as e:
-        return jsonify(error=str(e)), 403
+        print(f"Error: {str(e)}")
+        return jsonify({"error": "An unexpected error occurred"}), 500
 
 @app.route('/webhook', methods=['POST'])
 def webhook():

@@ -9,8 +9,6 @@ const Event = () => {
   const [ticketDescriptions, setTicketDescriptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
-
   const handlePurchase = async (ticket) => {
     try {
       const response = await axios.post("http://localhost:5000/create-checkout-session", {
@@ -20,7 +18,8 @@ const Event = () => {
         name: ticket.name,
         description: ticket.description,
         price: parseFloat(ticket.price),
-        priceId: ticket.priceId  // Make sure you have this priceId available
+        priceId: ticket.priceId,  // Make sure you have this priceId available
+        product_type: "ticket"
       });
   
       // Redirect to Stripe Checkout

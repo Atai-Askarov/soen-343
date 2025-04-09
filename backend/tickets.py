@@ -34,7 +34,7 @@ def create_ticket():
     try:
         product_id = pp.create_ticket_product(event_name=data["name"], event_description=data["description"])
         price_id = pp.create_ticket_price(int(float(data["price"]) * 100), data["name"], product_id)
-        
+         
         new_ticket = Ticket(
             userid=data['userid'],
             eventid=data['eventid'],

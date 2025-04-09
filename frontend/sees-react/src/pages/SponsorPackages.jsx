@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./css/eventDashboard.css";
+import axios from 'axios';
 
 const SponsorPackages = () => {
   const { eventId } = useParams();
@@ -28,25 +29,36 @@ const SponsorPackages = () => {
     fetchPackages();
   }, [eventId]);
 
-  const handleSponsor = async (selectedPackage) => {
-    try {
-      const res = await fetch("http://127.0.0.1:5000/sponsorship", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          event_id: parseInt(eventId),
-          sponsor_id: user?.id,
-          package_id: selectedPackage.id,  // send the package ID from the database
-        }),
-      });
+  
+const handleSponsor = async (selectedPackage) => {
+  try {
+    const value = {
+      event_id: parseInt(eventId),
+      sponsor_id: user?.id,
+      package_id: selectedPackage.id,
+      name: selectedPackage.name,
+      width: selectedPackage.width,
+      height: selectedPackage.height,
+      price: selectedPackage.price,
+      product_type: "sponsorship",
+    };
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message);
-      alert(`✅ You sponsored with: ${selectedPackage.name}`);
-    } catch (err) {
-      alert("❌ Sponsorship failed: " + err.message);
+    // Sending the request with axios
+    const res = await axios.post("http://127.0.0.1:5000/create-checkout-session", value, {
+      headers: { "Content-Type": "application/json" },
+    });
+
+    // If the response contains a URL, redirect to it
+    if (res.data.url) {
+      window.location.href = res.data.url;
+    } else {
+      alert("❌ Error: " + res.data.error);
     }
-  };
+  } catch (err) {
+    alert("❌ Sponsorship failed: " + err.message);
+  }
+};
+
 
   return (
     <div className="event-details-dashboard">

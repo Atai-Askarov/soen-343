@@ -10,7 +10,6 @@ import Signup from "./pages/signup";
 import CreateEvent from "./pages/createEvent";
 import Dashboard from "./pages/orgDashboard";
 import Event from "./pages/eventPage";
-import Checkout from './components/Checkout';
 import Success from "./pages/Success";
 import Canceled from "./pages/Canceled";
 import LandingPage from "./pages/LandingPage";
@@ -30,7 +29,6 @@ const App = () => {
             <Routes>
               <Route path="/success" element={<Success />} />
               <Route path="/canceled" element={<Canceled />} />
-              <Route path="/checkout" element={<Checkout />} />
               <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
