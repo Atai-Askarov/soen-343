@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./css/createEvent.css";
+import { CreateEventCommand } from "../components/Command/CreateEventCommand";
+import commandService from "../services/CommandService";
+import { useNavigate } from "react-router-dom";
 
 const CreateEvent = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     date: "",
@@ -14,8 +18,10 @@ const CreateEvent = () => {
     social_media_link: "",
     venue_id: "",
   });
-  const [speakers, setSpeakers] = useState([]); // Store speakers here
+  const [speakers, setSpeakers] = useState([]);
   const [venues, setVenues] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState(null);
   const eventTypes = ["workshop", "webinar", "conference", "seminar"];
 
   // Get the current user (organizer) from localStorage
@@ -35,7 +41,7 @@ const CreateEvent = () => {
         const response = await fetch("http://localhost:5000/users/by_role?role=speaker");
         const data = await response.json();
         if (response.ok) {
-          setSpeakers(data.users); // Assuming the response contains the users array
+          setSpeakers(data.users);
         } else {
           throw new Error(data.message || "Failed to fetch speakers");
         }
@@ -43,6 +49,7 @@ const CreateEvent = () => {
         console.error("Error fetching speakers:", error);
       }
     };
+    
     const fetchVenues = async () => {
       try {
         const res = await fetch("http://localhost:5000/venues");
@@ -75,37 +82,46 @@ const CreateEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate times
     if (formData.starttime && formData.endtime && formData.starttime > formData.endtime) {
       alert("Error: Start time cannot be later than end time.");
-      return; // Stop form submission
+      return;
     }
+    
+    setIsSubmitting(true);
+    setSubmitMessage({ type: 'info', text: 'Submitting request...' });
+    
     try {
-      const response = await fetch('http://localhost:5000/create_event', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          eventname: formData.name,
-          eventdate: formData.date,
-          eventstarttime: `${formData.date} ${formData.starttime}`,
-          eventendtime: `${formData.date} ${formData.endtime}`,
-          eventlocation: formData.location,
-          eventdescription: formData.description,
-          speakerid: formData.speakerid,
-          organizerid: formData.organizerid,
-          event_type: formData.event_type,
-          social_media_link: formData.social_media_link,
-          venue_id: formData.venue_id,
-
-        }),
+      // Prepare event data for the command
+      const eventData = {
+        eventname: formData.name,
+        eventdate: formData.date,
+        eventstarttime: `${formData.date} ${formData.starttime}`,
+        eventendtime: `${formData.date} ${formData.endtime}`,
+        eventlocation: formData.location,
+        eventdescription: formData.description,
+        speakerid: formData.speakerid,
+        organizerid: formData.organizerid,
+        event_type: formData.event_type,
+        social_media_link: formData.social_media_link,
+        venue_id: formData.venue_id,
+      };
+      
+      // Create the command
+      const command = new CreateEventCommand(eventData);
+      
+      // Add to command queue
+      commandService.addCommand(command);
+      
+      // Show success message
+      setSubmitMessage({ 
+        type: 'success', 
+        text: 'Your event creation request has been submitted for approval. You will be notified once it is approved.' 
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        alert(`Event created successfully! ID: ${data.eventid}`);
-        // Reset form
+      
+      // Reset form after 3 seconds
+      setTimeout(() => {
         setFormData({
           name: "",
           date: "",
@@ -118,18 +134,26 @@ const CreateEvent = () => {
           social_media_link: "",
           venue_id: "",
         });
-      } else {
-        throw new Error(data.message || 'Failed to create event');
-      }
+        setSubmitMessage(null);
+        navigate("/my-requests"); // Optional: navigate to a page showing user's requests
+      }, 3000);
+      
     } catch (error) {
-      alert(`Error: ${error.message}`);
-      console.error('Submission error:', error);
+      console.error('Error creating command:', error);
+      setSubmitMessage({ type: 'error', text: `Error: ${error.message}` });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <div className="createEvent">
       <h1>Create New Event</h1>
+      {submitMessage && (
+        <div className={`message ${submitMessage.type}`}>
+          {submitMessage.text}
+        </div>
+      )}
       <form onSubmit={handleSubmit}>
         <label>
           Event Name:
@@ -155,29 +179,29 @@ const CreateEvent = () => {
         </label>
 
         <label>
-  Start Time:
-  <input
-    type="time"
-    name="starttime"
-    value={formData.starttime}
-    onChange={handleChange}
-    step="1" // Allows seconds
-    pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}" // Ensures HH:MM:SS format
-  />
-</label>
+          Start Time:
+          <input
+            type="time"
+            name="starttime"
+            value={formData.starttime}
+            onChange={handleChange}
+            step="1"
+            pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}"
+          />
+        </label>
 
-<label>
-  End Time:
-  <input
-    type="time"
-    name="endtime"
-    value={formData.endtime}
-    onChange={handleChange}
-    step="1"
-    pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}"
-    min={formData.starttime}
-  />
-</label>
+        <label>
+          End Time:
+          <input
+            type="time"
+            name="endtime"
+            value={formData.endtime}
+            onChange={handleChange}
+            step="1"
+            pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}"
+            min={formData.starttime}
+          />
+        </label>
 
         <div className="form-group">
           <label>Location:</label>
@@ -243,7 +267,6 @@ const CreateEvent = () => {
             </select>
         </label>
 
-
         <label>
           Event Type:
           <select
@@ -270,8 +293,12 @@ const CreateEvent = () => {
           />
         </label>
 
-        <button className="create-button" type="submit">
-          Create Event
+        <button 
+          className="create-button" 
+          type="submit" 
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Submitting...' : 'Submit for Approval'}
         </button>
       </form>
     </div>

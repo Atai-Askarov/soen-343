@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './css/manageevents.css';
 
 import useEventData from '../hooks/useEventData';
+import commandService from '../services/CommandService';
 
 // Components
 import EventsHeader from '../components/EventManagement/EventsHeader';
@@ -13,6 +14,8 @@ import Loading from '../components/EventManagement/Loading';
 
 const ManageEvents = () => {
   const [showFilters, setShowFilters] = useState(false);
+  const [pendingEvents, setPendingEvents] = useState([]);
+  const [isPendingLoading, setIsPendingLoading] = useState(true);
   const navigate = useNavigate();
   
   const { 
@@ -34,12 +37,75 @@ const ManageEvents = () => {
     clearLocationFilter,
     clearTypeFilter,
   } = useEventData();
+  
+  // Fetch pending events
+  useEffect(() => {
+    const fetchPendingEvents = async () => {
+      try {
+        const commands = await commandService.getCommands();
+        // Filter commands for CreateEventCommand type with status "pending"
+        const pendingEventCommands = commands.filter(cmd => 
+          cmd.type === 'CreateEventCommand' && cmd.status === 'pending'
+        );
+        
+        // Transform commands to match event structure
+        const formattedPendingEvents = pendingEventCommands.map(cmd => ({
+          id: `pending-${cmd.id}`,
+          eventname: cmd.eventData.eventname,
+          eventdate: cmd.eventData.eventdate,
+          eventlocation: cmd.eventData.eventlocation,
+          event_type: cmd.eventData.event_type,
+          isPending: true,
+          commandId: cmd.id,
+          timestamp: cmd.timestamp
+        }));
+        
+        setPendingEvents(formattedPendingEvents);
+      } catch (error) {
+        console.error("Failed to fetch pending events:", error);
+      } finally {
+        setIsPendingLoading(false);
+      }
+    };
+    
+    fetchPendingEvents();
+  }, []);
+  
+  // Combine regular and pending events
+  const allEvents = [...filteredEvents, ...pendingEvents.filter(pending => {
+    // Apply the same filters as regular events
+    const matchesSearch = (
+      (pending.eventname?.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (pending.eventdate?.includes(searchTerm)) ||
+      (pending.eventlocation?.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+    
+    const matchesLocation = locationFilter.includes(pending.eventlocation);
+    const matchesType = typeFilter.includes(pending.event_type);
+    
+    // Always show pending events when "upcoming" is selected
+    const matchesStatus = statusFilter.upcoming;
+    
+    return matchesSearch && matchesLocation && matchesType && matchesStatus;
+  })];
 
   // Navigation functions
-  const handleEventClick = (eventId) => navigate(`/event-details/${eventId}`);
+  const handleEventClick = (eventId) => {
+    if (eventId.toString().startsWith('pending-')) {
+      // Extract original command ID from the formatted ID
+      const commandId = eventId.replace('pending-', '');
+      navigate(`/admin/pending-events/${commandId}`);
+    } else {
+      navigate(`/event-details/${eventId}`);
+    }
+  };
+  
   const handleFunctionClick = (eventId, functionType, e) => {
     e.stopPropagation();
-    navigate(`/events/${eventId}/${functionType}`);
+    // Don't allow function clicks on pending events
+    if (!eventId.toString().startsWith('pending-')) {
+      navigate(`/events/${eventId}/${functionType}`);
+    }
   };
 
   return (
@@ -68,13 +134,13 @@ const ManageEvents = () => {
         />
       )}
       
-      {loading ? (
+      {(loading || isPendingLoading) ? (
         <Loading />
       ) : (
         <>
-          <StatsCards events={events} filteredEvents={filteredEvents} />
+          <StatsCards events={events} filteredEvents={allEvents} />
           <EventsTable 
-            filteredEvents={filteredEvents}
+            filteredEvents={allEvents}
             handleEventClick={handleEventClick}
             handleFunctionClick={handleFunctionClick}
           />

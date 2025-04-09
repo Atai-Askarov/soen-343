@@ -438,4 +438,66 @@
   .search-box input {
     width: 100%;
   }
+  /* Pending events styling */
+.pending-badge {
+  margin-left: 8px;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  background-color: #ff9800;
+  color: white;
+  border-radius: 4px;
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+.status-pill.pending {
+  background-color: rgba(255, 152, 0, 0.15);
+  color: #ff9800;
+}
+
+.pending-actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.review-button {
+  padding: 6px 12px;
+  background-color: #ff9800;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.review-button:hover {
+  background-color: #f57c00;
+}
+
+/* Pending events styling */
+.pending-badge {
+  margin-left: 8px;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  background-color: #ff9800;
+  color: white;
+  border-radius: 4px;
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+.status-pill.pending {
+  background-color: rgba(255, 152, 0, 0.15);
+  color: #ff9800;
+}
+
+/* Make entire row clickable with better feedback */
+.events-table tr {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.events-table tr:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
 }
