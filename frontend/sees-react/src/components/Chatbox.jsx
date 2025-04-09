@@ -19,6 +19,12 @@ const Chatbox = () => {
   const [user, setUser] = useState(null); // Store user info from localStorage
   const hasJoinedRef = useRef(false); // Track if the client has joined the room
   const userRef = useRef(null); // Store user data for cleanup
+  const [isChatVisible, setChatVisible] = useState(false);
+
+  const toggleChat = () => {
+    setChatVisible(!isChatVisible);
+  };
+
 
   // Check if user is logged in on mount
   useEffect(() => {
@@ -112,27 +118,40 @@ const Chatbox = () => {
 
   return (
     <div>
-        <h1>Live Chat</h1>
-      <div>
-        <p>Logged in as: {user?.username || 'Unknown'}</p>
-      </div>
-      <div className="chat-window">
-        {messages.map((msg, index) => (
-          <div key={index}>
-            <strong>{msg.user}:</strong> {msg.message}
+    {/* Floating Button */} 
+    <button className="floating-btn" onClick={toggleChat}>
+      <i className="fa fa-comments"></i> {/* Icon for the button */}
+    </button>
+
+    {/* Chatbox Container */}
+    {isChatVisible && (
+      <div className="chatbox-container">
+        <div className="chat-window">
+        <div>
+          <p>Logged in as: {user?.username || 'Unknown'}</p>
+        </div>
+          {messages.map((msg, index) => (
+            <div key={index}>
+              <strong>{msg.user}:</strong> {msg.message}
+            </div>
+          ))}
+        </div>
+        <form className="form-chat" onSubmit={handleSendMessage}>
+          <div className="input-container">
+            <input
+              type="text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="Type your message here..."
+            />
+            <button className="send" type="submit">
+              <i className="fa fa-paper-plane"></i>
+            </button>
           </div>
-        ))}
+        </form>
       </div>
-      <form onSubmit={handleSendMessage}>
-        <input
-          type="text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Type your message here..."
-        />
-        <button type="submit">Send</button>
-      </form>
-    </div>
+    )}
+  </div>
   );
 };
 

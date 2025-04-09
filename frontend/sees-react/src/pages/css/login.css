@@ -4,6 +4,8 @@
   align-items: center;
   height: 100vh;
   margin: 0;
+  background-image: url('https://puzzlemania-154aa.kxcdn.com/products/2024/puzzle-enjoy-1000-pieces-montreal-skyline-by-night-canada.webp');
+  background-size: cover;
 }
 
 .welcome {
@@ -31,10 +33,10 @@
   font-size: 1vw; /* Adjust input text size */
 }
 
-.container {
-  width: 50vw;
-  height: 50vh;
-  max-width: 500px;
+.login-container {
+  width: 30vw;
+  height: 60vh;
+  max-width: 300px;
   max-height: 500px;
   background-color: white;
   display: flex;
@@ -44,6 +46,7 @@
   border: 1px solid red;
   border-radius: 25px;
   padding: 2vw;
+  z-index: 10;
 }
 
 .no-account {
