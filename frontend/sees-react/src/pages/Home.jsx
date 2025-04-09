@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link,  } from "react-router-dom";
-import Button from "../components/Button";
 import "./css/home.css"; 
 import "./css/eventPopup.css"; 
 

@@ -34,6 +34,8 @@ const LoginPage = () => {
   
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user)); // Save user details like ID
+
+        window.dispatchEvent(new Event("userLogin")); // Custom event to notify the navbar
   
         console.log("Redirecting to home page...");
         navigate("/home");
