@@ -91,6 +91,7 @@ const EventDashboard = () => {
             <Link to={`/promotion/${eventId}`} className="menu-item">Promotion</Link>
             <Link to={`/budget/${eventId}`} className="menu-item">Budgeting</Link>
             <Link to={`/sponsorships/${eventId}`} className="menu-item">Sponsorships</Link>
+            <Link to={`/manage-qa/${eventId}`} className="menu-item">Q&A Management</Link>
           </div>
 
           {/* Dashboard for Analytics */}

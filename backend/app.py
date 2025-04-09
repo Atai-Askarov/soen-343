@@ -403,6 +403,27 @@ def handle_send_message(data):
             print(f'Message from invalid user ID {user_id} in room {room}: {message}')
             emit('receiveMessage', {'user': 'Guest', 'message': message}, room=room)
 
+
+# FOR QUESTIONS
+from questions import Question, create_question, get_questions_by_event, answer_question
+@app.route('/questions', methods=['POST'])
+@cross_origin(origin='http://localhost:3000')
+def submit_question():
+    """Create a new question"""
+    return create_question()
+
+@app.route('/questions/<int:event_id>', methods=['GET'])
+@cross_origin(origin='http://localhost:3000')
+def get_event_questions(event_id):
+    """Get all questions for an event"""
+    return get_questions_by_event(event_id)
+
+@app.route('/questions/answer/<int:question_id>', methods=['POST'])
+@cross_origin(origin='http://localhost:3000')
+def post_answer(question_id):
+    """Answer a question"""
+    return answer_question(question_id)
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()  # Create tables if they don't exist

@@ -20,9 +20,11 @@ import ManageEvents from "./pages/ManageEvents"
 import EventDetail from './pages/EventDetails';
 import ReviewEvent from "./pages/ReviewEvent";
 import './css/normalize.css';
+import EventPageAttendee from './pages/EventPageAttendee'
 // import './css/global.css';
 import SponsorView from "./pages/SponsorView";
 import SponsorPackages from "./pages/SponsorPackages";
+import ManageQA from "./pages/ManageQA"
 const App = () => {
   return (
     <BrowserRouter>
@@ -51,7 +53,8 @@ const App = () => {
               <Route path="/review-event/:commandId" element={<ReviewEvent />} />
 
               <Route path="/myevents" element={<MyEventsLearner />} />
-
+              <Route path="/event-attendee/:id" element={<EventPageAttendee />} />
+              <Route path="/manage-qa/:eventId" element={<ManageQA />} />
             </Routes>
 
           </main>

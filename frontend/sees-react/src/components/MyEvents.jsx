@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './css/myevents.css'; // Adjust the path as necessary
 
 const MyEvents = () => {
+    const navigate = useNavigate(); // Add navigation hook
     const [tickets, setTickets] = useState([]);
     const [events, setEvents] = useState([]);  
     const [loading, setLoading] = useState(true);
@@ -59,6 +61,18 @@ const MyEvents = () => {
         }
     }, [tickets]);  
     
+    // Updated navigation function for event attendees
+    const navigateToEventDetails = (event, e) => {
+        // Prevent navigation if clicking on ticket info
+        if (e.target.closest('.ticket-info')) {
+            return;
+        }
+        
+        if (event && event.eventid) {
+            navigate(`/event-attendee/${event.eventid}`);
+        }
+    };
+    
     if (loading) {
         return <p>Loading...</p>;
     }
@@ -74,14 +88,19 @@ const MyEvents = () => {
             ) : (
                 <div className="events-list">
                     {tickets.map((ticket, index) => (
-                        <div key={ticket.id} className="event-item">
+                        <div 
+                            key={ticket.id} 
+                            className="event-item"
+                            onClick={(e) => navigateToEventDetails(events[index], e)}
+                            style={{ cursor: 'pointer' }}
+                        >
                             <div className="event-content">
                                 <div className="event-image-div">
-                                <img 
-                                    src={events[index]?.event_img || 'default-image.jpg'} 
-                                    alt="Event" 
-                                    className="event-image" 
-                                />
+                                    <img 
+                                        src={events[index]?.event_img || 'default-image.jpg'} 
+                                        alt="Event" 
+                                        className="event-image" 
+                                    />
                                 </div>
                                 <div className="event-details">
                                     {events[index] ? (
@@ -96,7 +115,7 @@ const MyEvents = () => {
                                         <p>Event details not available.</p>
                                     )}
                                 </div>
-                                <div className="ticket-info">
+                                <div className="ticket-info" onClick={(e) => e.stopPropagation()}>
                                     <h3>Ticket ID: {ticket.id}</h3>
                                     <p>Description ID: {ticket.descid}</p>
                                     <p>IMMA ADD THE QR CODE OR SMTH</p>
