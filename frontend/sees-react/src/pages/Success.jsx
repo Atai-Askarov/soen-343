@@ -18,6 +18,7 @@ const Success = () => {
   }, [sessionId]);
 
   return (
+    <div class="stripe_wrapper">
     <div className="sr-root">
       <div className="sr-main">
         <header className="sr-header">
@@ -62,6 +63,7 @@ const Success = () => {
           />
         </div>
       </div>
+    </div>
     </div>
   );
 };

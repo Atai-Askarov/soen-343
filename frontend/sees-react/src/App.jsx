@@ -18,8 +18,6 @@ import Budget from "./pages/budget";
 import ManageEvents from "./pages/ManageEvents"
 import EventDetail from './pages/EventDetails';
 import ReviewEvent from "./pages/ReviewEvent";
-import './css/normalize.css';
-import './css/global.css';
 import SponsorView from "./pages/SponsorView";
 import SponsorPackages from "./pages/SponsorPackages";
 const App = () => {

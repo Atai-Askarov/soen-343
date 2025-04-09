@@ -60,8 +60,7 @@ def create_ticket():
             "ticket_id": new_ticket.id,
             "purchase_date": new_ticket.purchase_date.isoformat(),
             "product_id": product_id,
-            "price_id": price_id,
-            "purchase_date": purchase_date
+            "price_id": price_id
         }), 201
         
     except Exception as e:

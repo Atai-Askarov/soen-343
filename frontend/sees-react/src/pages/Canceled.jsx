@@ -1,8 +1,8 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-
 const Canceled = () => {
   return (
+    <div class="stripe_wrapper">
     <div className="sr-root">
       <div className="sr-main">
         <header className="sr-header">
@@ -41,6 +41,7 @@ const Canceled = () => {
           />
         </div>
       </div>
+    </div>
     </div>
   );
 };
