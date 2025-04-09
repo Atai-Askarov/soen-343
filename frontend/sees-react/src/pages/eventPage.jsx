@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams} from "react-router-dom";
 import "./css/eventPage.css";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";import Chatbox from "../components/Chatbox.jsx";
+import axios from "axios";
+import Chatbox from "../components/Chatbox.jsx";
 
 
 const Event = () => {
@@ -98,6 +98,7 @@ const Event = () => {
                 <p><strong>Price:</strong> ${ticket.price}</p>
                 <p><strong>Description:</strong> {ticket.description || "No description available"}</p>
                 <button onClick={() => {handlePurchase(ticket)}}>Purchase Ticket</button>
+                </div>
               </div>
             ))}
           </div>

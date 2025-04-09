@@ -231,8 +231,3 @@ def delete_stripe_products(
         results['errors'] += 1
 
     return results
-# price = create_ticket_product("Rock Climbing", "Outdoors rock climbing", )
-# price_object = get_ticket_product(price)
-# deleted_price_object = archive_ticket_product(price)
-# print(deleted_price_object)
-# delete_stripe_products(key)
