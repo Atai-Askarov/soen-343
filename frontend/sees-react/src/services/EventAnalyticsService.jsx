@@ -134,10 +134,18 @@ processAttendeeData(ticketSales, attendanceData = null) {
      * TODO: Implement this endpoint in the backend
      */
     async fetchTicketSales(eventId) {
-      // This endpoint doesn't exist yet - it needs to be created in the backend
-      const response = await fetch(`http://127.0.0.1:5000/tickets/${eventId}`);
-      const data = await response.json();
-      return data.tickets || [];
+      try {
+        const response = await fetch(`http://127.0.0.1:5000/tickets/${eventId}`);
+        if (!response.ok) {
+          console.warn(`Tickets endpoint returned ${response.status}, using empty array`);
+          return [];
+        }
+        const data = await response.json();
+        return data.tickets || [];
+      } catch (error) {
+        console.error(`Error fetching ticket sales: ${error.message}`);
+        return []; // Return empty array on error
+      }
     },
   
     /**
