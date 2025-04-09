@@ -3,9 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@stripe/stripe-js": "^4.5.0",
     "@testing-library/user-event": "^13.5.0",
-    "accept-a-payment-checkout-react-cra": "file:",
     "ajv": "^8.17.1",
     "axios": "^1.8.4",
     "lint": "^0.8.19",
@@ -14,7 +12,7 @@
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.4.0",
     "react-scripts": "5.0.1",
-    "sees-react": "file:",
+    "socket.io-client": "^4.8.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

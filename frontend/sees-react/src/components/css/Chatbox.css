@@ -1,0 +1,63 @@
+.chat-window {
+    border: 1px solid #ccc;
+    padding: 10px;
+    height: 300px;
+    overflow-y: scroll;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    border-radius: 20px;
+    width: 400px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .form-chat {
+    display: flex;
+    gap: 10px;
+    width: 430px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  input {
+    flex: 1;
+    padding: 5px;
+  }
+  
+  .send {
+    padding: 5px 10px;
+    width: 50px;
+    height: 50px;
+    background-color: rgb(56, 56, 246);
+  }
+  .input-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .floating-btn {
+    position: fixed;
+    bottom: 40px;
+    right: 20px;
+    background-color: white; /* Blue button */
+    color: #007bff;
+    border: none;
+    border-radius: 50%; /* Makes it a circle */
+    width: 60px; /* Width of the button */
+    padding: 15px;
+    font-size: 24px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    z-index: 1000; /* Make sure it stays above other content */
+  }
+
+  /* Chatbox container positioning (next to the floating button) */
+.chatbox-container {
+  position: fixed;
+  bottom: 40px;
+  right: 100px;
+}
+
+
+  

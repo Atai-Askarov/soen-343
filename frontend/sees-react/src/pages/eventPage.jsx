@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams} from "react-router-dom";
 import "./css/eventPage.css";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "axios";import Chatbox from "../components/Chatbox.jsx";
+
+
 const Event = () => {
   const { eventId } = useParams(); 
   const [event, setEvent] = useState(null);
@@ -61,10 +63,10 @@ const Event = () => {
     return <p>{error}</p>;
   }
 
-  return (
-    <div className="event-container-page">
+  return (  
+    <div className="event-page">
       {event ? (
-        <div>
+        <div className="event-container-page">
           <div className="event-thumbnail-page">
               <img
                 src={event.event_img || "/images/default.jpg"} // Use the event image if available, otherwise use the default image
@@ -83,14 +85,15 @@ const Event = () => {
       ) : (
         <p>Event not found.</p>
       )}
-
+      
       {/* Ticket Options Section */}
-      <div>
+      <div className="ticket-options">
         <h1>Ticket Options</h1>
         {ticketDescriptions.length > 0 ? (
           <div className="ticket-list" style={{ display: "flex", flexDirection: "row", gap: "20px",contentAlign: "center" }}>
             {ticketDescriptions.map((ticket) => (
               <div key={ticket.id} className="ticket-card">
+                <div className="ticket-writing">
                 <h4>{ticket.name}</h4>
                 <p><strong>Price:</strong> ${ticket.price}</p>
                 <p><strong>Description:</strong> {ticket.description || "No description available"}</p>
@@ -101,6 +104,9 @@ const Event = () => {
         ) : (
           <p>No ticketing options available for this event.</p>
         )}
+      </div>
+      <div className="chatbox-container">
+        <Chatbox eventId={eventId} />
       </div>
     </div>
   );

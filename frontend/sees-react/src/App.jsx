@@ -1,4 +1,3 @@
-// src/App.jsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, BrowserRouter } from "react-router-dom";
 import "./App.css";
@@ -15,6 +14,8 @@ import Canceled from "./pages/Canceled";
 import LandingPage from "./pages/LandingPage";
 import EventDashboard from "./pages/eventDashboard";
 import TicketsPage from "./pages/ticketsPage";
+import Budget from "./pages/budget";
+import ManageEvents from "./pages/ManageEvents"
 import './css/normalize.css';
 import './css/global.css';
 import SponsorView from "./pages/SponsorView";
@@ -39,9 +40,12 @@ const App = () => {
               <Route path="/eventDashboard/:eventId" element={<EventDashboard />} />
               <Route path="/manage-ticketing/:eventId" element={<TicketsPage />} />
               <Route path="/promotion/:eventId" element={<TicketsPage />} />
+              <Route path="/budget/:eventId" element={<Budget />} />
+              <Route path ="/manage-events" element = {<ManageEvents/>}/>
               <Route path="/sponsor-view" element={<SponsorView />} />
               <Route path="/sponsor/:eventId" element={<SponsorPackages />} />
             </Routes>
+
           </main>
           <Footer />
         </div>
