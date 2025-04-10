@@ -6,19 +6,23 @@ from account import db, sign_in, get_users, log_in,get_users_by_role, get_all_us
 from event import * #register_for_event
 from ticketdescription import create_ticket_description, get_ticket_desc, get_ticket_descriptions_by_event
 from venue import create_venue, get_venues, get_venue_by_id
-from tickets import get_tickets,get_users_by_event, get_tickets_by_user, create_ticket
+from tickets import get_tickets,get_users_by_event, get_tickets_by_user, create_ticket, get_tickets_by_event
 from budget_items import create_budget_item, get_budget_items_by_event, delete_budget_item
 from flask import Flask, request, jsonify
-from sendEmail import EmailDirector, HTMLEmailBuilder, send_email
+from sendEmail import EmailDirector, HTMLEmailBuilder, send_email, send_email_update, send_delete_email
 from datetime import datetime
 import os
 from dotenv import load_dotenv
 from flask_socketio import SocketIO, join_room, leave_room, emit
 from dotenv import load_dotenv
 from attendance import get_attendance_by_event
+from EventNotifier import EventNotifier, email_attendees_on_update, email_attendees_on_delete
 
 
 from stripe.error import StripeError, CardError, InvalidRequestError, AuthenticationError, APIConnectionError, RateLimitError
+EventNotifier.register(email_attendees_on_update)
+EventNotifier.register(email_attendees_on_delete)
+
 
 
 # Import blueprints
@@ -185,10 +189,30 @@ def get_user_by_id_route(user_id):
 def event_by_id(event_id):
     return get_event_by_id(event_id)
 
+
 @app.route('/events/<int:event_id>', methods=['PUT'])
 @cross_origin(origin='http://localhost:3000')
 def update_events(event_id):
-    return update_event(event_id)
+    print("➡️ Updating event...")
+    update_response = update_event(event_id)
+
+    if isinstance(update_response, tuple):
+        update_data, update_status = update_response
+    else:
+        update_data = update_response
+        update_status = getattr(update_response, "status_code", 500)
+
+    if update_status != 200:
+        print("❌ Event update failed, skipping notifications.")
+        return update_response
+
+    # 🔔 Notify all registered observers
+    print("📣 Notifying observers...")
+    EventNotifier.notify(event_id)
+
+    return update_data, update_status
+
+
 
 @app.route("/get_tickets", methods=["GET"])
 @cross_origin(origin='http://localhost:3000')
@@ -307,7 +331,6 @@ def delete_budget_item_route(item_id):
     return delete_budget_item(item_id)
 
 
-
 @app.route("/login", methods=["POST"])
 @cross_origin(origin='http://localhost:3000')
 def login():
@@ -364,7 +387,27 @@ def send_email_via_blast():
 @app.route('/events/<int:event_id>', methods=['DELETE'])
 @cross_origin(origin='http://localhost:3000')
 def delete_events(event_id):
-    return delete_event(event_id)
+    # 1. Fetch event
+    event = fetch_event_by_id(event_id)
+    if not event:
+        return jsonify({"error": f"No event found for ID {event_id}"}), 404
+
+    # 2. MOCK DELETE
+    print(f"[MOCK DELETE] Pretending to delete event with ID {event_id}")
+    delete_json = {"message": f"Event {event_id} mock-deleted successfully"}
+    status = 200
+
+    # 3. Notify observers (which includes email_attendees_on_delete)
+    print("📣 Notifying observers about deletion...")
+    EventNotifier.notify(event_id)
+
+    return jsonify({
+        "message": "✅ Event mock-deleted and notifications sent",
+        "mock": True
+    }), status
+
+
+
 
 @app.route('/eventEmailUpdate/<int:event_id>', methods=['GET'])
 @cross_origin(origin='http://localhost:3000')
@@ -395,13 +438,14 @@ def event_email_update(event_id):
         "socialMediaLink": event["social_media_link"]
         }
 
-        director = Director(event_data)
-        builder = Builder()
-        email_html = director.construct(builder)
+        director = EmailDirector()
+        builder = HTMLEmailBuilder()
+        director.builder = builder
+        email_html = director.build_event_email(event_data)
 
         print("✅ Email HTML generated")
 
-        useremails = get_all_user_emails()
+        useremails = emails
         print("✅ User emails:", useremails)
 
         subject = event.get("eventname")
@@ -412,7 +456,7 @@ def event_email_update(event_id):
             return jsonify({"error": "Missing email data"}), 500
 
         send_email(useremails, subject, email_html)
-        return jsonify({"message": "✅ Email campaign sent successfully."}), 200
+        return jsonify({"message": "✅ Emails sent successfully."}), 200
 
     except Exception as e:
         print(f"❌ Error in /emailSending: {e}")
@@ -453,9 +497,10 @@ def share_resource(event_id):
             "files": file_urls  # These are now public URLs
         }
 
-        director = Director(resource_data)
-        builder = Builder()
-        email_html = director.construct_resource_sharing(builder)
+        director = EmailDirector()
+        builder = HTMLEmailBuilder()
+        director.builder = builder
+        email_html = director.build_resource_sharing_email(resource_data)
         print("✅ Email HTML generated")
         subject = "Resource Sharing Concerning: " + event["eventname"]
         print("✅ Email subject:", subject)
@@ -685,5 +730,5 @@ if __name__ == "__main__":
         db.create_all()
     app.run(debug=True, host="0.0.0.0", port=5000)
 
-        db.create_all()  # Create tables if they don't exist
+    db.create_all()  # Create tables if they don't exist
     socketio.run(app, debug=True, host="0.0.0.0", port=5000)

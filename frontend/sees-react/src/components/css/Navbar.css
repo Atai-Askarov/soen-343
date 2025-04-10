@@ -1,3 +1,12 @@
+.polar-bear-image {
+  width: inherit;
+  height: 70vh;
+  position: absolute;
+  top: 0px;
+  display: block;
+  margin: 0 auto;
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;

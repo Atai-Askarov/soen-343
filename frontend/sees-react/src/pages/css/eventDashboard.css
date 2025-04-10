@@ -7,6 +7,7 @@
   box-sizing: border-box;
   margin-top: 20px;
   background-color: #a4cbf1;
+  min-height: 1500px;
 }
 
 .event-details-card {
