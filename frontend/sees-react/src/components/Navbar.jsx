@@ -122,14 +122,16 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="navbar-left">
         <div style={{ display: "flex", alignItems: "row" }}>
+          <div className="navbar-logo">
         <div className="logo">
           <Link to="/home">
-            <img className="image" src="https://cdn-icons-png.flaticon.com/512/2938/2938245.png" alt="placeholder" />
+            <img className="polar-bear-image" id="PolarImage" src="https://cdn-icons-png.flaticon.com/512/2938/2938245.png" alt="placeholder" />
           </Link>
         </div>
           <Link to="/home">
             <div className="pookie-bears">POOKIE <br></br> BEARS</div>
           </Link>
+          </div>
         </div>
       </div>
       <div className="navbar-right">

@@ -62,8 +62,18 @@ class EmailBuilder(ABC):
     @abstractmethod
     def get_result(self) -> str:
         pass
-
-
+    @abstractmethod
+    def build_message(self) -> str:
+        pass
+    @abstractmethod
+    def build_files(self) -> list:
+        pass
+    @abstractmethod
+    def get_resource_sharing_result(self) -> str:
+        pass
+    @abstractmethod
+    def get_delete_email(self) -> str:
+        pass
 class HTMLEmailBuilder(EmailBuilder):
     """Concrete Builder implementation that creates HTML email content"""
     
@@ -122,10 +132,21 @@ class HTMLEmailBuilder(EmailBuilder):
             </div>
         """
         return self
+    def build_files(self, files):
+        self.event_dict["files"] = files
+        return self
+    def build_message(self, message):
+        self.event_dict["message"] = message
+        return self
 
     def get_result(self):
         """Returns the final HTML email template"""
         return self._get_email_html()
+    def get_resource_sharing_result(self):
+        """Returns the final HTML email template"""
+        return self.__get_resource_sharing_email()
+    def get_delete_email(self):
+        return self.__getDeleteEmail()
     
     def _get_email_html(self):
         """Internal method to format the complete HTML email"""
@@ -147,7 +168,55 @@ class HTMLEmailBuilder(EmailBuilder):
 
         </div>
         """
+        full_email = f"""
+        <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Event Details</title>
+            </head>
+            <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 40px;">
+                {body_content}
+            </body>
+        </html>
+        """
+        return full_email
+    def __get_resource_sharing_email(self):
+        body_content = f"""
+        <div style="max-width: 600px; margin: auto; background: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+            <h1 style="color: #2c3e50;">Event Details</h1>
+            <h2>Message:</h2>
+            <div style="margin-bottom: 20px;">
+                {self.event_dict.get("message", "")}
+            </div>
+            <h2>Files:</h2>
+            <div style="margin-top: 10px;">
+                {self.event_dict.get("files", "")}
+            </div>
+        </div>
+        """
+        full_email = f"""
+        <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Event Details</title>
+            </head>
+            <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 40px;">
+                {body_content}
+            </body>
+        </html>
+        """
+        return full_email
 
+    def __getDeleteEmail(self):
+        body_content = f"""
+        <div style="max-width: 600px; margin: auto; background: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+            <h1 style="color: #2c3e50;">Event Details</h1>
+            <h2>Hello Sir/Madam, we are sorry to inform you that unfortunately the event you were attending: {self.event_dict.get("eventName", "")} has been cancelled</h2>
+            <div style="margin-bottom: 20px;">
+                {self.event_dict.get("message", "")}
+            </div>
+        </div>
+        """
         full_email = f"""
         <html>
             <head>
@@ -212,6 +281,31 @@ class EmailDirector:
             self._builder.build_socialMediaLink(socialMediaLink)
             
         return self._builder.get_result()
+    def build_resource_sharing_email(self, event_data):
+        """Builds a complete resource sharing email using the provided data"""
+        if not self._builder:
+            raise ValueError("Builder hasn't been set")
+            
+        self._builder.reset()
+        files=event_data.get("files")
+        message=event_data.get("message")
+        # Build the email components
+        self._builder.build_files(files)
+        self._builder.build_message(message)
+        
+        return self._builder.get_resource_sharing_result()
+    def build_delete_email(self, event_data):
+        """Builds a complete resource sharing email using the provided data"""
+        if not self._builder:
+            raise ValueError("Builder hasn't been set")
+            
+        self._builder.reset()
+        eventName = event_data.get("eventName")
+        # Build the email components
+        self._builder.build_eventName(eventName)
+
+        
+        return self._builder.get_delete_email()
 
 
 def send_email(to_emails, event_name, html_content):
@@ -248,6 +342,97 @@ def send_email(to_emails, event_name, html_content):
             msg['From'] = from_email
             msg['To'] = to_email
             msg['Subject'] = f"{event_name} — Exclusive Promotion is coming your way!"
+            msg.attach(MIMEText(html_content, 'html'))
+
+            server.sendmail(from_email, to_email, msg.as_string())
+            print(f"✅ Email sent to {to_email}")
+        except smtplib.SMTPAuthenticationError as e:
+            print(f"❗ Authentication Error: {e}")
+        except Exception as e:
+            print(f"❗ Failed to send email to {to_email}: {e}")
+
+    server.quit()
+    
+    
+def send_email_update(to_emails, event_name, html_content):
+    from_email = os.getenv("EMAIL_ADDRESS")
+    from_password = os.getenv("EMAIL_PASSWORD")
+
+    # Safety check for required values
+    if not from_email:
+        raise ValueError("❌ Missing sender email (from_email).")
+    if not from_password:
+        raise ValueError("❌ Missing sender email password (from_password).")
+    if not to_emails:
+        raise ValueError("❌ No recipient emails provided (to_emails).")
+    if not event_name:
+        raise ValueError("❌ Missing event name (event_name).")
+    if not html_content:
+        raise ValueError("❌ Missing email content (html_content).")
+
+
+    if isinstance(to_emails, str):
+        to_emails = [to_emails]
+
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login(from_email, from_password)
+
+    for to_email in to_emails:
+        try:
+            if not to_email:
+                print("⚠️ Skipped empty recipient.")
+                continue
+
+            msg = MIMEMultipart()
+            msg['From'] = from_email
+            msg['To'] = to_email
+            msg['Subject'] = f"The Event you're attending: - {event_name} - got Updated!!"
+            msg.attach(MIMEText(html_content, 'html'))
+
+            server.sendmail(from_email, to_email, msg.as_string())
+            print(f"✅ Email sent to {to_email}")
+        except smtplib.SMTPAuthenticationError as e:
+            print(f"❗ Authentication Error: {e}")
+        except Exception as e:
+            print(f"❗ Failed to send email to {to_email}: {e}")
+
+    server.quit()
+    
+def send_delete_email(to_emails, event_name, html_content):
+    from_email = os.getenv("EMAIL_ADDRESS")
+    from_password = os.getenv("EMAIL_PASSWORD")
+
+    # Safety check for required values
+    if not from_email:
+        raise ValueError("❌ Missing sender email (from_email).")
+    if not from_password:
+        raise ValueError("❌ Missing sender email password (from_password).")
+    if not to_emails:
+        raise ValueError("❌ No recipient emails provided (to_emails).")
+    if not event_name:
+        raise ValueError("❌ Missing event name (event_name).")
+    if not html_content:
+        raise ValueError("❌ Missing email content (html_content).")
+
+
+    if isinstance(to_emails, str):
+        to_emails = [to_emails]
+
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login(from_email, from_password)
+
+    for to_email in to_emails:
+        try:
+            if not to_email:
+                print("⚠️ Skipped empty recipient.")
+                continue
+
+            msg = MIMEMultipart()
+            msg['From'] = from_email
+            msg['To'] = to_email
+            msg['Subject'] = f"The Event you're attending: - {event_name} - got Deleted :((!!"
             msg.attach(MIMEText(html_content, 'html'))
 
             server.sendmail(from_email, to_email, msg.as_string())
