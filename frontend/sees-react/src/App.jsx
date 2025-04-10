@@ -27,10 +27,12 @@ import SponsorAnalytics from "./pages/SponsorAnalytics";
 import SponsorDashboard from "./pages/SponsorDashboard";
 import MySponsorships from "./pages/MySponsorships";
 import ManageQA from "./pages/ManageQA"
+import ConfirmationPage from "./pages/QRConfirmationPage";
 import ManageAttendees from "./pages/ManagementEvents/ManageAttendees";
 import ManageAnalytics from "./pages/ManagementEvents/ManageAnalytics";
 import ManageFinancials from "./pages/ManagementEvents/ManageFinancials";
 import ManageRequests from "./pages/ManagementEvents/ManageRequests"
+import OrgPackageCreation from "./pages/OrgPackageCreation";
 import ManageUsers from "./pages/ManagementEvents/ManageUsers";
 
 const App = () => {
@@ -62,7 +64,7 @@ const App = () => {
               <Route path="/sponsor/analytics" element={<SponsorAnalytics />} />
               <Route path="/sponsor-dashboard" element={<SponsorDashboard />} />
               <Route path="/sponsor/mysponsorships" element={<MySponsorships />} />
-
+              <Route path="/sponsorships/:eventId" element={<OrgPackageCreation />} />
               <Route path="/event-details/:id" element={<EventDetail />} />
               <Route path="/review-event/:commandId" element={<ReviewEvent />} />
               <Route path="/myevents" element={<MyEventsLearner />} />
@@ -83,6 +85,8 @@ const App = () => {
             <Route path="/events/:eventId/resources" element={<Resources />} />
             <Route path="/events/:eventId/networking" element={<Networking />} /> */}
 
+              <Route path="/myevents/attendance-confirmation-page/:ticketId" element={<ConfirmationPage/>} />
+              <Route path="/eventDasboard/:eventId/attendance-confirmation-page" element={<ConfirmationPage/>} />
             </Routes>
 
           

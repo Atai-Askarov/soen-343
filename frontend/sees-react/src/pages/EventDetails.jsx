@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaTag, FaUserTie, FaUserCog, FaBuilding, FaLink } from 'react-icons/fa';
+import CheckInPanel from '../components/AttendanceButton';
 import './css/eventDetails.css';
+import QRCode from '../components/QRCode';
 
 const EventDetail = () => {
   const { id } = useParams();
@@ -198,6 +200,8 @@ const EventDetail = () => {
             </div>
           </div>
         </div>
+        
+        
         
         <div className="event-actions">
           <button className="neuro-button action">Edit Event</button>

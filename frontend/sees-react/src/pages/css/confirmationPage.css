@@ -1,0 +1,51 @@
+.confirmation-page {
+    max-width: 600px;
+    margin: 80px auto;
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    text-align: center;
+  }
+  
+  .confirmation-page h1 {
+    font-size: 2.5rem;
+    color: #2a9d8f;
+    margin-bottom: 16px;
+  }
+  
+  .confirmation-page h2 {
+    font-size: 1.8rem;
+    margin: 16px 0 12px;
+    color: #264653;
+  }
+  
+  .confirmation-page p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 8px 0;
+  }
+  
+  .confirmation-page p:last-of-type {
+    font-weight: bold;
+    color: #2a9d8f;
+    margin-top: 24px;
+  }
+  
+  @media (max-width: 640px) {
+    .confirmation-page {
+      margin: 40px 20px;
+      padding: 24px;
+    }
+  
+    .confirmation-page h1 {
+      font-size: 2rem;
+    }
+  
+    .confirmation-page h2 {
+      font-size: 1.4rem;
+    }
+  }
+  

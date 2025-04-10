@@ -5,7 +5,56 @@ import AnalyticsModal from "../components/Analytics/AnalyticsModal";
 import AnalyticsCard from "../components/Analytics/AnalyticsCard";
 //? Service File to fetch the analytics 
 import eventAnalyticsService from "../services/EventAnalyticsService";
+import { QRCodeSVG } from "qrcode.react";
 
+function QrModalButton({ eventid }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      {/* Button to open the modal */}
+      <button
+        className="menu-item"
+        onClick={() => setIsOpen(true)}
+      >
+        Show QR Code
+      </button>
+
+      {/* Modal for displaying the QR code */}
+      {isOpen && (
+        <div className="centered-qr-modal">
+          <div>
+            {/* Close button */}
+            <button
+              onClick={() => setIsOpen(false)}
+              className="close-button"
+            >
+              &times;
+            </button>
+
+            <h2 className="text-center">Scan the QR Code</h2>
+
+            {/* QR Code wrapped in a clickable link */}
+            <a
+              target="_blank" // Opens the link in a new tab
+              rel="noopener noreferrer" // Security best practice
+            >
+              <QRCodeSVG
+                
+                size={350}
+                level="H"
+                includeMargin={true}
+              />
+            </a>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+
+ 
 
 
 const EventDashboard = () => {
@@ -44,15 +93,16 @@ const EventDashboard = () => {
   
   
   const getTimeInputValue = (dateStr, timeStr) => {
-    if (!dateStr || !timeStr) return ""; // early return for invalid values
+    if (!dateStr || !timeStr) return "";
   
-    const combined = `${dateStr}T${timeStr}`;
-    const d = new Date(combined);
+    // Try parsing the time string into 24-hour format
+    const date = new Date(`${dateStr} ${timeStr}`);
+    if (isNaN(date.getTime())) return "";
   
-    if (isNaN(d.getTime())) return ""; // invalid date object
-  
-    return d.toISOString().split("T")[1].slice(0, 8);
+    // Return HH:MM:SS (24-hour) format
+    return date.toTimeString().split(" ")[0]; // → "04:33:59"
   };
+  
   
   
   const handleUpdateSubscribers = async () => {
@@ -267,7 +317,7 @@ const EventDashboard = () => {
                   ) : (
                     event.eventname
                   )}</h2>
-            <p><strong>Type:</strong> 
+            <p><strong>Type: </strong> 
                   {isEditing ? (
                     <select
   value={editedEvent.event_type}
@@ -301,47 +351,44 @@ const EventDashboard = () => {
 }</p>
 <p><strong>Start Time:</strong> {
   isEditing ? (
-    <input type="time"
-    step="1"
-    value={
-      isEditing
-        ? getTimeInputValue(editedEvent.eventdate, editedEvent.eventstarttime)
-        : ""
-    }
-    onChange={(e) =>
-      setEditedEvent({
-        ...editedEvent,
-        eventstarttime: e.target.value,
-      })
-    }
-  />
-  
-    ) : ( 
-      new Date(event.eventstarttime).toISOString().split("T")[1].slice(0, 8)
-  )
+    <input 
+      type="time"
+      step="1"
+      value={
+        getTimeInputValue(editedEvent.eventdate, editedEvent.eventstarttime)
+      }
+      onChange={(e) =>
+        setEditedEvent({
+          ...editedEvent,
+          eventstarttime: e.target.value,
+        })
+      }
+    />
+  ) : (
+    new Date(new Date(event.eventstarttime).getTime() - 4 * 60 * 60 * 1000)
+      .toTimeString()
+      .split(" ")[0]  )
 }</p>
 
 <p><strong>End Time:</strong> {
   isEditing ? (
-    <input
-    type="time"
-  step="1"
-  value={
-    isEditing
-      ? getTimeInputValue(editedEvent.eventdate, editedEvent.eventendtime)
-      : ""
-  }
-  onChange={(e) =>
-    setEditedEvent({
-      ...editedEvent,
-      eventendtime: e.target.value,
-    })
-  }
-/>
-
+    <input 
+      type="time"
+      step="1"
+      value={
+        getTimeInputValue(editedEvent.eventdate, editedEvent.eventendtime)
+      }
+      onChange={(e) =>
+        setEditedEvent({
+          ...editedEvent,
+          eventendtime: e.target.value,
+        })
+      }
+    />
   ) : (
-    new Date(event.eventendtime).toISOString().split("T")[1].slice(0, 8)
-  )
+    new Date(new Date(event.eventendtime).getTime() - 4 * 60 * 60 * 1000)
+      .toTimeString()
+      .split(" ")[0]  )
 }</p>
 
 
@@ -434,12 +481,14 @@ const EventDashboard = () => {
 
           {/* Buttons with links */}
           <div className="side-menu">
-          <Link to={`/eventDashboard/${eventId}`} className="menu-item">Analytics</Link>
+            <Link to={`/eventDashboard/${eventId}`} className="menu-item">Analytics</Link>
             <Link to={`/manage-ticketing/${eventId}`} className="menu-item">Manage Ticketing</Link>
             <Link to={`/promotion/${eventId}`} className="menu-item">Promotion</Link>
             <Link to={`/budget/${eventId}`} className="menu-item">Budgeting</Link>
             <Link to={`/sponsorships/${eventId}`} className="menu-item">Sponsorships</Link>
             <Link to={`/manage-qa/${eventId}`} className="menu-item">Q&A Management</Link>
+            <QrModalButton  className="menu-item"eventid={ eventId}/>
+            
           </div>
 
           {/* Dashboard for Analytics */}

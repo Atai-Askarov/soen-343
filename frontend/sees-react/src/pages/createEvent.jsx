@@ -3,6 +3,10 @@ import "./css/createEvent.css";
 import { CreateEventCommand } from "../components/Command/CreateEventCommand";
 import commandService from "../services/CommandService";
 import { useNavigate } from "react-router-dom";
+function generateZoomLink(meetingId = "1234567890", passcode = "abcd1234") {
+  // Optional: encode passcode in base64 if needed
+  return `https://zoom.us/j/${meetingId}?pwd=${passcode}`;
+}
 
 const CreateEvent = () => {
   const navigate = useNavigate();
@@ -219,6 +223,13 @@ const CreateEvent = () => {
               onClick={() => handleLocationChange('Laval')}
             >
               Laval
+            </button>
+            <button
+              type="button"
+              className={`location-btn ${formData.location === 'Online' ? 'active' : ''}`}
+              onClick={() => handleLocationChange('Online')}
+            >
+              Online
             </button>
           </div>
         </div>
