@@ -5,7 +5,7 @@ from account import db
 # Create a Blueprint for sponsorship and package operations
 sponsorship_bp = Blueprint('sponsorship', __name__)
 
-# ─── Models ─────────────────────────────────────────────────────
+# ─── MODELS ───────────────────────────────────────────────
 class SponsorshipPackage(db.Model):
     __tablename__ = 'packages'  # Table name is "packages"
     id = db.Column(db.Integer, primary_key=True)
@@ -34,8 +34,8 @@ class Sponsorship(db.Model):
         self.package_id = package_id
         self.event_id = event_id
 
-# ─── Routes ─────────────────────────────────────────────────────
-# Route: Create a sponsorship package (for event organizers)
+# ─── ROUTES ───────────────────────────────────────────────
+# Create a sponsorship package (for an event organizer)
 @sponsorship_bp.route("/packages", methods=["POST"])
 def create_package():
     data = request.get_json()
@@ -67,7 +67,7 @@ def create_package():
         db.session.rollback()
         return jsonify({"message": f"Server error: {str(e)}"}), 500
 
-# Route: Get packages for a specific event
+# Get packages for a specific event
 @sponsorship_bp.route("/packages/<int:event_id>", methods=["GET"])
 def get_packages_by_event(event_id):
     try:
@@ -84,7 +84,7 @@ def get_packages_by_event(event_id):
     except Exception as e:
         return jsonify({"message": f"Server error: {str(e)}"}), 500
 
-# Route: Create a sponsorship (when sponsor selects a package)
+# Create a sponsorship (when sponsor selects a package)
 @sponsorship_bp.route("/sponsorship", methods=["POST"])
 def create_sponsorship():
     data = request.get_json()
@@ -92,7 +92,7 @@ def create_sponsorship():
     if not all(field in data for field in required_fields):
         return jsonify({"message": "Missing required fields"}), 400
     try:
-        # Check if sponsor has already sponsored this package for this event.
+        # Check if the sponsor has already sponsored this package for the event
         existing = Sponsorship.query.filter_by(
             sponsor_id=data['sponsor_id'],
             package_id=data['package_id'],

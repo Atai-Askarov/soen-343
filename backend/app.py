@@ -12,26 +12,28 @@ from datetime import datetime
 import os
 from dotenv import load_dotenv
 
-# Import the sponsorship blueprint
+# Import blueprints for sponsorship and analytics
 from sponsorship import sponsorship_bp
+from analytics import analytics_bp
 
-# ───── ENVIRONMENT & APP INITIALIZATION ─────────────────────────
+# ───── ENVIRONMENT & APP INIT ─────────────────────────
 load_dotenv()
 app = Flask(__name__)
 CORS(app, support_credentials=True)
 
-# ───── DATABASE CONFIGURATION ─────────────────────────────────────
+# ───── DATABASE CONFIGURATION ─────────────────────────────
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://sql5770341:mP8Mx9h2IU@sql5.freesqldatabase.com:3306/sql5770341"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# Initialize the database and migration
+# ───── INIT DB & MIGRATE ─────────────────────────────────────
 db.init_app(app)
 migrate = Migrate(app, db)
 
-# Register the sponsorship blueprint (it handles /packages and /sponsorship endpoints)
+# Register blueprints
 app.register_blueprint(sponsorship_bp)
+app.register_blueprint(analytics_bp)
 
-# ───── ROUTES ─────────────────────────────────────────────────────
+# ───── ROUTES ─────────────────────────────────────────────
 @app.route("/")
 def home():
     return "<p>Event Registration System</p>"
@@ -154,9 +156,9 @@ def send_email_via_blast():
         print(f"❌ Error in /emailSending: {e}")
         return jsonify({"error": str(e)}), 500
 
-# ───── MAIN ─────────────────────────────────────────────────────
+# ───── MAIN ─────────────────────────────────────────────
 if __name__ == "__main__":
     with app.app_context():
-        # For development, create tables if they do not exist.
+        # For development only: create all tables if they do not exist.
         db.create_all()
     app.run(debug=True, host="0.0.0.0", port=5000)
