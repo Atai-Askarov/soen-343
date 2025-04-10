@@ -53,6 +53,10 @@ class CommandService {
         // Recreate the proper command object based on the stored data
         let executableCommand;
         switch (command.type) {
+          case 'EditEvent':
+            const { EditEventCommand } = await import('../components/Command/EditEventCommand');
+            executableCommand = new EditEventCommand(command.eventId, command.eventData);
+            break;
           case 'CreateEvent':
             const { CreateEventCommand } = await import('../components/Command/CreateEventCommand');
             executableCommand = new CreateEventCommand(command.eventData);
