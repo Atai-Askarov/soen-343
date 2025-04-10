@@ -63,16 +63,15 @@
 
   /* Add to your ticketPage.css */
 .ticket-card {
-  border: 2px solid #ccc;
+
   padding: 15px;
   margin: 10px 0;
   border-radius: 10px;
   position: relative;
-  border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 1.5rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  background-color: #fff;
+  background-color: transparent;
   background-position: center center; /* This centers the image horizontally and vertically */
 
 }

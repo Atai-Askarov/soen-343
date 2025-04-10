@@ -1,14 +1,17 @@
 /* Container for the entire budget component */
 .budget-container {
   padding: 1.5rem;
-  margin-left: 220px;
+  margin-left: 200px;
+  background-image: linear-gradient(#5f2c82, #49a09d);
+
 }
 
 /* Header text for the event budget */
 .budget-header {
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 500;
   margin-bottom: 1rem;
+  color: #fff;
 }
 
 /* Table style */
@@ -16,6 +19,7 @@
   width: 100%;
   border-collapse: collapse;
   border: 1px solid #ddd;
+  background-color: white;
 }
 
 .budget-table th,
@@ -122,7 +126,7 @@
 
 .delete-button{
   width: 70px;
-  height: 30px;
+  height: 40px;
   padding: 0.5rem;
 }
 
@@ -139,6 +143,7 @@
   padding: 1rem;
   border: 1px solid #ddd;
   border-radius: 6px;
+  margin-left: 55px;
 }
 
 .ticket-descriptions h3 {

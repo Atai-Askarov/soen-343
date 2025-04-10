@@ -29,6 +29,10 @@ import SponsorAnalytics from "./pages/SponsorAnalytics";
 import SponsorDashboard from "./pages/SponsorDashboard";
 import MySponsorships from "./pages/MySponsorships";
 import ManageQA from "./pages/ManageQA"
+import Networking from "./pages/networking";
+import GroupchatPage from "./pages/groupchat";
+
+
 import ManageAttendees from "./pages/ManagementEvents/ManageAttendees";
 import ManageAnalytics from "./pages/ManagementEvents/ManageAnalytics";
 import ManageFinancials from "./pages/ManagementEvents/ManageFinancials";
@@ -68,7 +72,6 @@ const App = () => {
               <Route path="/sponsorships/:eventId" element={<OrgPackageCreation />} />
               <Route path="/event-details/:id" element={<EventDetail />} />
               <Route path="/review-event/:commandId" element={<ReviewEvent />} />
-
               <Route path="/myevents" element={<MyEventsLearner />} />
               <Route path="/event-attendee/:id" element={<EventPageAttendee />} />
               <Route path="/manage-qa/:eventId" element={<ManageQA />} />
@@ -82,6 +85,9 @@ const App = () => {
             <Route path="/events/:eventId/promotions" element={<Promotion />} />
             <Route path="/events/:eventId/resources" element={<Resources />} />
             <Route path="/events/:eventId/networking" element={<Networking />} /> */}
+
+              <Route path="/events/:eventId/networking" element={<Networking />} />
+              <Route path="/groupchat/:groupchatTitle" element={<GroupchatPage />} />
 
             </Routes>
 

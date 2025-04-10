@@ -1,14 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './css/myevents.css'; // Adjust the path as necessary
-
+import { Views } from 'react-big-calendar';
+import EventCalendar from "../components/EventCalendar.jsx"; // Import the EventCalendar component
 const MyEvents = () => {
     const navigate = useNavigate(); // Add navigation hook
     const [tickets, setTickets] = useState([]);
-    const [events, setEvents] = useState([]);  
+    const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [user, setUser] = useState(null);
+    const [selectedEvent, setSelectedEvent] = useState(null);
+    const [selectedEventId, setSelectedEventId] = useState("");
+    const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
+    const popupRef = useRef(null);
+    const [view, setView] = useState(Views.WEEK);
+    const [date, setDate] = useState(new Date());
     
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
@@ -60,14 +67,32 @@ const MyEvents = () => {
             fetchEvents();
         }
     }, [tickets]);  
-    
-    // Updated navigation function for event attendees
+
+    // Event click handler to set popup position and show event details
+    const handleEventClick = (event, e) => {
+        const { clientX, clientY } = e;
+        setPopupPosition({ x: clientX, y: clientY });
+        setSelectedEvent(event);
+    };
+
+    const handleOutsideClick = (e) => {
+        if (popupRef.current && !popupRef.current.contains(e.target)) {
+            setSelectedEvent(null);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleOutsideClick);
+        return () => {
+            document.removeEventListener("mousedown", handleOutsideClick);
+        };
+    }, []);
+
     const navigateToEventDetails = (event, e) => {
-        // Prevent navigation if clicking on ticket info
         if (e.target.closest('.ticket-info')) {
             return;
         }
-        
+
         if (event && event.eventid) {
             navigate(`/event-attendee/${event.eventid}`);
         }
@@ -125,11 +150,46 @@ const MyEvents = () => {
                     ))}
                 </div>
             )}
+
+            {/* Reusable calendar component */}
+            <EventCalendar
+                events={events}
+                view={view}
+                date={date}
+                onViewChange={setView}
+                onDateChange={(newDate) => setDate(new Date(newDate))}
+                onEventClick={handleEventClick}
+            />
+
+            {/* Event Popup */}
+            {selectedEvent && (
+                <div
+                    ref={popupRef}
+                    className="event-popup"
+                    style={{
+                        position: "absolute",
+                        top: popupPosition.y + window.scrollY,
+                        left: popupPosition.x + window.scrollX,
+                        backgroundColor: "white",
+                        padding: "10px",
+                        borderRadius: "10px",
+                        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                        zIndex: 1000,
+                        maxWidth: "300px",
+                        fontSize: 14,
+                    }}
+                >
+                    <h3>Event Details</h3>
+                    <p><strong>Name:</strong> {selectedEvent.title}</p>
+                    <p><strong>Description:</strong> {selectedEvent.description}</p>
+                </div>
+            )}
         </div>
     );
 };
 
 export default MyEvents;
+
 
 
 

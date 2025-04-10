@@ -1,10 +1,11 @@
 .scrollImage {
   width: 100%;
+  z-index: -1;
 }
 
 .image {
   width: inherit;
-  height: 70vh;
+  height: 100vh;
   position: absolute;
   top: 0px;
   display: block;

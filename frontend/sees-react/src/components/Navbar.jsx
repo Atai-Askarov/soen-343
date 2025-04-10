@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
+  const [notifications, setNotifications] = useState([]); // To store notifications
+  const [showNotifications, setShowNotifications] = useState(false); // To toggle notifications visibility
   const navigate = useNavigate();
 
   const updateUser = () => {
@@ -14,19 +16,40 @@ const Navbar = () => {
       setUser(null);
     }
   };
-
+  // Fetch user data from localStorage on component mount
   useEffect(() => {
-    // Initial check on mount
-    updateUser();
-
-    // Listen for the custom userLogin event
-    window.addEventListener("userLogin", updateUser);
-
-    // Cleanup the event listener on unmount
-    return () => {
-      window.removeEventListener("userLogin", updateUser);
-    };
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser)); 
+    }
   }, []);
+
+  // Fetch notifications when user data changes
+  useEffect(() => {
+    if (user) {
+      fetchNotifications();
+    }
+  }, [user]);
+
+  // Fetch notifications from the backend
+  const fetchNotifications = async () => {
+    if (user) {
+      try {
+        const response = await fetch(`http://127.0.0.1:5000/notifications/${user.id}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (data.status === "success") {
+          setNotifications(data.notifications);
+        } else {
+          console.error("Error fetching notifications:", data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      }
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token"); // Remove token
@@ -41,14 +64,11 @@ const Navbar = () => {
         case "learner":
           return (
             <>
-               <li className="nav-button">
+              <li className="nav-button">
                 <Link to="/home">Home</Link>
               </li>
               <li className="nav-button">
                 <Link to="/myevents/">My Events</Link>
-              </li>
-              <li className="nav-button">
-                <Link to="/networking">Networking</Link>
               </li>
             </>
           );
@@ -139,11 +159,49 @@ const Navbar = () => {
           {user ? (
             // If the user is logged in, show these options
             <>
-
               {renderUserLinks()}
-              <li className="logout-button" style={{alignItems:"center", color: "white"}} onClick={handleLogout}>
+
+              {/* Notification Bell Icon */}
+              <li className="notification-button">
+                <button 
+                  onClick={() => setShowNotifications(!showNotifications)} 
+                  style={{ background: "none", border: "none", cursor: "pointer" }}
+                >
+                  <i className="fas fa-bell" style={{ fontSize: "20px", color: "white" }}></i>
+                </button>
+              </li>
+
+              {/* Logout Button */}
+              <li
+                className="logout-button"
+                style={{ alignItems: "center", color: "white" }}
+                onClick={handleLogout}
+              >
                 LOGOUT
               </li>
+
+              {/* Notification Dropdown */}
+              {showNotifications && (
+                <div className="notification-dropdown">
+                  <h3>Notifications</h3>
+                  {notifications.length > 0 ? (
+                    <ul>
+                      {notifications.map((notification) => (
+                        <li key={notification.id}>
+                          <p>{notification.message}</p>
+                          {notification.link && (
+                            <a href={notification.link} target="_blank" rel="noopener noreferrer">
+                              Join Groupchat Now!
+                            </a>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No notifications</p>
+                  )}
+                </div>
+              )}
             </>
           ) : (
             // If the user is not logged in, show these options
@@ -163,5 +221,7 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+
 
 

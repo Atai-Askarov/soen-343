@@ -1,6 +1,12 @@
+.createEventPage{
+  background-image: linear-gradient(#5f2c82, #49a09d);
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  padding: 20px;
+}
 .createEvent{
   max-width: 500px;
-  margin: 50px auto;
   padding: 40px;
   background-color: #f9f9f9;
   border-radius: 12px;

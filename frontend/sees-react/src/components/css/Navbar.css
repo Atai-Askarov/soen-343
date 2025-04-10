@@ -1,6 +1,6 @@
 .polar-bear-image {
   width: inherit;
-  height: 70vh;
+  height: 130vh;
   position: absolute;
   top: 0px;
   display: block;
@@ -12,10 +12,64 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  border-bottom: 2px solid lightgray;
   z-index: 3;
   background-color: black;
 }
+.notification-button{
+  background-image: linear-gradient(to right, #d38312 , #a83279);
+  border: none;
+  border-radius: 30px;
+  width: 50px;
+}
+
+
+.notification-dropdown {
+  position: absolute;
+  border-radius: 20px;
+  top: 70px; /* Adjust this value to position the dropdown */
+  right: 20px; /* Align it to the left edge of the notification button */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 280px;
+  max-height: 500px; /* Limit the height if you want to prevent overflow */
+  overflow-y: auto; /* Make the dropdown scrollable if too many notifications */
+  z-index: 1000; /* Ensure it appears on top of other elements */
+  text-align:left;
+  padding: 10px;
+}
+
+.notification-dropdown ul {
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.notification-dropdown li {
+  text-align: start;
+  font-size: 14px;
+  padding: 10px;
+  border-bottom: 1px solid #f1f1f1;
+  width: 95%; /* Ensure the list items stretch to full width */
+}
+
+.notification-dropdown li:last-child {
+  border-bottom: none;
+}
+
+.notification-dropdown a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.notification-dropdown a:hover {
+  text-decoration: underline;
+}
+
 
 .navbar-left {
   display: flex;

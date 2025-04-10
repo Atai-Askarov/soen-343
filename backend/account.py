@@ -123,5 +123,18 @@ def log_in():
             return jsonify({"message": "Invalid password!"}), 401
     else:
         return jsonify({"message": "User not found!"}), 404
+    
+def get_user_by_id(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    if user:
+        return {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "user_type": user.user_type,
+            "interests": user.interests
+        }
+    else:
+        return None
 
 

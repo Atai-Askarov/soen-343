@@ -147,6 +147,7 @@ const CreateEvent = () => {
   };
 
   return (
+    <div className="createEventPage">
     <div className="createEvent">
       <h1>Create New Event</h1>
       {submitMessage && (
@@ -301,6 +302,7 @@ const CreateEvent = () => {
           {isSubmitting ? 'Submitting...' : 'Submit for Approval'}
         </button>
       </form>
+    </div>
     </div>
   );
 };

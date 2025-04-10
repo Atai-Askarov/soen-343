@@ -1,4 +1,4 @@
-/* Variables */
+/* Variables
 :root {
   --gray-offset: rgba(0, 0, 0, 0.03);
   --gray-border: rgba(0, 0, 0, 0.15);
@@ -13,7 +13,7 @@
   --form-width: 600px;
 }
 
-/* Base */
+/* Base 
 * {
   box-sizing: border-box;
 }
@@ -43,7 +43,7 @@ h4 {
   color: var(--gray-light);
 }
 
-/* Layout */
+/* Layout 
 .sr-root {
   display: flex;
   flex-direction: row;
@@ -97,7 +97,7 @@ h4 {
   margin-top: 12px;
 }
 
-/* Form */
+/* Form 
 .sr-form-row {
   margin: 16px 0;
 }
@@ -108,7 +108,7 @@ label {
   display: inline-block;
 }
 
-/* Inputs */
+/* Inputs 
 .sr-input,
 .sr-select,
 input[type='text'],
@@ -140,7 +140,7 @@ input[type='number']::placeholder {
   color: var(--gray-light);
 }
 
-/* Checkbox */
+/* Checkbox 
 .sr-checkbox-label {
   position: relative;
   cursor: pointer;
@@ -175,7 +175,7 @@ input[type='number']::placeholder {
   background-position: -1px -1px;
 }
 
-/* Select */
+/* Select 
 .sr-select {
   display: block;
   height: 44px;
@@ -202,7 +202,7 @@ input[type='number']::placeholder {
   color: var(--gray-light);
 }
 
-/* Combo inputs */
+/* Combo inputs 
 .sr-combo-inputs {
   display: flex;
   flex-direction: column;
@@ -256,7 +256,7 @@ input[type='number']::placeholder {
   border-radius: 0 0 var(--radius) var(--radius);
 }
 
-/* Buttons and links */
+/* Buttons and links 
 button {
   background: var(--accent-color);
   border-radius: var(--radius);
@@ -300,7 +300,7 @@ a:active {
   filter: brightness(0.5);
 }
 
-/* Code block */
+/* Code block 
 .sr-callout {
   background: var(--gray-offset);
   padding: 12px;
@@ -314,12 +314,12 @@ pre {
   font-size: 12px;
 }
 
-/* Stripe Element placeholder */
+/* Stripe Element placeholder 
 .sr-card-element {
   padding-top: 12px;
 }
 
-/* Responsiveness */
+/* Responsiveness 
 @media (max-width: 720px) {
   .sr-root {
     flex-direction: column;
@@ -345,7 +345,7 @@ pre {
   }
 }
 
-/* Pasha styles – Brand-overrides, can split these out */
+/* Pasha styles – Brand-overrides, can split these out 
 :root {
   --accent-color: #ed5f74;
   --headline-color: var(--accent-color);
@@ -389,7 +389,7 @@ pre {
   opacity: 1;
 }
 
-/* todo: spinner/processing state, errors, animations */
+/* todo: spinner/processing state, errors, animations 
 
 .spinner,
 .spinner:before,
@@ -459,7 +459,7 @@ pre {
   }
 }
 
-/* Custom */
+/* Custom 
 .container {
   border: 1px solid #e8e8e8;
   border-radius: 6px;
@@ -503,7 +503,7 @@ input[type='number']::-webkit-outer-spin-button {
   margin: 0;
 }
 
-/* Animated form */
+/* Animated form 
 
 .sr-root {
   animation: 0.4s form-in;
@@ -518,7 +518,7 @@ input[type='number']::-webkit-outer-spin-button {
   transform-origin: 50% 0%;
 }
 
-/* need saas for loop :D  */
+/* need saas for loop :D  
 .sr-payment-form .sr-form-row:nth-child(1) {
   animation-delay: 0;
 }
@@ -565,4 +565,4 @@ input[type='number']::-webkit-outer-spin-button {
 
 #submit {
   width: 100%;
-}
+} */

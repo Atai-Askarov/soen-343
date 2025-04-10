@@ -134,8 +134,8 @@ const Budget = () => {
   return (
     <div className="budget-container">
       <div className="header">
-        <h2 className="header-title">Your Budget Management</h2>
-        <h2 className="header-title">Simulate Ticket Purchases</h2>
+        <h2 className="header-title" style={{color:"white"}}>Your Budget Management</h2>
+        <h2 className="header-title" style={{color:"white"}}>Simulate Ticket Purchases</h2>
         </div>
 
       <div className="side-menu">
@@ -209,7 +209,6 @@ const Budget = () => {
       </div>
       {/* Ticket Descriptions Section */}
       <div className="ticket-descriptions">
-        <div className='ticket-description-header'><h3>Ticket Descriptions</h3></div>
         <ul>
           {ticketDescriptions.length > 0 ? (
             ticketDescriptions.map((ticket, index) => (

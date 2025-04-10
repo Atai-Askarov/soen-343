@@ -1,0 +1,133 @@
+/* General layout styles */
+.networking-container {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  .networking-form-container{
+      background-image: linear-gradient(#5f2c82, #49a09d);
+      padding: 30px;
+  }
+
+  .interest-button.selected {
+    background-color: #4caf50;   /* green background */
+    color: white;                /* white text/icons */
+    border-color: #4caf50;
+  }
+  
+  .interest-button.selected i {
+    color: white;
+  }
+  
+  /* Heading Styles */
+  .event-title, .groupchat-title, .interest-title, .moderator-title, .attendee-title {
+    color: #333;
+  }
+  
+  .event-title {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+  }
+  
+  .groupchat-title {
+    font-size: 1.8rem;
+    margin-top: 30px;
+  }
+  
+  .interest-title, .moderator-title, .attendee-title {
+    font-size: 1.4rem;
+    margin-top: 20px;
+  }
+  
+  /* Paragraph */
+  .event-description {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  /* Form Styles */
+  .groupchat-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  /* Input and Select styles */
+  .input-text, .select-moderator {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .input-text:focus, .select-moderator:focus {
+    border-color: #007BFF;
+    outline: none;
+  }
+  
+
+  
+  /* Button Style */
+  .submit-button {
+    background-color: #007BFF;
+    color: white;
+    font-size: 1rem;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    width: 50%;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Form Section Styles */
+  .form-group {
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+  
+  .form-group h3 {
+    margin-bottom: 10px;
+  }
+  
+  /* Spacing between checkboxes */
+  .form-group label {
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  /* Responsiveness for mobile */
+  @media (max-width: 600px) {
+    .networking-container {
+      padding: 15px;
+    }
+  
+    .event-title {
+      font-size: 1.8rem;
+    }
+  
+    .groupchat-title {
+      font-size: 1.6rem;
+    }
+  
+    .interest-title, .moderator-title, .attendee-title {
+      font-size: 1.2rem;
+    }
+  
+    .input-text, .select-moderator, .submit-button {
+      font-size: 0.9rem;
+    }
+  }
+  
