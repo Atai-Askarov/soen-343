@@ -8,6 +8,7 @@
     "axios": "^1.8.4",
     "chart.js": "^4.4.8",
     "lint": "^0.8.19",
+    "qrcode.react": "^4.2.0",
     "react": "^19.0.0",
     "react-big-calendar": "^1.18.0",
     "react-chartjs-2": "^5.3.0",
@@ -16,6 +17,7 @@
     "react-router-dom": "^7.4.0",
     "react-scripts": "5.0.1",
     "recharts": "^2.15.2",
+    "sees-react": "file:",
     "socket.io-client": "^4.8.1",
     "web-vitals": "^2.1.4"
   },

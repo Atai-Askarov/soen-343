@@ -20,7 +20,6 @@ import MyEventsLearner from "./pages/myEventsLearner";
 import ManageEvents from "./pages/ManageEvents"
 import EventDetail from './pages/EventDetails';
 import ReviewEvent from "./pages/ReviewEvent";
-import './css/normalize.css';
 import EventPageAttendee from './pages/EventPageAttendee'
 // import './css/global.css';
 import SponsorView from "./pages/SponsorView";
@@ -29,6 +28,7 @@ import SponsorAnalytics from "./pages/SponsorAnalytics";
 import SponsorDashboard from "./pages/SponsorDashboard";
 import MySponsorships from "./pages/MySponsorships";
 import ManageQA from "./pages/ManageQA"
+import ConfirmationPage from "./pages/QRConfirmationPage";
 import ManageAttendees from "./pages/ManagementEvents/ManageAttendees";
 import ManageAnalytics from "./pages/ManagementEvents/ManageAnalytics";
 import ManageFinancials from "./pages/ManagementEvents/ManageFinancials";
@@ -83,6 +83,8 @@ const App = () => {
             <Route path="/events/:eventId/resources" element={<Resources />} />
             <Route path="/events/:eventId/networking" element={<Networking />} /> */}
 
+              <Route path="/myevents/attendance-confirmation-page/:ticketId" element={<ConfirmationPage/>} />
+              <Route path="/eventDasboard/:eventId/attendance-confirmation-page" element={<ConfirmationPage/>} />
             </Routes>
 
           

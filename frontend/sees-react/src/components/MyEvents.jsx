@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './css/myevents.css'; // Adjust the path as necessary
+import QRCode from './QRCode';
 
 const MyEvents = () => {
     const navigate = useNavigate(); // Add navigation hook
@@ -12,11 +13,13 @@ const MyEvents = () => {
     
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
+        
         if (storedUser) {
             setUser(JSON.parse(storedUser)); 
+            
         }
     }, []);
-    
+
     useEffect(() => {
         if (user) {
             const fetchTickets = async () => {
@@ -118,7 +121,12 @@ const MyEvents = () => {
                                 <div className="ticket-info" onClick={(e) => e.stopPropagation()}>
                                     <h3>Ticket ID: {ticket.id}</h3>
                                     <p>Description ID: {ticket.descid}</p>
-                                    <p>IMMA ADD THE QR CODE OR SMTH</p>
+                                    {console.log(ticket)}
+                                    <QRCode
+                                        endpoint="http://localhost:5000/attendance/checkin" 
+                                        params={{ ticket_id: ticket.id, event_id: ticket.eventid }} 
+                                        
+                                    />
                                 </div>
                             </div>
                         </div>

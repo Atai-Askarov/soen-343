@@ -5,7 +5,56 @@ import AnalyticsModal from "../components/Analytics/AnalyticsModal";
 import AnalyticsCard from "../components/Analytics/AnalyticsCard";
 //? Service File to fetch the analytics 
 import eventAnalyticsService from "../services/EventAnalyticsService";
+import { QRCodeSVG } from "qrcode.react";
 
+function QrModalButton({ eventid }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      {/* Button to open the modal */}
+      <button
+        className="menu-item"
+        onClick={() => setIsOpen(true)}
+      >
+        Show QR Code
+      </button>
+
+      {/* Modal for displaying the QR code */}
+      {isOpen && (
+        <div className="centered-qr-modal">
+          <div>
+            {/* Close button */}
+            <button
+              onClick={() => setIsOpen(false)}
+              className="close-button"
+            >
+              &times;
+            </button>
+
+            <h2 className="text-center">Scan the QR Code</h2>
+
+            {/* QR Code wrapped in a clickable link */}
+            <a
+              target="_blank" // Opens the link in a new tab
+              rel="noopener noreferrer" // Security best practice
+            >
+              <QRCodeSVG
+                
+                size={350}
+                level="H"
+                includeMargin={true}
+              />
+            </a>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+
+ 
 
 
 const EventDashboard = () => {
@@ -432,12 +481,14 @@ const EventDashboard = () => {
 
           {/* Buttons with links */}
           <div className="side-menu">
-          <Link to={`/eventDashboard/${eventId}`} className="menu-item">Analytics</Link>
+            <Link to={`/eventDashboard/${eventId}`} className="menu-item">Analytics</Link>
             <Link to={`/manage-ticketing/${eventId}`} className="menu-item">Manage Ticketing</Link>
             <Link to={`/promotion/${eventId}`} className="menu-item">Promotion</Link>
             <Link to={`/budget/${eventId}`} className="menu-item">Budgeting</Link>
             <Link to={`/sponsorships/${eventId}`} className="menu-item">Sponsorships</Link>
             <Link to={`/manage-qa/${eventId}`} className="menu-item">Q&A Management</Link>
+            <QrModalButton  className="menu-item"eventid={ eventId}/>
+            
           </div>
 
           {/* Dashboard for Analytics */}
