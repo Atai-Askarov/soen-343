@@ -21,9 +21,13 @@ from attendance import get_attendance_by_event
 from stripe.error import StripeError, CardError, InvalidRequestError, AuthenticationError, APIConnectionError, RateLimitError
 
 
+# Import blueprints
+from sponsorship import sponsorship_bp
+from analytics import analytics_bp
 # Import the sponsorship blueprint
 from sponsorship import sponsorship_bp, create_sponsorship
 
+# ───── ENV & APP INIT ─────────────────────────
 # ───── ENVIRONMENT & APP INITIALIZATION ─────────────────────────
 from werkzeug.utils import secure_filename
 load_dotenv()
@@ -39,6 +43,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app = Flask(__name__)
 CORS(app, support_credentials=True)
 
+# ───── DB CONFIG ──────────────────────────────
 
 # Configure CORS to allow all routes from your React app
 CORS(app, resources={
@@ -53,10 +58,11 @@ CORS(app, resources={
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://sql5770341:mP8Mx9h2IU@sql5.freesqldatabase.com:3306/sql5770341"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# Initialize the database and migration
+# ───── INIT DB & MIGRATE ──────────────────────
 db.init_app(app)
 migrate = Migrate(app, db)
 
+# Register Blueprints
 
 
 # Fetch the Checkout Session to display the JSON result on the success page
@@ -143,8 +149,9 @@ def webhook():
 
 # Register the sponsorship blueprint (it handles /packages and /sponsorship endpoints)
 app.register_blueprint(sponsorship_bp)
+app.register_blueprint(analytics_bp)
 
-# ───── ROUTES ─────────────────────────────────────────────────────
+# ───── ROUTES ─────────────────────────────────────────────
 @app.route("/")
 def home():
     return "<p>Event Registration System</p>"
@@ -353,6 +360,7 @@ def send_email_via_blast():
         print(f"❌ Error in /emailSending: {e}")
         return jsonify({"error": str(e)}), 500
 
+# ───── MAIN ─────────────────────────────────────────────
 @app.route('/events/<int:event_id>', methods=['DELETE'])
 @cross_origin(origin='http://localhost:3000')
 def delete_events(event_id):
@@ -673,5 +681,9 @@ def find_similar_interest_attendees(event_id, user_id):
 
 if __name__ == "__main__":
     with app.app_context():
+        # For development: create tables if they do not exist.
+        db.create_all()
+    app.run(debug=True, host="0.0.0.0", port=5000)
+
         db.create_all()  # Create tables if they don't exist
     socketio.run(app, debug=True, host="0.0.0.0", port=5000)

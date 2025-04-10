@@ -25,6 +25,9 @@ import EventPageAttendee from './pages/EventPageAttendee'
 // import './css/global.css';
 import SponsorView from "./pages/SponsorView";
 import SponsorPackages from "./pages/SponsorPackages";
+import SponsorAnalytics from "./pages/SponsorAnalytics";
+import SponsorDashboard from "./pages/SponsorDashboard";
+import MySponsorships from "./pages/MySponsorships";
 import ManageQA from "./pages/ManageQA"
 import ManageAttendees from "./pages/ManagementEvents/ManageAttendees";
 import ManageAnalytics from "./pages/ManagementEvents/ManageAnalytics";
@@ -58,6 +61,9 @@ const App = () => {
 
               <Route path="/sponsor-view" element={<SponsorView />} />
               <Route path="/sponsor/:eventId" element={<SponsorPackages />} />
+              <Route path="/sponsor/analytics" element={<SponsorAnalytics />} />
+              <Route path="/sponsor-dashboard" element={<SponsorDashboard />} />
+              <Route path="/sponsor/mysponsorships" element={<MySponsorships />} />
               <Route path="/event-details/:id" element={<EventDetail />} />
               <Route path="/review-event/:commandId" element={<ReviewEvent />} />
 

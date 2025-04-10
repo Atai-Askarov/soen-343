@@ -8,7 +8,7 @@ import PaymentProcessing.stripe_setup as price
 # Create a Blueprint for sponsorship and package operations
 sponsorship_bp = Blueprint('sponsorship', __name__)
 
-# ─── Models ─────────────────────────────────────────────────────
+# ─── MODELS ───────────────────────────────────────────────
 class SponsorshipPackage(db.Model):
     __tablename__ = 'packages'  # Table name is "packages"
     id = db.Column(db.Integer, primary_key=True)
@@ -45,8 +45,8 @@ class Sponsorship(db.Model):
         self.stripe_product_id = stripe_product_id
         self.stripe_price_id = stripe_price_id
 
-# ─── Routes ─────────────────────────────────────────────────────
-# Route: Create a sponsorship package (for event organizers)
+# ─── ROUTES ───────────────────────────────────────────────
+# Route: Create a sponsorship package (for an event organizer)
 @sponsorship_bp.route("/packages", methods=["POST"])
 def create_package():
     data = request.get_json()
@@ -103,9 +103,7 @@ def create_sponsorship():
     if not all(field in data for field in required_fields):
         return jsonify({"message": "Missing required fields"}), 400
     try:
-        # Check if sponsor has already sponsored this package for this event.
-
-
+        # Check if the sponsor already has a sponsorship for this package/event
         existing = Sponsorship.query.filter_by(
             sponsor_id=data['sponsor_id'],
             package_id=data['package_id'],
@@ -152,4 +150,28 @@ def create_sponsorship():
     except Exception as e:
         print("Classic")
         db.session.rollback()
+        return jsonify({"message": f"Server error: {str(e)}"}), 500
+
+# New Route: Get all sponsorships for a specific sponsor
+@sponsorship_bp.route("/mysponsorships/<int:sponsor_id>", methods=["GET"])
+def get_my_sponsorships(sponsor_id):
+    try:
+        sponsorships = Sponsorship.query.filter_by(sponsor_id=sponsor_id).all()
+        result = []
+        for s in sponsorships:
+            # Get the package information from the packages table.
+            pkg = SponsorshipPackage.query.get(s.package_id)
+            result.append({
+                "sponsorship_id": s.id,
+                "event_id": s.event_id,
+                "package": {
+                    "id": pkg.id,
+                    "name": pkg.name,
+                    "width": pkg.width,
+                    "height": pkg.height,
+                    "price": pkg.price
+                }
+            })
+        return jsonify({"sponsorships": result}), 200
+    except Exception as e:
         return jsonify({"message": f"Server error: {str(e)}"}), 500
