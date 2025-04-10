@@ -6,7 +6,6 @@ import AnalyticsCard from "../components/Analytics/AnalyticsCard";
 //? Service File to fetch the analytics 
 import eventAnalyticsService from "../services/EventAnalyticsService";
 import { QRCodeSVG } from "qrcode.react";
-import QRConfirmationPage from "./QRConfirmationPage";
 
 function QrModalButton({ eventid }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,13 +36,12 @@ function QrModalButton({ eventid }) {
 
             {/* QR Code wrapped in a clickable link */}
             <a
-              href={`http://localhost:3000/eventDashboard/${eventid}/attendance-confirmation-page`}
               target="_blank" // Opens the link in a new tab
               rel="noopener noreferrer" // Security best practice
             >
               <QRCodeSVG
-                value={`http://localhost:3000/eventDashboard/${eventid}/attendance-confirmation-page`}
-                size={500}
+                
+                size={350}
                 level="H"
                 includeMargin={true}
               />
@@ -143,7 +141,7 @@ const EventDashboard = () => {
             <Link to={`/budget/${eventId}`} className="menu-item">Budgeting</Link>
             <Link to={`/sponsorships/${eventId}`} className="menu-item">Sponsorships</Link>
             <Link to={`/manage-qa/${eventId}`} className="menu-item">Q&A Management</Link>
-            <QrModalButton eventid={ eventId}/>
+            <QrModalButton  className="menu-item"eventid={ eventId}/>
             
           </div>
 
