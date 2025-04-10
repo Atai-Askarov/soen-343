@@ -16,13 +16,16 @@
   
   .drop-zone {
     border: 2px dashed #007bff;
-    padding: 30px;
+    padding: 40px 60px; /* ⬅️ More horizontal and vertical padding */
     text-align: center;
     cursor: pointer;
     border-radius: 10px;
-    margin-bottom: 20px;
+    margin: 40px auto; /* ⬅️ Centers it horizontally and adds vertical spacing */
     transition: background-color 0.3s;
+    max-width: 500px; /* ⬅️ Optional: keeps it from stretching too wide */
+    width: 100%;
   }
+  
   
   .drop-zone:hover {
     background-color: #f0f8ff;

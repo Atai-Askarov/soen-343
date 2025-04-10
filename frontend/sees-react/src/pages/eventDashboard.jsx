@@ -41,6 +41,8 @@ const EventDashboard = () => {
     fetchData();
   }, [eventId]);
   const eventTypes = ["workshop", "webinar", "conference", "seminar"];
+  
+  
   const getTimeInputValue = (dateStr, timeStr) => {
     if (!dateStr || !timeStr) return ""; // early return for invalid values
   
@@ -51,6 +53,8 @@ const EventDashboard = () => {
   
     return d.toISOString().split("T")[1].slice(0, 8);
   };
+  
+  
   const handleUpdateSubscribers = async () => {
     try {
       const response = await fetch(`http://127.0.0.1:5000/eventEmailUpdate/${eventId}`, {
@@ -297,32 +301,30 @@ const EventDashboard = () => {
 }</p>
 <p><strong>Start Time:</strong> {
   isEditing ? (
-    <input
-  type="time"
-  step="1"
-  value={
-    isEditing
-      ? getTimeInputValue(editedEvent.eventdate, editedEvent.eventstarttime)
-      : ""
-  }
-  onChange={(e) =>
-    setEditedEvent({
-      ...editedEvent,
-      eventstarttime: e.target.value,
-    })
-  }
-/>
-
-  ) : (
-    new Date(event.eventstarttime).toISOString().split("T")[1].slice(0, 8)
+    <input type="time"
+    step="1"
+    value={
+      isEditing
+        ? getTimeInputValue(editedEvent.eventdate, editedEvent.eventstarttime)
+        : ""
+    }
+    onChange={(e) =>
+      setEditedEvent({
+        ...editedEvent,
+        eventstarttime: e.target.value,
+      })
+    }
+  />
+  
+    ) : ( 
+      new Date(event.eventstarttime).toISOString().split("T")[1].slice(0, 8)
   )
 }</p>
-
 
 <p><strong>End Time:</strong> {
   isEditing ? (
     <input
-  type="time"
+    type="time"
   step="1"
   value={
     isEditing
@@ -341,6 +343,13 @@ const EventDashboard = () => {
     new Date(event.eventendtime).toISOString().split("T")[1].slice(0, 8)
   )
 }</p>
+
+
+
+
+
+
+
                 <p><strong>Location:</strong> {
                   isEditing ? (
                     <input 
