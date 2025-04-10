@@ -28,6 +28,8 @@ import ManageQA from "./pages/ManageQA"
 import ManageAttendees from "./pages/ManagementEvents/ManageAttendees";
 import ManageAnalytics from "./pages/ManagementEvents/ManageAnalytics";
 import ManageFinancials from "./pages/ManagementEvents/ManageFinancials";
+import ManageRequests from "./pages/ManagementEvents/ManageRequests"
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -50,6 +52,8 @@ const App = () => {
               <Route path="/promotion/:eventId" element={<TicketsPage />} />
               <Route path="/budget/:eventId" element={<Budget />} />
               <Route path ="/manage-events" element = {<ManageEvents/>}/>
+              <Route path ="/manage-requests" element = {<ManageRequests/>}/>
+
               <Route path="/sponsor-view" element={<SponsorView />} />
               <Route path="/sponsor/:eventId" element={<SponsorPackages />} />
               <Route path="/event-details/:id" element={<EventDetail />} />

@@ -57,6 +57,10 @@ class CommandService {
             const { EditEventCommand } = await import('../components/Command/EditEventCommand');
             executableCommand = new EditEventCommand(command.eventId, command.eventData);
             break;
+          case 'SendEmailCampaign':
+            const { SendEmailCampaignCommand } = await import('../components/Command/SendEmailCampaignCommand');
+            executableCommand = new SendEmailCampaignCommand(command.eventId, command.eventName);
+            break;
           case 'CreateEvent':
             const { CreateEventCommand } = await import('../components/Command/CreateEventCommand');
             executableCommand = new CreateEventCommand(command.eventData);

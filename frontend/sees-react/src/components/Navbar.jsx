@@ -90,7 +90,7 @@ const Navbar = () => {
              <Link to="/home">Home</Link>
            </li>
            <li className="nav-button">
-             <Link to="/admin-dashboard">Admin Dashboard</Link>
+             <Link to="/manage-requests">Manage Requests</Link>
            </li>
 
            <li className="nav-button">

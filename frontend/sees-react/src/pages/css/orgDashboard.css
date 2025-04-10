@@ -76,3 +76,38 @@
   background-color: white;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.status-badge.pending {
+  background-color: #ffe8cc;
+  color: #995500;
+}
+
+.status-badge.approved {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.status-badge.failed {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.status-badge.sent {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.no-campaigns {
+  text-align: center;
+  font-style: italic;
+  color: #6b7280;
+  padding: 1rem;
+}

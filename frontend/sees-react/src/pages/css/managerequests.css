@@ -1,0 +1,267 @@
+/* Improved styles for the manage requests page */
+
+/* Command type column styling */
+.command-type {
+    font-weight: 600;
+    color: #4c1d95;
+  }
+  
+  .command-description {
+    max-width: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  /* Button styling */
+  .approve-button {
+    color: #065f46;
+    background-color: rgba(6, 95, 70, 0.1);
+  }
+  
+  .approve-button:hover {
+    background-color: rgba(6, 95, 70, 0.2);
+  }
+  
+  .reject-button {
+    color: #b91c1c;
+    background-color: rgba(185, 28, 28, 0.1);
+  }
+  
+  .reject-button:hover {
+    background-color: rgba(185, 28, 28, 0.2);
+  }
+  
+  .view-button {
+    color: #1e40af;
+    background-color: rgba(30, 64, 175, 0.1);
+  }
+  
+  .view-button:hover {
+    background-color: rgba(30, 64, 175, 0.2);
+  }
+  
+  .processed-request {
+    opacity: 0.8;
+  }
+  
+  .processed-request:hover {
+    opacity: 1;
+  }
+  
+  .no-data {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+    font-style: italic;
+  }
+  
+  /* Make sure the action buttons don't wrap */
+  .btn-group {
+    white-space: nowrap;
+    display: flex;
+    gap: 8px;
+  }
+  
+  /* ===== IMPROVED FILTER STYLES ===== */
+  
+  /* Filter panel container */
+  .filter-panel {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  /* Filter section layout */
+  .filter-section {
+    margin-bottom: 16px;
+  }
+  
+  /* Filter header with title and actions */
+  .filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  
+  .filter-header h3 {
+    font-size: 1rem;
+    margin: 0;
+    color: #4b5563;
+  }
+  
+  /* Filter actions container */
+  .filter-actions {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .filter-actions button {
+    background: none;
+    border: none;
+    font-size: 0.85rem;
+    color: #4c1d95;
+    padding: 4px 8px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .filter-actions button:hover {
+    background-color: rgba(76, 29, 149, 0.1);
+  }
+  
+  /* Checkbox group styling - UPDATED */
+  .checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  
+  .checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    color: #4b5563;
+    padding: 4px 12px;
+    background-color: #f9fafb;
+    border-radius: 20px; /* More rounded, pill-like shape */
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+    border: 1px solid #e5e7eb;
+    /* Remove the min-width that was causing the problem */
+  }
+  
+  /* Selected state for filter buttons */
+  .checkbox-label input[type="checkbox"]:checked + span {
+    font-weight: 500;
+    color: #4c1d95;
+  }
+  
+  .checkbox-label:hover {
+    background-color: #f3f4f6;
+    border-color: #d1d5db;
+  }
+  
+  /* Hide the default checkbox but keep functionality */
+  .checkbox-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #4c1d95;
+    cursor: pointer;
+  }
+  
+  /* Filter toggle button styling */
+  .filter-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .filter-toggle.active {
+    background-color: #4c1d95;
+    color: white;
+  }
+  
+  /* Search box styling */
+  .search-box {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 0 12px;
+    height: 40px;
+  }
+  
+  .search-icon {
+    color: #9ca3af;
+    margin-right: 8px;
+  }
+  
+  .search-box input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 0.95rem;
+    color: #1f2937;
+  }
+  
+  .clear-search {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .clear-search:hover {
+    color: #4b5563;
+  }
+  
+  /* Search and filter container */
+  .search-filter-container {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  
+  /* Header styling */
+  .events-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  
+  .events-header h1 {
+    margin: 0;
+    color: #1f2937;
+    font-size: 1.8rem;
+  }
+  
+  /* Make the filtering experience more mobile friendly */
+  @media (max-width: 768px) {
+    .events-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    
+    .search-filter-container {
+      width: 100%;
+    }
+    
+    .search-box {
+      flex: 1;
+    }
+    
+    /* Remove the column direction to keep items horizontal */
+    .checkbox-group {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    
+    /* Remove full width to keep buttons compact */
+    .checkbox-label {
+      width: auto;
+      padding: 4px 10px;
+      font-size: 0.85rem;
+    }
+  }
