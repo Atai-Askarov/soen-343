@@ -13,6 +13,7 @@ import Event from "./pages/eventPage";
 import LandingPage from "./pages/LandingPage";
 import EventDashboard from "./pages/eventDashboard";
 import TicketsPage from "./pages/ticketsPage";
+import ShareResourcePage from "./pages/ShareResources";
 const App = () => {
   return (
     <Router>
@@ -31,6 +32,7 @@ const App = () => {
               <Route path="/eventDashboard/:eventId" element={<EventDashboard />} />
               <Route path="/manage-ticketing/:eventId" element={<TicketsPage />} />
               <Route path="/promotion/:eventId" element={<TicketsPage />} />
+              <Route path="/share-resources/:eventId" element={<ShareResourcePage />} />
             </Routes>
           </main>
           <Footer />

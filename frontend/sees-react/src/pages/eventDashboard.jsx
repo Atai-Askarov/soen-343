@@ -383,7 +383,11 @@ const EventDashboard = () => {
               Re-send Event Details via Email
             </button>
             <button>
+            <Link to={`/share-resources/${eventId}`}
+            style={{ color: 'white', textDecoration: 'none' }}>
               Share Resources to Everyone via Email
+              </Link>
+
             </button>
             </div>
           </div>

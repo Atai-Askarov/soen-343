@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 from flask_migrate import Migrate
 from flask_cors import CORS, cross_origin
 from account import db, sign_in, get_users, log_in,get_users_by_role, get_all_user_emails, get_user_by_id, get_user_emails_from_array, get_user_by_id
@@ -11,7 +11,11 @@ from flask import Flask, request, jsonify
 from sendEmail import Director, Builder, send_email
 import os
 from dotenv import load_dotenv
+from werkzeug.utils import secure_filename
 load_dotenv()
+
+UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app = Flask(__name__)
 CORS(app, support_credentials=True)
@@ -246,7 +250,66 @@ def event_email_update(event_id):
     except Exception as e:
         print(f"❌ Error in /emailSending: {e}")
         return jsonify({"error": str(e)}), 500
-    
+
+@app.route('/uploads/<path:filename>', methods=['GET'])
+def serve_uploaded_file(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)
+
+@app.route('/share-resource/<int:event_id>', methods=['POST'])
+@cross_origin(origin='http://localhost:3000')
+def share_resource(event_id):
+    try:
+        users = get_users_by_event(event_id)
+        print("✅ Users fetched:", users)
+        emails = get_user_emails_from_array(users)
+        print("✅ User emails:", emails)
+
+        event = fetch_event_by_id(event_id)
+        if not event:
+            return jsonify({"error": f"No event found for ID {event_id}"}), 404
+        message = request.form.get("message")
+        files = request.files.getlist("files")
+        file_urls = []
+
+        for file in files:
+            if file and file.filename:
+                filename = secure_filename(file.filename)
+                file_path = os.path.join(UPLOAD_FOLDER, filename)
+                file.save(file_path)
+
+                # Generate accessible URL
+                file_url = f"http://localhost:5000/uploads/{filename}"
+                file_urls.append(file_url)
+
+        resource_data = {
+            "message": message,
+            "files": file_urls  # These are now public URLs
+        }
+
+        director = Director(resource_data)
+        builder = Builder()
+        email_html = director.construct_resource_sharing(builder)
+        print("✅ Email HTML generated")
+        subject = "Resource Sharing Concerning: " + event["eventname"]
+        print("✅ Email subject:", subject)
+        # Make sure all components are not None
+        if not email_html:
+            return jsonify({"error": "Email content could not be generated"}), 500
+        if not subject:
+            return jsonify({"error": "Missing email subject"}), 500
+        if not emails:
+            return jsonify({"error": "No recipients found"}), 404
+
+
+        send_email(emails, subject, email_html)
+
+        return jsonify({"message": "✅ Email campaign sent successfully."}), 200
+        
+
+    except Exception as e:
+        print(f"❌ Error in /emailSending: {e}")
+        return jsonify({"error": str(e)}), 500
+        
 
 if __name__ == "__main__":
     with app.app_context():

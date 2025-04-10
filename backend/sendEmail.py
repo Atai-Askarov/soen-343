@@ -20,6 +20,8 @@ class Director(object):
         self.eventOrganizer = event_data.get("eventOrganizer")
         self.eventImg = event_data.get("eventImg")
         self.socialMediaLink = event_data.get("socialMediaLink")
+        self.files = event_data.get("files", [])
+        self.message = event_data.get("message", "")
     def construct(self, builder):
         builder.build_eventID(self.eventId)
         builder.build_eventName(self.eventName)
@@ -34,6 +36,11 @@ class Director(object):
         if self.socialMediaLink:  # Only include if it's provided
                     builder.build_socialMediaLink(self.socialMediaLink)
         return builder.get_email_html()
+    def construct_resource_sharing(self, builder):
+        builder.build_sending_resource_message(self.message)
+        if self.files:
+            builder.build_file_links(self.files)
+        return builder.get_email_html_resource_sharing()
         
 
 class Builder(object):
@@ -77,7 +84,23 @@ class Builder(object):
                 </a>
             </div>
         """
+    def build_sending_resource_message(self, message):
+            self.event_dict["message"] = f"<p><strong>Message:</strong> {message}</p>"
+    def build_file_links(self, files):
+        """
+        Expects a list of file URLs or names.
+        Could be links to files hosted on a server or just file names if locally handled.
+        """
+        if not files:
+            return
 
+        links_html = "<div><h3>Attached Resources:</h3><ul>"
+        for file in files:
+            links_html += f'<li><a href="{file}" style="color: #3498db;">{file}</a></li>'
+        links_html += "</ul></div>"
+
+        self.event_dict["files"] = links_html
+    
     def get_email_html(self):
         body_content = f"""
         <div style="max-width: 600px; margin: auto; background: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
@@ -93,6 +116,7 @@ class Builder(object):
             {self.event_dict.get("eventDescription", "")}
             {self.event_dict.get("eventOrganizer", "")}
             {self.event_dict.get("socialMediaLink", "")}
+
         </div>
         """
 
@@ -101,6 +125,29 @@ class Builder(object):
             <head>
                 <meta charset="UTF-8">
                 <title>Event Details</title>
+            </head>
+            <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 40px;">
+                {body_content}
+            </body>
+        </html>
+        """
+        return full_email
+    def get_email_html_resource_sharing(self):
+        body_content = f"""
+        <div style="max-width: 600px; margin: auto; background: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+            <h1 style="color: #2c3e50;">Resource Sharing</h1>
+            
+            {self.event_dict.get("message", "")}
+            {self.event_dict.get("files", "")}
+
+        </div>
+        """
+
+        full_email = f"""
+        <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Resource Sharing</title>
             </head>
             <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 40px;">
                 {body_content}
