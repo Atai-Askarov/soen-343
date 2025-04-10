@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
+import commandService from "../services/CommandService";
+import { SendEmailCampaignCommand } from "../components/Command/SendEmailCampaignCommand";
 
 
 
@@ -48,54 +50,81 @@ const Dashboard = () => {
     }
   }, [user]);
 
-  // Handle adding a campaign
-  const handleAddCampaign = async () => {
-    if (!selectedEventId) {
-      alert("Please select an event before adding a campaign.");
-      return;
-    }
-  
-    const selectedEvent = events.find(event => event.eventid === parseInt(selectedEventId));
-  
-    const newCampaign = {
-      id: campaigns.length + 1,
-      name: `${selectedEvent.eventname}`,
-      status: "Sending",
-      eventId: selectedEvent.eventid,
-    };
-  
-    setCampaigns([...campaigns, newCampaign]);
-    setSelectedEventId(""); // Reset the selection
-  
-    try {
-      // Sending the eventId to the backend using a GET request
-      const response = await fetch(`http://localhost:5000/emailSending?eventId=${selectedEvent.eventid}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-  
-      const data = await response.json();
-      if (response.ok) {
-        console.log("✅ Email sent successfully!", data);
-        alert(`Email sent for event: ${selectedEvent.eventname}`);
-        setCampaigns((prevCampaigns) =>
-          prevCampaigns.map((c) =>
-            c.eventId === selectedEvent.eventid ? { ...c, status: "Sent" } : c
-          )
-        );
+  // Add this effect to fetch existing email campaign commands
+  useEffect(() => {
+    const fetchPendingCampaigns = async () => {
+      if (!user) return;
       
-      } else {
-        console.error("❗ Error sending email:", data);
-        alert(`Failed to send email: ${data.message || "Unknown error"}`);
+      try {
+        // Fetch all commands from the command service
+        const allCommands = await commandService.getCommands();
+        
+        // Filter for email campaign commands only
+        const emailCampaigns = allCommands.filter(
+          cmd => cmd.type === 'SendEmailCampaign' && 
+                 cmd.status === 'pending' &&
+                 events.some(event => event.eventid === cmd.eventId)
+        );
+        
+        // Transform commands into campaign format
+        const existingCampaigns = emailCampaigns.map((cmd, index) => ({
+          id: `existing-${cmd.id}`,
+          name: cmd.eventName || `Campaign for Event #${cmd.eventId}`,
+          status: cmd.status === 'pending' ? 'Pending' : cmd.status,
+          eventId: cmd.eventId,
+          commandId: cmd.id
+        }));
+        
+        setCampaigns(existingCampaigns);
+      } catch (error) {
+        console.error("Error fetching pending campaigns:", error);
       }
-    } catch (error) {
-      console.error("❗ Network error:", error);
-      alert("Failed to connect to the server.");
+    };
+    
+    if (events.length > 0) {
+      fetchPendingCampaigns();
     }
-  };
+  }, [user, events]); // Re-run when user or events change
 
+  // Handle adding a campaign
+const handleAddCampaign = async () => {
+  if (!selectedEventId) {
+    alert("Please select an event before adding a campaign.");
+    return;
+  }
+
+  const selectedEvent = events.find(event => event.eventid === parseInt(selectedEventId));
+  
+  try {
+    // Create the command
+    const command = new SendEmailCampaignCommand(
+      selectedEvent.eventid,
+      selectedEvent.eventname
+    );
+    
+    // Add command to the service but don't execute it
+    const commandId = await commandService.addCommand(command);
+    
+    // Add new campaign to state with the command ID
+    const newCampaign = {
+      id: `new-${commandId}`,
+      name: selectedEvent.eventname,
+      status: "Pending",
+      eventId: selectedEvent.eventid,
+      commandId: commandId
+    };
+    
+    setCampaigns(prevCampaigns => [...prevCampaigns, newCampaign]);
+    setSelectedEventId(""); // Reset the selection
+    
+    console.log("✅ Email campaign command added successfully with ID:", commandId);
+    alert(`Email campaign for "${selectedEvent.eventname}" is pending approval.`);
+    
+  } catch (error) {
+    console.error("❗ Command error:", error);
+    alert("Failed to create email campaign command.");
+  }
+};
   const eventList = events.map(event => ({
     id: event.eventid,
     title: event.eventname,
@@ -239,15 +268,27 @@ const Dashboard = () => {
             <tr>
               <th>Event</th>
               <th>Status</th>
+              <th>Created</th>
             </tr>
           </thead>
           <tbody>
-            {campaigns.map((campaign) => (
-              <tr key={campaign.id}>
-                <td>{campaign.name}</td>
-                <td>{campaign.status}</td>
+            {campaigns.length > 0 ? (
+              campaigns.map((campaign) => (
+                <tr key={campaign.id}>
+                  <td>{campaign.name}</td>
+                  <td>
+                    <span className={`status-badge ${campaign.status.toLowerCase()}`}>
+                      {campaign.status}
+                    </span>
+                  </td>
+                  <td>{campaign.created || "Just now"}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="3" className="no-campaigns">No campaigns created yet.</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

@@ -9,7 +9,7 @@ from venue import create_venue, get_venues, get_venue_by_id
 from tickets import get_tickets,get_users_by_event, get_tickets_by_user, create_ticket
 from budget_items import create_budget_item, get_budget_items_by_event, delete_budget_item
 from flask import Flask, request, jsonify
-from sendEmail import Director, Builder, send_email
+from sendEmail import EmailDirector, HTMLEmailBuilder, send_email
 from datetime import datetime
 import os
 from dotenv import load_dotenv
@@ -332,9 +332,14 @@ def send_email_via_blast():
             "socialMediaLink": event["social_media_link"]
         }
 
-        director = Director(event_data)
-        builder = Builder()
-        email_html = director.construct(builder)
+        # Create builder and director (FIXED)
+        builder = HTMLEmailBuilder()
+        director = EmailDirector()
+        
+        # Set the builder and build the email (FIXED)
+        director.builder = builder
+        email_html = director.build_event_email(event_data)
+        
         useremails = get_all_user_emails()
         subject = event.get("eventname")
 

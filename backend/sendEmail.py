@@ -3,78 +3,115 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import os
 from dotenv import load_dotenv
+from abc import ABC, abstractmethod
 
 # Load environment variables from .env file
 load_dotenv()
 
-class Director(object):
-    def __init__(self, event_data):
-        self.eventId = event_data.get("eventId")
-        self.eventName = event_data.get("eventName")
-        self.eventDate = event_data.get("eventDate")
-        self.eventStartTime = event_data.get("eventStartTime")
-        self.eventEndTime = event_data.get("eventEndTime")
-        self.eventLocation = event_data.get("eventLocation")
-        self.eventType = event_data.get("eventType")
-        self.eventDescription = event_data.get("eventDescription")
-        self.eventOrganizer = event_data.get("eventOrganizer")
-        self.eventImg = event_data.get("eventImg")
-        self.socialMediaLink = event_data.get("socialMediaLink")
-        self.files = event_data.get("files", [])
-        self.message = event_data.get("message", "")
-    def construct(self, builder):
-        builder.build_eventID(self.eventId)
-        builder.build_eventName(self.eventName)
-        builder.build_eventDate(self.eventDate)
-        builder.build_eventStartTime(self.eventStartTime)
-        builder.build_eventEndTime(self.eventEndTime)
-        builder.build_eventLocation(self.eventLocation)
-        builder.build_eventType(self.eventType)
-        builder.build_eventDescription(self.eventDescription)
-        builder.build_eventOrganizer(self.eventOrganizer)
-        builder.build_eventImg(self.eventImg)
-        if self.socialMediaLink:  # Only include if it's provided
-                    builder.build_socialMediaLink(self.socialMediaLink)
-        return builder.get_email_html()
-    def construct_resource_sharing(self, builder):
-        builder.build_sending_resource_message(self.message)
-        if self.files:
-            builder.build_file_links(self.files)
-        return builder.get_email_html_resource_sharing()
-        
+class EmailBuilder(ABC):
+    """Abstract Builder interface that defines all building methods"""
+    
+    @abstractmethod
+    def reset(self) -> None:
+        pass
+    
+    @abstractmethod
+    def build_eventID(self, eventId) -> None:
+        pass
+    
+    @abstractmethod
+    def build_eventName(self, eventName) -> None:
+        pass
+    
+    @abstractmethod
+    def build_eventDate(self, eventDate) -> None:
+        pass
+    
+    @abstractmethod
+    def build_eventStartTime(self, eventStartTime) -> None:
+        pass
+    
+    @abstractmethod
+    def build_eventEndTime(self, eventEndTime) -> None:
+        pass
+    
+    @abstractmethod
+    def build_eventLocation(self, eventLocation) -> None:
+        pass
+    
+    @abstractmethod
+    def build_eventType(self, eventType) -> None:
+        pass
+    
+    @abstractmethod
+    def build_eventDescription(self, eventDescription) -> None:
+        pass
+    
+    @abstractmethod
+    def build_eventOrganizer(self, eventOrganizer) -> None:
+        pass
+    
+    @abstractmethod
+    def build_eventImg(self, eventImg) -> None:
+        pass
+    
+    @abstractmethod
+    def build_socialMediaLink(self, socialMediaLink) -> None:
+        pass
+    
+    @abstractmethod
+    def get_result(self) -> str:
+        pass
 
-class Builder(object):
+
+class HTMLEmailBuilder(EmailBuilder):
+    """Concrete Builder implementation that creates HTML email content"""
+    
     def __init__(self):
+        self.reset()
+    
+    def reset(self) -> None:
         self.event_dict = {}
+    
     def build_eventName(self, eventName):
         self.event_dict["eventName"] = f"<p><strong>Event Name:</strong> {eventName}</p>"
+        return self
 
     def build_eventID(self, eventId):
         self.event_dict["eventID"] = f"<p><strong>Event ID:</strong> {eventId}</p>"
+        return self
 
     def build_eventDate(self, eventDate):
         self.event_dict["eventDate"] = f"<p><strong>Date:</strong> {eventDate}</p>"
+        return self
 
     def build_eventStartTime(self, eventStartTime):
         self.event_dict["eventStartTime"] = f"<p><strong>Start Time:</strong> {eventStartTime}</p>"
+        return self
 
     def build_eventEndTime(self, eventEndTime):
         self.event_dict["eventEndTime"] = f"<p><strong>End Time:</strong> {eventEndTime}</p>"
+        return self
 
     def build_eventLocation(self, eventLocation):
         self.event_dict["eventLocation"] = f"<p><strong>Location:</strong> {eventLocation}</p>"
+        return self
 
     def build_eventType(self, eventType):
         self.event_dict["eventType"] = f"<p><strong>Type:</strong> {eventType}</p>"
+        return self
 
     def build_eventDescription(self, eventDescription):
         self.event_dict["eventDescription"] = f"<p><strong>Description:</strong> {eventDescription}</p>"
+        return self
 
     def build_eventOrganizer(self, eventOrganizer):
         self.event_dict["eventOrganizer"] = f"<p><strong>Organizer:</strong> {eventOrganizer}</p>"
+        return self
 
     def build_eventImg(self, eventImg):
         self.event_dict["eventImg"] = f'<img src="{eventImg}" alt="Event Image" style="max-width: 100%; border-radius: 10px; margin-bottom: 20px;" />'
+        return self
 
     def build_socialMediaLink(self, socialMediaLink):
         self.event_dict["socialMediaLink"] = f"""
@@ -84,30 +121,21 @@ class Builder(object):
                 </a>
             </div>
         """
-    def build_sending_resource_message(self, message):
-            self.event_dict["message"] = f"<p><strong>Message:</strong> {message}</p>"
-    def build_file_links(self, files):
-        """
-        Expects a list of file URLs or names.
-        Could be links to files hosted on a server or just file names if locally handled.
-        """
-        if not files:
-            return
+        return self
 
-        links_html = "<div><h3>Attached Resources:</h3><ul>"
-        for file in files:
-            links_html += f'<li><a href="{file}" style="color: #3498db;">{file}</a></li>'
-        links_html += "</ul></div>"
-
-        self.event_dict["files"] = links_html
+    def get_result(self):
+        """Returns the final HTML email template"""
+        return self._get_email_html()
     
-    def get_email_html(self):
+    def _get_email_html(self):
+        """Internal method to format the complete HTML email"""
         body_content = f"""
         <div style="max-width: 600px; margin: auto; background: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
             <h1 style="color: #2c3e50;">Event Details</h1>
             
             {self.event_dict.get("eventImg", "")}
             {self.event_dict.get("eventID", "")}
+            {self.event_dict.get("eventName", "")}
             {self.event_dict.get("eventDate", "")}
             {self.event_dict.get("eventStartTime", "")}
             {self.event_dict.get("eventEndTime", "")}
@@ -132,54 +160,59 @@ class Builder(object):
         </html>
         """
         return full_email
-    def get_email_html_resource_sharing(self):
-        body_content = f"""
-        <div style="max-width: 600px; margin: auto; background: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-            <h1 style="color: #2c3e50;">Resource Sharing</h1>
+
+
+class EmailDirector:
+    """Director class that orchestrates the building process"""
+    
+    def __init__(self):
+        self._builder = None
+    
+    @property
+    def builder(self) -> EmailBuilder:
+        return self._builder
+    
+    @builder.setter
+    def builder(self, builder: EmailBuilder) -> None:
+        self._builder = builder
+    
+    def build_event_email(self, event_data):
+        """Builds a complete event email using the provided data"""
+        if not self._builder:
+            raise ValueError("Builder hasn't been set")
             
-            {self.event_dict.get("message", "")}
-            {self.event_dict.get("files", "")}
+        self._builder.reset()
+        
+        # Extract event data
+        eventId = event_data.get("eventId")
+        eventName = event_data.get("eventName")
+        eventDate = event_data.get("eventDate")
+        eventStartTime = event_data.get("eventStartTime")
+        eventEndTime = event_data.get("eventEndTime")
+        eventLocation = event_data.get("eventLocation")
+        eventType = event_data.get("eventType")
+        eventDescription = event_data.get("eventDescription")
+        eventOrganizer = event_data.get("eventOrganizer")
+        eventImg = event_data.get("eventImg")
+        socialMediaLink = event_data.get("socialMediaLink")
+        
+        # Build the email components
+        self._builder.build_eventID(eventId)
+        self._builder.build_eventName(eventName)
+        self._builder.build_eventDate(eventDate)
+        self._builder.build_eventStartTime(eventStartTime)
+        self._builder.build_eventEndTime(eventEndTime)
+        self._builder.build_eventLocation(eventLocation)
+        self._builder.build_eventType(eventType)
+        self._builder.build_eventDescription(eventDescription)
+        self._builder.build_eventOrganizer(eventOrganizer)
+        self._builder.build_eventImg(eventImg)
+        
+        if socialMediaLink:  # Only include if it's provided
+            self._builder.build_socialMediaLink(socialMediaLink)
+            
+        return self._builder.get_result()
 
-        </div>
-        """
-
-        full_email = f"""
-        <html>
-            <head>
-                <meta charset="UTF-8">
-                <title>Resource Sharing</title>
-            </head>
-            <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 40px;">
-                {body_content}
-            </body>
-        </html>
-        """
-        return full_email
-
-
-# def format_email(eventId, eventName, eventDate, eventStartTime, eventEndTime, eventLocation, eventType, eventDescription, speakerId, eventOrganizer, eventImg, socialMediaLink):
-#     html_content = f"""
-#         <html>
-#             <body>
-#                 <h2>Exclusive Promotion Just for You!</h2>
-#                 <p>Dear {subscriber_list['name']},</p>
-#                 <p>We are excited to offer you a special promotion for the event: <strong>{event_dict['name']}</strong>.</p>
-#                 <p>Event Details:</p>
-#                 <ul>
-#                     <li><strong>Type:</strong> {event_dict['eventType']}</li>
-#                     <li><strong>Date:</strong> {event_dict['startDate']} to {event_dict['endDate']}</li>
-#                     <li><strong>Time:</strong> {event_dict['startTime']} - {event_dict['endTime']}</li>
-#                     <li><strong>Location:</strong> {event_dict['location']}</li>
-#                     <li><strong>Description:</strong> {event_dict['description']}</li>
-#                     <li><strong>Organizer:</strong> {event_dict['organizer']}</li>
-#                     <li><strong>Speaker:</strong> {event_dict['speaker']}</li>
-#                 </ul>
-#                 <p>Don't miss out! Visit <a href="http://example.com/tickets">this link</a> to get your tickets now.</p>
-#                 <p>This is an automated message, please do not reply.</p>
-#             </body>
-#         </html>
-#     """
-#     return html_content
 
 def send_email(to_emails, event_name, html_content):
     from_email = os.getenv("EMAIL_ADDRESS")
@@ -204,7 +237,6 @@ def send_email(to_emails, event_name, html_content):
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
     server.login(from_email, from_password)
-
 
     for to_email in to_emails:
         try:
