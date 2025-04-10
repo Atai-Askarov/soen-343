@@ -62,6 +62,72 @@ class Event(db.Model):
             db.session.rollback()
             print(f"❗ Error Creating Event: {e}")
             raise e
+    def serialize(self):
+            return {
+                "eventid": self.id,
+                "eventname": self.eventname,
+                "event_type": self.event_type,
+                "eventdate": self.eventdate.isoformat() if self.eventdate else None,
+                "eventstarttime": self.eventstarttime.isoformat() if self.eventstarttime else None,
+                "eventendtime": self.eventendtime.isoformat() if self.eventendtime else None,
+                "eventlocation": self.eventlocation,
+                "eventdescription": self.eventdescription,
+                "speakerid": self.speakerid,
+                "organizerid": self.organizerid,
+                "social_media_link": self.social_media_link,
+                "event_img": self.event_img
+            }
+
+def delete_event(event_id):
+    try:
+        event = Event.query.get(event_id)
+        if not event:
+            return jsonify({"message": "Event not found"}), 404
+        db.session.delete(event)
+        db.session.commit()
+        return jsonify({"message": "Event deleted successfully"}), 200
+    except exc.IntegrityError:
+        db.session.rollback()
+        return jsonify({"message": "Integrity error, cannot delete event"}), 400
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": f"Error deleting event: {str(e)}"}), 500
+
+def update_event(event_id):
+    data = request.get_json() or {}
+    event = Event.query.get(event_id)
+
+    if not event:
+        return jsonify({"error": "Event not found"}), 404
+
+    # Parse eventdate: expecting format "YYYY-MM-DD"
+    try:
+        if 'eventdate' in data:
+            event.eventdate = datetime.strptime(data['eventdate'], "%Y-%m-%d").date()
+    except ValueError:
+        return jsonify({"error": "Invalid date format for eventdate"}), 400
+
+    # Parse eventstarttime and eventendtime: expecting "YYYY-MM-DDTHH:MM:SS" or "YYYY-MM-DD HH:MM:SS"
+    try:
+        if 'eventstarttime' in data:
+            event.eventstarttime = datetime.fromisoformat(data['eventstarttime'])
+        if 'eventendtime' in data:
+            event.eventendtime = datetime.fromisoformat(data['eventendtime'])
+    except ValueError:
+        return jsonify({"error": "Invalid datetime format for start or end time"}), 400
+
+    # Update all other fields safely
+    event.eventname = data.get('eventname', event.eventname)
+    event.eventlocation = data.get('eventlocation', event.eventlocation)
+    event.eventdescription = data.get('eventdescription', event.eventdescription)
+    event.speakerid = data.get('speakerid', event.speakerid)
+    event.organizerid = data.get('organizerid', event.organizerid)
+    event.event_type = data.get('event_type', event.event_type)
+    event.social_media_link = data.get('social_media_link', event.social_media_link)
+    event.event_img = data.get('event_img', event.event_img)
+
+    db.session.commit()
+    return jsonify(event.serialize()), 200
 
 
 def create_event():

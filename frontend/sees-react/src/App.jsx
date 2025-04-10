@@ -14,6 +14,7 @@ import Canceled from "./pages/Canceled";
 import LandingPage from "./pages/LandingPage";
 import EventDashboard from "./pages/eventDashboard";
 import TicketsPage from "./pages/ticketsPage";
+import ShareResourcePage from "./pages/ShareResources";
 import Budget from "./pages/budget";
 import MyEventsLearner from "./pages/myEventsLearner";
 import ManageEvents from "./pages/ManageEvents"
@@ -48,6 +49,7 @@ const App = () => {
               <Route path="/eventDashboard/:eventId" element={<EventDashboard />} />
               <Route path="/manage-ticketing/:eventId" element={<TicketsPage />} />
               <Route path="/promotion/:eventId" element={<TicketsPage />} />
+              <Route path="/share-resources/:eventId" element={<ShareResourcePage />} />
               <Route path="/budget/:eventId" element={<Budget />} />
               <Route path ="/manage-events" element = {<ManageEvents/>}/>
               <Route path="/sponsor-view" element={<SponsorView />} />

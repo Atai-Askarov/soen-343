@@ -49,6 +49,13 @@ def get_users_by_role(role):
 def get_all_user_emails():
     users = User.query.all()
     return [user.email for user in users]
+def get_user_emails_from_array(user_ids):
+    if not user_ids:
+        return []
+    users = User.query.filter(User.id.in_(user_ids)).all()
+    return [user.email for user in users]
+
+    
 def sign_in():
     data = request.get_json()
     username = data.get("username")
@@ -75,6 +82,20 @@ def sign_in():
         }), 201
     except Exception as e:
         return jsonify({"message": str(e)}), 400
+
+def get_user_by_id(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    if user:
+        user_data= {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "user_type": user.user_type,
+            "interests": user.interests
+        }
+        return jsonify(user_data), 200
+    else:
+        return jsonify({"message": "User not found!"}), 404
 
 def log_in():
     data = request.get_json()

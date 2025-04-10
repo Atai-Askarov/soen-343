@@ -66,6 +66,13 @@ def create_ticket():
     except Exception as e:
         db.session.rollback()
         return jsonify({"message": f"Error creating ticket: {str(e)}"}), 500
+
+def get_users_by_event(event_id):
+    """Get all users who have tickets for a specific event"""
+    users = Ticket.query.filter_by(eventid=event_id).all()
+    user_ids = [ticket.userid for ticket in users]
+    return user_ids
+
 def get_tickets():
     try:
         tickets = Ticket.query.all()
@@ -122,6 +129,32 @@ def get_tickets_by_event(event_id):
         return jsonify({"tickets": ticket_list}), 200
     except Exception as e:
         return jsonify({"message": f"Error retrieving tickets for event {event_id}: {str(e)}"}), 500
+
+def get_ticket_by_user(user_id):
+    try:
+        tickets = Ticket.query.filter_by(userid=user_id).all()
+        if not tickets:
+            return jsonify({"message": f"No tickets found for user ID {user_id}."}), 404
+        
+        ticket_list = [{
+            'id': ticket.id,
+            'eventid': ticket.eventid,
+            'descid': ticket.descid,
+            'product_stripe_id': ticket.product_stripe_id,
+            'price_stripe_id': ticket.price_stripe_id
+        } for ticket in tickets]
+        
+        return jsonify({"tickets": ticket_list}), 200
+    except Exception as e:
+        return jsonify({"message": f"Error retrieving tickets for user {user_id}: {str(e)}"}), 500
+    
+def get_all_users_from_ticket(eventid):
+    try:
+        users=Ticket.query.filter_by(eventid=eventid).all()
+        user_ids = [ticket.userid for ticket in users]
+        return user_ids
+    except Exception as e:
+        return jsonify({"message": f"Error retrieving users from ticket: {str(e)}"}), 500
     
 def get_tickets_by_user(user_id):
     try:

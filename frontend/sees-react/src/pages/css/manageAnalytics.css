@@ -9,6 +9,12 @@
     min-height: 100vh;
     color: #333;
   }
+  .card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+    grid-auto-rows: minmax(150px, auto); /* ✅ This is key */
+  }
   
   /* Dashboard header */
   .dashboard-header {
@@ -208,9 +214,10 @@
     background-color: white;
     border-radius: 0.5rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
+    padding: 1rem 1.5rem; /* Top/Bottom = 1rem, Left/Right = 1.5rem */
     height: 100%;
   }
+  
   
   .analytics-card.wide {
     grid-column: 1 / -1;

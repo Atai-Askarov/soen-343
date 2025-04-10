@@ -1,11 +1,12 @@
-from flask import Flask, render_template, jsonify, request, send_from_directory, redirect
+from datetime import datetime
+from flask import Flask, render_template, jsonify, send_from_directory, request, send_from_directory, redirect
 from flask_migrate import Migrate
 from flask_cors import CORS, cross_origin
-from account import db, sign_in, get_users, log_in,get_users_by_role, get_all_user_emails, User
-from event import create_event, get_events, get_event_by_id,get_events_by_organizer, fetch_event_by_id #register_for_event
+from account import db, sign_in, get_users, log_in,get_users_by_role, get_all_user_emails, User, get_user_by_id, get_user_emails_from_array, get_user_by_id
+from event import * #register_for_event
 from ticketdescription import create_ticket_description, get_ticket_desc, get_ticket_descriptions_by_event
 from venue import create_venue, get_venues, get_venue_by_id
-from tickets import get_tickets, get_tickets_by_user, create_ticket
+from tickets import get_tickets,get_users_by_event, get_tickets_by_user, create_ticket
 from budget_items import create_budget_item, get_budget_items_by_event, delete_budget_item
 from flask import Flask, request, jsonify
 from sendEmail import Director, Builder, send_email
@@ -24,12 +25,16 @@ from stripe.error import StripeError, CardError, InvalidRequestError, Authentica
 from sponsorship import sponsorship_bp, create_sponsorship
 
 # ───── ENVIRONMENT & APP INITIALIZATION ─────────────────────────
+from werkzeug.utils import secure_filename
 load_dotenv()
 import stripe
 import json
 import os
 from dotenv import load_dotenv, find_dotenv
 
+
+UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app = Flask(__name__)
 CORS(app, support_credentials=True)
@@ -163,11 +168,20 @@ def create_new_event():
 @cross_origin(origin='http://localhost:3000')
 def get_all_events():
     return get_events()
+@app.route("/usersid/<int:user_id>", methods=["GET"])
+@cross_origin(origin='http://localhost:3000')
+def get_user_by_id_route(user_id):
+    return get_user_by_id(user_id)
 
 @app.route("/events/<int:event_id>", methods=["GET"])
 @cross_origin(origin='http://localhost:3000')
 def event_by_id(event_id):
     return get_event_by_id(event_id)
+
+@app.route('/events/<int:event_id>', methods=['PUT'])
+@cross_origin(origin='http://localhost:3000')
+def update_events(event_id):
+    return update_event(event_id)
 
 @app.route("/get_tickets", methods=["GET"])
 @cross_origin(origin='http://localhost:3000')
@@ -334,8 +348,122 @@ def send_email_via_blast():
         print(f"❌ Error in /emailSending: {e}")
         return jsonify({"error": str(e)}), 500
 
+@app.route('/events/<int:event_id>', methods=['DELETE'])
+@cross_origin(origin='http://localhost:3000')
+def delete_events(event_id):
+    return delete_event(event_id)
 
-    
+@app.route('/eventEmailUpdate/<int:event_id>', methods=['GET'])
+@cross_origin(origin='http://localhost:3000')
+def event_email_update(event_id):
+    if not event_id:
+            return jsonify({"error": "Missing eventId"}), 400
+    try:
+        users = get_users_by_event(event_id)
+        print("✅ Users fetched:", users)
+        emails = get_user_emails_from_array(users)
+        print("✅ User emails:", emails)
+
+        event = fetch_event_by_id(event_id)
+        if not event:
+            return jsonify({"error": f"No event found for ID {event_id}"}), 404
+
+        event_data = {
+        "eventId": event["eventid"],
+        "eventName": event["eventname"],
+        "eventDate": event["eventdate"].strftime("%B %d, %Y"),
+        "eventStartTime": event["eventstarttime"].strftime("%I:%M %p"),
+        "eventEndTime": event["eventendtime"].strftime("%I:%M %p"),
+        "eventLocation": event["eventlocation"],
+        "eventType": event["event_type"],
+        "eventDescription": event["eventdescription"],
+        "eventOrganizer": event["organizerid"],  # You could join with user table for name
+        "eventImg": event["event_img"],
+        "socialMediaLink": event["social_media_link"]
+        }
+
+        director = Director(event_data)
+        builder = Builder()
+        email_html = director.construct(builder)
+
+        print("✅ Email HTML generated")
+
+        useremails = get_all_user_emails()
+        print("✅ User emails:", useremails)
+
+        subject = event.get("eventname")
+        print("✅ Email subject:", subject)
+
+        # Make sure all components are not None
+        if not all([email_html, subject, useremails]):
+            return jsonify({"error": "Missing email data"}), 500
+
+        send_email(useremails, subject, email_html)
+        return jsonify({"message": "✅ Email campaign sent successfully."}), 200
+
+    except Exception as e:
+        print(f"❌ Error in /emailSending: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/uploads/<path:filename>', methods=['GET'])
+def serve_uploaded_file(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)
+
+@app.route('/share-resource/<int:event_id>', methods=['POST'])
+@cross_origin(origin='http://localhost:3000')
+def share_resource(event_id):
+    try:
+        users = get_users_by_event(event_id)
+        print("✅ Users fetched:", users)
+        emails = get_user_emails_from_array(users)
+        print("✅ User emails:", emails)
+
+        event = fetch_event_by_id(event_id)
+        if not event:
+            return jsonify({"error": f"No event found for ID {event_id}"}), 404
+        message = request.form.get("message")
+        files = request.files.getlist("files")
+        file_urls = []
+
+        for file in files:
+            if file and file.filename:
+                filename = secure_filename(file.filename)
+                file_path = os.path.join(UPLOAD_FOLDER, filename)
+                file.save(file_path)
+
+                # Generate accessible URL
+                file_url = f"http://localhost:5000/uploads/{filename}"
+                file_urls.append(file_url)
+
+        resource_data = {
+            "message": message,
+            "files": file_urls  # These are now public URLs
+        }
+
+        director = Director(resource_data)
+        builder = Builder()
+        email_html = director.construct_resource_sharing(builder)
+        print("✅ Email HTML generated")
+        subject = "Resource Sharing Concerning: " + event["eventname"]
+        print("✅ Email subject:", subject)
+        # Make sure all components are not None
+        if not email_html:
+            return jsonify({"error": "Email content could not be generated"}), 500
+        if not subject:
+            return jsonify({"error": "Missing email subject"}), 500
+        if not emails:
+            return jsonify({"error": "No recipients found"}), 404
+
+
+        send_email(emails, subject, email_html)
+
+        return jsonify({"message": "✅ Email campaign sent successfully."}), 200
+        
+
+    except Exception as e:
+        print(f"❌ Error in /emailSending: {e}")
+        return jsonify({"error": str(e)}), 500
+        
 
 # SocketIO Event Handlers for Real-Time Chat
 socketio = SocketIO(app, cors_allowed_origins="http://localhost:3000")
@@ -405,6 +533,76 @@ def handle_send_message(data):
 
 
 # FOR QUESTIONS
+from questions import Question, create_question, get_questions_by_event, answer_question
+
+
+# SocketIO Event Handlers for Real-Time Chat
+socketio = SocketIO(app, cors_allowed_origins="http://localhost:3000")
+
+@socketio.on('connect')
+def handle_connect():
+    print('Client connected:', request.sid)
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('Client disconnected:', request.sid)
+
+@socketio.on('join')
+def handle_join(data):
+    room = data['room']
+    user_id = data.get('userId')
+    username = data.get('username', 'Guest')
+    join_room(room)
+    with app.app_context():
+        user = db.session.query(User).filter_by(id=user_id).first()
+        if user:
+            # Validate username
+            if user.username != username:
+                print(f'Username mismatch for user ID {user_id}: expected {user.username}, got {username}')
+                emit('receiveMessage', {'user': 'System', 'message': 'Invalid user'}, room=room)
+                return
+            print(f'Client {request.sid} (User ID: {user_id}, Username: {username}) joined room: {room}')
+            emit('receiveMessage', {'user': 'System', 'message': f'{username} has joined the room!'}, room=room)
+        else:
+            print(f'Client (invalid user ID: {user_id}) joined room: {room}')
+            emit('receiveMessage', {'user': 'System', 'message': 'A user has joined the room!'}, room=room)
+
+@socketio.on('leave')
+def handle_leave(data):
+    room = data['room']
+    user_id = data.get('userId')
+    username = data.get('username', 'Guest')
+    leave_room(room)
+    with app.app_context():
+        user = db.session.query(User).filter_by(id=user_id).first()
+        if user and user.username == username:
+            print(f'Client {request.sid} (User ID: {user_id}, Username: {username}) left room: {room}')
+            emit('receiveMessage', {'user': 'System', 'message': f'{username} has left the room!'}, room=room)
+        else:
+            print(f'Client (invalid user ID: {user_id}) left room: {room}')
+            emit('receiveMessage', {'user': 'System', 'message': 'A user has left the room!'}, room=room)
+
+@socketio.on('sendMessage')
+def handle_send_message(data):
+    room = data['room']
+    message = data['message']
+    user_id = data.get('userId')
+    username = data.get('username', 'Guest')
+    with app.app_context():
+        user = db.session.query(User).filter_by(id=user_id).first()
+        if user:
+            # Validate username
+            if user.username != username:
+                print(f'Username mismatch for user ID {user_id}: expected {user.username}, got {username}')
+                emit('receiveMessage', {'user': 'System', 'message': 'Invalid user'}, room=room)
+                return
+            print(f'Message from {username} in room {room}: {message}')
+            emit('receiveMessage', {'user': username, 'message': message}, room=room)
+        else:
+            print(f'Message from invalid user ID {user_id} in room {room}: {message}')
+            emit('receiveMessage', {'user': 'Guest', 'message': message}, room=room)
+
+
 from questions import Question, create_question, get_questions_by_event, answer_question
 @app.route('/questions', methods=['POST'])
 @cross_origin(origin='http://localhost:3000')
