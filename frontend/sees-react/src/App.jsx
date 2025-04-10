@@ -17,6 +17,7 @@ import SponsorView from "./pages/SponsorView";
 import SponsorPackages from "./pages/SponsorPackages";
 import SponsorAnalytics from "./pages/SponsorAnalytics";
 import SponsorDashboard from "./pages/SponsorDashboard";
+import MySponsorships from "./pages/MySponsorships";
 const App = () => {
   return (
     <Router>
@@ -39,6 +40,7 @@ const App = () => {
               <Route path="/sponsor/:eventId" element={<SponsorPackages />} />
               <Route path="/sponsor/analytics" element={<SponsorAnalytics />} />
               <Route path="/sponsor-dashboard" element={<SponsorDashboard />} />
+              <Route path="/sponsor/mysponsorships" element={<MySponsorships />} />
             </Routes>
           </main>
           <Footer />
