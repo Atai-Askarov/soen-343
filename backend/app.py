@@ -92,7 +92,7 @@ def create_checkout_session():
             if sponsorship_response[1] != 201:
                 return jsonify({"error": "Sponsorship creation failed"}), 400
             sponsorship_data = sponsorship_response[0].get_json()
-            price_id = sponsorship_data.get("sponsorship", {}).get("stripe_price_id") if product_type != "ticket" else product.get("ticket", {}).get("stripe_price_id")
+            price_id = sponsorship_data.get("sponsorship", {}).get("stripe_price_id") if product_type != "ticket" else sponsorship_data.get("ticket", {}).get("stripe_price_id")
         
         # Extract the price_id depending on the product type
         
@@ -685,5 +685,5 @@ if __name__ == "__main__":
         db.create_all()
     app.run(debug=True, host="0.0.0.0", port=5000)
 
-        db.create_all()  # Create tables if they don't exist
+    db.create_all()  # Create tables if they don't exist
     socketio.run(app, debug=True, host="0.0.0.0", port=5000)

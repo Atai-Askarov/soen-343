@@ -96,6 +96,9 @@ const Navbar = () => {
            <li className="nav-button">
              <Link to="/manage-events">Manage Events</Link>
            </li>
+           <li className="nav-button">
+             <Link to="/manage-users">Manage Users</Link>
+           </li>
          </>
 
           )

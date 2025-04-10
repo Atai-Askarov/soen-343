@@ -33,6 +33,7 @@ import ManageAttendees from "./pages/ManagementEvents/ManageAttendees";
 import ManageAnalytics from "./pages/ManagementEvents/ManageAnalytics";
 import ManageFinancials from "./pages/ManagementEvents/ManageFinancials";
 import ManageRequests from "./pages/ManagementEvents/ManageRequests"
+import ManageUsers from "./pages/ManagementEvents/ManageUsers";
 
 const App = () => {
   return (
@@ -58,6 +59,7 @@ const App = () => {
               <Route path="/budget/:eventId" element={<Budget />} />
               <Route path ="/manage-events" element = {<ManageEvents/>}/>
               <Route path ="/manage-requests" element = {<ManageRequests/>}/>
+              <Route path ="/manage-users" element = {<ManageUsers/>}/>
 
               <Route path="/sponsor-view" element={<SponsorView />} />
               <Route path="/sponsor/:eventId" element={<SponsorPackages />} />
