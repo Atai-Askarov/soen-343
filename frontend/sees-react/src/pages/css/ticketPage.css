@@ -60,6 +60,57 @@
     border-radius: 4px;
     margin-top: 8px;
   }
+
+  /* Add to your ticketPage.css */
+.ticket-card {
+  border: 2px solid #ccc;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  position: relative;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  background-color: #fff;
+  background-position: center center; /* This centers the image horizontally and vertically */
+
+}
+
+.ticket-card.pending {
+  border-color: #ffc107;
+  background-color: #fff8e1;
+}
+
+.pending-badge {
+  background-color: #ffc107;
+  color: #000;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  margin-left: 8px;
+}
+
+.message {
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+}
+
+.message.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.error-message {
+  color: #d32f2f;
+  margin-bottom: 10px;
+}
   
   
   
