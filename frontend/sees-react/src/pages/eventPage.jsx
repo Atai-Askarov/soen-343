@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams} from "react-router-dom";
 import "./css/eventPage.css";
+import axios from "axios";
+import Chatbox from "../components/Chatbox.jsx";
+
 
 const Event = () => {
   const { eventId } = useParams(); 
@@ -8,6 +11,26 @@ const Event = () => {
   const [ticketDescriptions, setTicketDescriptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const handlePurchase = async (ticket) => {
+    try {
+      const response = await axios.post("http://localhost:5000/create-checkout-session", {
+        userid: JSON.parse(localStorage.getItem('user')).id,
+        eventid: ticket.eventid,
+        descid: ticket.id,
+        name: ticket.name,
+        description: ticket.description,
+        price: parseFloat(ticket.price),
+        priceId: ticket.priceId,  // Make sure you have this priceId available
+        product_type: "ticket"
+      });
+  
+      // Redirect to Stripe Checkout
+      window.location.href = response.data.url;
+    } catch (error) {
+      console.error("Error creating checkout session:", error.response?.data || error.message);
+    }
+  };
+  
 
   useEffect(() => {
     const fetchEventDetails = async () => {
@@ -40,10 +63,10 @@ const Event = () => {
     return <p>{error}</p>;
   }
 
-  return (
-    <div className="event-container-page">
+  return (  
+    <div className="event-page">
       {event ? (
-        <div>
+        <div className="event-container-page">
           <div className="event-thumbnail-page">
               <img
                 src={event.event_img || "/images/default.jpg"} // Use the event image if available, otherwise use the default image
@@ -62,24 +85,29 @@ const Event = () => {
       ) : (
         <p>Event not found.</p>
       )}
-
+      
       {/* Ticket Options Section */}
-      <div>
+      <div className="ticket-options">
         <h1>Ticket Options</h1>
         {ticketDescriptions.length > 0 ? (
           <div className="ticket-list" style={{ display: "flex", flexDirection: "row", gap: "20px",contentAlign: "center" }}>
             {ticketDescriptions.map((ticket) => (
               <div key={ticket.id} className="ticket-card">
+                <div className="ticket-writing">
                 <h4>{ticket.name}</h4>
                 <p><strong>Price:</strong> ${ticket.price}</p>
                 <p><strong>Description:</strong> {ticket.description || "No description available"}</p>
-                <Link to={`/purchase/${ticket.id}`} className="btn">Purchase Ticket</Link>
+                <button className="ticket-card-button" onClick={() => {handlePurchase(ticket)}}>Purchase Ticket</button>
+                </div>
               </div>
             ))}
           </div>
         ) : (
           <p>No ticketing options available for this event.</p>
         )}
+      </div>
+      <div className="chatbox-container">
+        <Chatbox eventId={eventId} />
       </div>
     </div>
   );

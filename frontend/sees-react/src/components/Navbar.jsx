@@ -6,12 +6,26 @@ const Navbar = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Retrieve user data from localStorage
+  const updateUser = () => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      setUser(JSON.parse(storedUser)); // Parse and set the user data
+      setUser(JSON.parse(storedUser));
+    } else {
+      setUser(null);
     }
+  };
+
+  useEffect(() => {
+    // Initial check on mount
+    updateUser();
+
+    // Listen for the custom userLogin event
+    window.addEventListener("userLogin", updateUser);
+
+    // Cleanup the event listener on unmount
+    return () => {
+      window.removeEventListener("userLogin", updateUser);
+    };
   }, []);
 
   const handleLogout = () => {
@@ -31,7 +45,7 @@ const Navbar = () => {
                 <Link to="/home">Home</Link>
               </li>
               <li className="nav-button">
-                <Link to="/myevents">My Events</Link>
+                <Link to="/myevents/">My Events</Link>
               </li>
               <li className="nav-button">
                 <Link to="/networking">Networking</Link>
@@ -70,6 +84,21 @@ const Navbar = () => {
               </li>
             </>
           );
+        case "executive":
+          return(<>
+            <li className="nav-button">
+             <Link to="/home">Home</Link>
+           </li>
+           <li className="nav-button">
+             <Link to="/admin-dashboard">Admin Dashboard</Link>
+           </li>
+
+           <li className="nav-button">
+             <Link to="/manage-events">Manage Events</Link>
+           </li>
+         </>
+
+          )
         case "admin":
           return (
             <>
@@ -94,9 +123,13 @@ const Navbar = () => {
       <div className="navbar-left">
         <div style={{ display: "flex", alignItems: "row" }}>
         <div className="logo">
-        <img className="image" src="https://cdn-icons-png.flaticon.com/512/2938/2938245.png" alt="placeholder" />
+          <Link to="/home">
+            <img className="image" src="https://cdn-icons-png.flaticon.com/512/2938/2938245.png" alt="placeholder" />
+          </Link>
         </div>
-        <div className="pookie-bears">POOKIE <br></br> BEARS</div>
+          <Link to="/home">
+            <div className="pookie-bears">POOKIE <br></br> BEARS</div>
+          </Link>
         </div>
       </div>
       <div className="navbar-right">
@@ -106,18 +139,18 @@ const Navbar = () => {
             <>
 
               {renderUserLinks()}
-              <li className="nav-button" style={{alignItems:"center"}} onClick={handleLogout}>
-                Logout
+              <li className="logout-button" style={{alignItems:"center", color: "white"}} onClick={handleLogout}>
+                LOGOUT
               </li>
             </>
           ) : (
             // If the user is not logged in, show these options
             <>
               <li className="nav-button">
-                <Link to="login">Login</Link>
+                <Link to="login">LOGIN</Link>
               </li>
               <li className="nav-button ">
-                <Link to="signup">Sign Up</Link>
+                <Link to="signup">SIGN UP</Link>
               </li>
             </>
           )}

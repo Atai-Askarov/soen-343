@@ -42,7 +42,6 @@ textarea {
 }
 
 button {
-  background-color: red;
   color: white;
   border: none;
   cursor: pointer;
@@ -85,7 +84,6 @@ button:focus {
 }
 
 .create-button{
-  background-color: red;
   color: white;
   border: none;
   cursor: pointer;

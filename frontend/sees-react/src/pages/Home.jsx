@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link,  } from "react-router-dom";
-import Button from "../components/Button";
 import "./css/home.css"; 
 import "./css/eventPopup.css"; 
 
@@ -57,7 +56,6 @@ const Home = () => {
         <p className="home-image-text-subtitle">Your Event Management Platform </p>
       </div>
       <div className="content">
-
         {user ? (
           <div>
             <h1>Welcome back, {user.username}!</h1>

@@ -35,18 +35,18 @@
     transition: background-color 0.3s;
   }
   
-  button:hover {
+  .tickets-button:hover {
     background-color: darkred;
   }
   
-  button:active {
+  .tickets-button:active {
     background-color: darkred;
   }
   
-  button:focus {
+  
+  .tickets-button:focus {
     outline: none;
   }
-  
   @media (max-width: 600px) {
     .createEvent {
       padding: 20px;

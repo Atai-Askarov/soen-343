@@ -1,15 +1,45 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import "./css/eventDashboard.css";
+import AnalyticsModal from "../components/Analytics/AnalyticsModal";
+import AnalyticsCard from "../components/Analytics/AnalyticsCard";
+//? Service File to fetch the analytics 
+import eventAnalyticsService from "../services/EventAnalyticsService";
+
+
 
 const EventDashboard = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedEvent, setEditedEvent] = useState({});
-  const { eventId } = useParams(); // Get the eventId from URL
-  const [event, setEvent] = useState(null); // State to hold the event data
+  const { eventId } = useParams();
+  const [event, setEvent] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  //? Modal state for popping up the analytics cards
+  const [activeModal, setActiveModal] = useState(null);
+ //? Analytics data
   const [user, setUser] = useState(null); // State to hold the user data
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const [analyticsData, setAnalyticsData] = useState({});
+
+
+  //! HARD CODED ANALYTICS DATA FOR TESTING
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await eventAnalyticsService.getEventAnalytics(eventId);
+        setEvent(data.event);
+        setAnalyticsData(data);
+      } catch (error) {
+        setError("Error fetching event data: " + error.message);
+        console.error("Error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [eventId]);
   const eventTypes = ["workshop", "webinar", "conference", "seminar"];
   const getTimeInputValue = (dateStr, timeStr) => {
     if (!dateStr || !timeStr) return ""; // early return for invalid values
@@ -176,19 +206,19 @@ const EventDashboard = () => {
       try {
         const eventResponse = await fetch(`http://127.0.0.1:5000/events/${eventId}`);
         const eventData = await eventResponse.json();
-        setEvent(eventData); // Set the event data
+        setEvent(eventData);
         setEditedEvent(eventData); // Preload editable version
 
       } catch (error) {
         setError("Error fetching event data.");
         console.error("Error:", error);
       } finally {
-        setLoading(false); // Set loading to false once the data is fetched
+        setLoading(false);
       }
     };
 
     fetchEventDetails();
-  }, [eventId]); // Refetch data when eventId changes
+  }, [eventId]);
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -217,7 +247,7 @@ const EventDashboard = () => {
 
   return (
     <div>
-      {loading ? <p>Loading...</p> : event ? (
+      {event ? (
         <div className="event-details-dashboard">
           <div className="event-details-card">
             <div className="event-card-body">
@@ -395,48 +425,61 @@ const EventDashboard = () => {
 
           {/* Buttons with links */}
           <div className="side-menu">
+          <Link to={`/eventDashboard/${eventId}`} className="menu-item">Analytics</Link>
             <Link to={`/manage-ticketing/${eventId}`} className="menu-item">Manage Ticketing</Link>
             <Link to={`/promotion/${eventId}`} className="menu-item">Promotion</Link>
-            <Link to={`/budgeting/${eventId}`} className="menu-item">Budgeting</Link>
+            <Link to={`/budget/${eventId}`} className="menu-item">Budgeting</Link>
+            <Link to={`/sponsorships/${eventId}`} className="menu-item">Sponsorships</Link>
+            <Link to={`/manage-qa/${eventId}`} className="menu-item">Q&A Management</Link>
           </div>
 
           {/* Dashboard for Analytics */}
           <div className="dashboard">
             <div className="card-container">
-              <div className="card">
-                <h3>Ticket Sales</h3>
+              <AnalyticsCard title="Ticket Sales" onClick={() => setActiveModal("ticketSales")}>
                 <p>Placeholder for ticket sales data</p>
-              </div>
-              <div className="card">
-                <h3>Attendee Numbers</h3>
+              </AnalyticsCard>
+              
+              <AnalyticsCard title="Attendee Numbers" onClick={() => setActiveModal("attendeeNumbers")}>
                 <p>Placeholder for attendee numbers</p>
-              </div>
-              <div className="card">
-                <h3>Event Views</h3>
+              </AnalyticsCard>
+              
+              <AnalyticsCard title="Event Views" onClick={() => setActiveModal("eventViews")}>
                 <p>Placeholder for event view counts</p>
-              </div>
-              <div className="card">
-                <h3>Profit</h3>
+              </AnalyticsCard>
+              
+              <AnalyticsCard title="Profit" onClick={() => setActiveModal("profit")}>
                 <p>Placeholder for profit data</p>
-              </div>
-              <div className="card">
-                <h3>Feedback</h3>
+              </AnalyticsCard>
+              
+              <AnalyticsCard title="Feedback" onClick={() => setActiveModal("feedback")}>
                 <p>Placeholder for feedback summary</p>
-              </div>
-              <div className="card">
-                <h3>Social Media Engagement</h3>
+              </AnalyticsCard>
+              
+              <AnalyticsCard title="Social Media Engagement" onClick={() => setActiveModal("socialMedia")}>
                 <p>Placeholder for social media metrics</p>
-              </div>
-              <div className="card">
-                <h3>Ticket Type Breakdown</h3>
+              </AnalyticsCard>
+              
+              <AnalyticsCard title="Ticket Type Breakdown" onClick={() => setActiveModal("ticketTypes")}>
                 <p>Placeholder for ticket type stats</p>
-              </div>
-              <div className="card">
-                <h3>Revenue by Source</h3>
+              </AnalyticsCard>
+              
+              <AnalyticsCard title="Revenue by Source" onClick={() => setActiveModal("revenueSources")}>
                 <p>Placeholder for revenue breakdown</p>
-              </div>
+              </AnalyticsCard>
             </div>
           </div>
+
+          {/* Render modal if active */}
+          {activeModal && (
+            <AnalyticsModal
+              isOpen={!!activeModal}
+              onClose={() => setActiveModal(null)}
+              title={analyticsData[activeModal].title}
+            >
+              {analyticsData[activeModal].content}
+            </AnalyticsModal>
+          )}
         </div>
       ) : (
         <p>No event data available</p>
@@ -446,5 +489,3 @@ const EventDashboard = () => {
 };
 
 export default EventDashboard;
-
-
