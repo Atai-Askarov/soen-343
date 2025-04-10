@@ -1,7 +1,7 @@
 // src/pages/MySponsorships.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./css/sponsorDashboard.css";
+import "./css/eventDashboard.css";
 
 const MySponsorships = () => {
   const [sponsorships, setSponsorships] = useState([]);
