@@ -17,11 +17,12 @@ from flask_socketio import SocketIO, join_room, leave_room, emit
 from dotenv import load_dotenv
 from attendance import get_attendance_by_event
 from EventNotifier import EventNotifier, email_attendees_on_update, email_attendees_on_delete
-
+from EmailObserver import EmailObserver
 
 from stripe.error import StripeError, CardError, InvalidRequestError, AuthenticationError, APIConnectionError, RateLimitError
-EventNotifier.register(email_attendees_on_update)
-EventNotifier.register(email_attendees_on_delete)
+email_observer = EmailObserver()
+EventNotifier.register(email_observer.update)
+
 
 
 
