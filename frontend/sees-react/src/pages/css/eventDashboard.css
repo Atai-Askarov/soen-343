@@ -1,4 +1,18 @@
 /* Event Card */
+.centered-qr-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  height: 70%;
+  background-color: white; /* You can change this */
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Optional shadow for a more refined look */
+  border-radius: 8px; /* Optional for rounded corners */
+  padding: 20px; /* Optional padding */
+  z-index: 1000; /* Ensure it's on top of other elements */
+}
+
 .event-details-dashboard {
   width: 100%;
   display: flex;

@@ -32,7 +32,15 @@ def create_ticket():
         return jsonify({
             "message": "All fields are required!",
             "missing_fields": [field for field in required_fields if field not in data]
-        }), 400
+        }), 403
+    existing = Ticket.query.filter_by(
+            userid=data['userid'],
+            eventid=data['eventid']
+        ).first()
+    if existing:
+        return jsonify({"message": "Currently we support only single item purchases"}), 400
+
+        
     
     try:
         # Always set purchase_date to current time if not provided
@@ -50,7 +58,8 @@ def create_ticket():
             eventid=data['eventid'],
             descid=data['descid'],
             product_stripe_id=product_id,
-            price_stripe_id=price_id
+            price_stripe_id=price_id,
+            purchase_date = purchase_date
         )
         db.session.add(new_ticket)
         db.session.commit()
@@ -61,7 +70,6 @@ def create_ticket():
             "purchase_date": new_ticket.purchase_date.isoformat(),
             "product_id": product_id,
             "price_id": price_id
-            "price_id": price_id,
         }), 201
         
     except Exception as e:

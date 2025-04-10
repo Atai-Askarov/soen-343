@@ -24,6 +24,7 @@ import EventPageAttendee from './pages/EventPageAttendee'
 import SponsorView from "./pages/SponsorView";
 import SponsorPackages from "./pages/SponsorPackages";
 import ManageQA from "./pages/ManageQA"
+import ConfirmationPage from "./pages/QRConfirmationPage";
 const App = () => {
   return (
     <BrowserRouter>
@@ -54,6 +55,8 @@ const App = () => {
               <Route path="/myevents" element={<MyEventsLearner />} />
               <Route path="/event-attendee/:id" element={<EventPageAttendee />} />
               <Route path="/manage-qa/:eventId" element={<ManageQA />} />
+              <Route path="/myevents/attendance-confirmation-page/:ticketId" element={<ConfirmationPage/>} />
+              <Route path="/eventDasboard/:eventId/attendance-confirmation-page" element={<ConfirmationPage/>} />
             </Routes>
 
           </main>

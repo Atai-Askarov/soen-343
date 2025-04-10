@@ -5,7 +5,7 @@ from account import db, sign_in, get_users, log_in,get_users_by_role, get_all_us
 from event import create_event, get_events, get_event_by_id,get_events_by_organizer, fetch_event_by_id #register_for_event
 from ticketdescription import create_ticket_description, get_ticket_desc, get_ticket_descriptions_by_event
 from venue import create_venue, get_venues, get_venue_by_id
-from tickets import get_tickets, get_tickets_by_user, create_ticket
+from tickets import get_tickets, get_tickets_by_user, create_ticket, get_tickets_by_event
 from budget_items import create_budget_item, get_budget_items_by_event, delete_budget_item
 from flask import Flask, request, jsonify
 from sendEmail import Director, Builder, send_email
