@@ -215,6 +215,8 @@ const EventDashboard = () => {
       setEvent(updatedEvent);
       setEditedEvent(updatedEvent);
       setIsEditing(false);
+      alert("✅ Event update Request Sent succesfully! Event will be updated and Subscribers will be notified via email once Admin approves the request.");
+
     } catch (error) {
       console.error("Error saving event:", error);
       setError("Error saving event data.");
