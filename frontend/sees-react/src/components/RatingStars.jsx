@@ -12,7 +12,7 @@ const StarRating = ({ event, user }) => {
     try {
       console.log(comment);
       console.log(value);
-      const response = await axios.post('http://localhost:5000/create-review', {
+      const response = await axios.post('http://localhost:5000/Review/create-review', {
         event_id: event,
         user_id: user,
         rating: value || 1,

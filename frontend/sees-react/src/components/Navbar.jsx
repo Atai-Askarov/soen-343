@@ -96,9 +96,7 @@ const Navbar = () => {
            <li className="nav-button">
              <Link to="/manage-events">Manage Events</Link>
            </li>
-           <li className="nav-button">
-             <Link to="/manage-users">Manage Users</Link>
-           </li>
+           
          </>
 
           )
@@ -110,8 +108,8 @@ const Navbar = () => {
                 <Link to="/admin-dashboard">Admin Dashboard</Link>
               </li>
               <li className="nav-button">
-                <Link to="/admin-users">Manage Users</Link>
-              </li>
+             <Link to="/manage-users">Manage Users</Link>
+           </li>
             </>
           );
         default:

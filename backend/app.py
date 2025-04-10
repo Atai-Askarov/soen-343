@@ -17,11 +17,8 @@ from flask_socketio import SocketIO, join_room, leave_room, emit
 from dotenv import load_dotenv
 from attendance import get_attendance_by_event
 
-from Review import create_review, get_reviews, get_review_by_id, update_review, delete_review
-
-
+from Review import  review_bp
 # Import blueprints
-from sponsorship import sponsorship_bp
 from analytics import analytics_bp
 # Import the sponsorship blueprint
 from sponsorship import sponsorship_bp, create_sponsorship
@@ -148,7 +145,7 @@ def webhook():
 # Register the sponsorship blueprint (it handles /packages and /sponsorship endpoints)
 app.register_blueprint(sponsorship_bp)
 app.register_blueprint(analytics_bp)
-
+app.register_blueprint(review_bp, url_prefix="/Review")
 # ───── ROUTES ─────────────────────────────────────────────
 @app.route("/")
 def home():

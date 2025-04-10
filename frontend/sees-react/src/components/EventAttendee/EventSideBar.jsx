@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import SimilarInterestsSection from './SimilarInterestsSection';
 import StarRating from '../RatingStars';
 
 const EventSidebar = ({ event, user, loadingSimilar, similarAttendees }) => {
+  useEffect(()=>{
+    console.log(event)
+  },[])
   return (
+    
     <div className="event-sidebar">
       <div className="organizer-card">
         <h3>Organized By</h3>
@@ -29,8 +33,12 @@ const EventSidebar = ({ event, user, loadingSimilar, similarAttendees }) => {
         />
       )}
       <h1>Rate this event!</h1>
+      {
+      console.log("Look here")}
+      {console.log(event.id)
+      }
       <StarRating 
-      event = {event.id}
+      event = {event.eventid}
       user = {user.id}
       />
     </div>

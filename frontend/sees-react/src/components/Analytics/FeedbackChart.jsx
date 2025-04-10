@@ -7,34 +7,34 @@ const FeedbackChart = ({ rating, themeData }) => {
     { name: 'Rating', value: rating },
     { name: 'Empty', value: 5 - rating }
   ];
-  const fetchReviews = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/get-reviews'); // Replace with your API endpoint
-      const reviews = response.data;
+  // const fetchReviews = async () => {
+  //   try {
+  //     const response = await axios.get('http://localhost:5000/get-reviews'); // Replace with your API endpoint
+  //     const reviews = response.data;
 
-      // Calculate the average rating
-      const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
-      const averageRating = (totalRating / reviews.length).toFixed(1); // Round to 1 decimal place
-      setRating(averageRating);
+  //     // Calculate the average rating
+  //     const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+  //     const averageRating = (totalRating / reviews.length).toFixed(1); // Round to 1 decimal place
+  //     setRating(averageRating);
 
-      // Process theme data (e.g., count mentions of themes)
-      const themeCounts = {};
-      reviews.forEach((review) => {
-        review.themes.forEach((theme) => {
-          themeCounts[theme] = (themeCounts[theme] || 0) + 1;
-        });
-      });
+  //     // Process theme data (e.g., count mentions of themes)
+  //     const themeCounts = {};
+  //     reviews.forEach((review) => {
+  //       review.themes.forEach((theme) => {
+  //         themeCounts[theme] = (themeCounts[theme] || 0) + 1;
+  //       });
+  //     });
       
-      // Convert themeCounts to an array for the BarChart
-      const processedThemeData = Object.keys(themeCounts).map((key) => ({
-        name: key,
-        count: themeCounts[key],
-      }));
-      setThemeData(processedThemeData);
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
-    }
-  };
+  //     // Convert themeCounts to an array for the BarChart
+  //     const processedThemeData = Object.keys(themeCounts).map((key) => ({
+  //       name: key,
+  //       count: themeCounts[key],
+  //     }));
+  //     setThemeData(processedThemeData);
+  //   } catch (error) {
+  //     console.error('Error fetching reviews:', error);
+  //   }
+  // };
   const COLORS = ['#0088FE', '#ECEFF1'];
   
   return (
