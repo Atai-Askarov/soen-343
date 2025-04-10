@@ -1,5 +1,6 @@
 import React from 'react';
 import SimilarInterestsSection from './SimilarInterestsSection';
+import StarRating from '../RatingStars';
 
 const EventSidebar = ({ event, user, loadingSimilar, similarAttendees }) => {
   return (
@@ -27,6 +28,11 @@ const EventSidebar = ({ event, user, loadingSimilar, similarAttendees }) => {
           attendees={similarAttendees} 
         />
       )}
+      <h1>Rate this event!</h1>
+      <StarRating 
+      event = {event.id}
+      user = {user.id}
+      />
     </div>
   );
 };

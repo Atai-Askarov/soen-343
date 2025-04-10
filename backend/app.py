@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Flask, render_template, jsonify, send_from_directory, request, send_from_directory, redirect
+from flask import Flask, render_template, jsonify, send_from_directory, request, send_from_directory
 from flask_migrate import Migrate
 from flask_cors import CORS, cross_origin
 from account import db, sign_in, get_users, log_in,get_users_by_role, get_all_user_emails, User, get_user_by_id, get_user_emails_from_array, get_user_by_id
@@ -17,8 +17,7 @@ from flask_socketio import SocketIO, join_room, leave_room, emit
 from dotenv import load_dotenv
 from attendance import get_attendance_by_event
 
-
-from stripe.error import StripeError, CardError, InvalidRequestError, AuthenticationError, APIConnectionError, RateLimitError
+from Review import create_review, get_reviews, get_review_by_id, update_review, delete_review
 
 
 # Import blueprints
@@ -32,7 +31,6 @@ from sponsorship import sponsorship_bp, create_sponsorship
 from werkzeug.utils import secure_filename
 load_dotenv()
 import stripe
-import json
 import os
 from dotenv import load_dotenv, find_dotenv
 
@@ -155,6 +153,12 @@ app.register_blueprint(analytics_bp)
 @app.route("/")
 def home():
     return "<p>Event Registration System</p>"
+
+
+
+
+
+
 
 @app.route("/add_user", methods=["POST"])
 @cross_origin(origin='http://localhost:3000')
