@@ -1,7 +1,7 @@
 // src/pages/SponsorView.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./css/eventDashboard.css";
+import "./css/sponsorView.css";
 
 const SponsorView = () => {
   const [events, setEvents] = useState([]);
