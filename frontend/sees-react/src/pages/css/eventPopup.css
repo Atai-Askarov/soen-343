@@ -1,0 +1,118 @@
+/* Container for each event */
+.event-container {
+    border-radius: 15px; /* Rounded edges */
+    margin: 20px 0; /* Space between events */
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: transform 0.3s ease; /* Smooth transition effect */
+    position: relative; /* Needed for positioning content above background */
+    background-size: cover; /* Ensure the background image covers the entire container */
+    background-position: center; /* Center the background image */
+    min-height: 480px;
+    min-width: 366px; /* Set the height of the container */
+    color: white; /* Make the text white to contrast with the background */
+    overflow: hidden; /* Hide content that overflows */
+  }
+  
+  /* Hover effect */
+  .event-container:hover {
+    transform: translateY(-5px) scale(1.05);
+}
+
+.event-container::after {
+    content: ""; 
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0); /* Transparent by default */
+}
+
+.event-container:hover::after {
+    background: rgba(0, 0, 0, 0.4); /* Slight dark overlay on hover */
+}
+
+  
+  /* Event name */
+  .event-container .event-name {
+    position: absolute; /* Position content above the image */
+    bottom: 100px; /* Align the text to the bottom */
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8); /* Add a little shadow for better readability */
+    z-index: 2; /* Make sure it's above other content */
+    text-align: start;
+  }
+
+  .event-container:hover .event-name {
+    position: absolute;
+    top: 10px;
+  }
+  .event-description,
+  .event-speaker,
+  .event-type{
+    opacity: 0;
+  }
+
+  .event-container:hover .event-type {
+    position: absolute;
+    bottom: 90px; /* Align the text to the bottom */
+    color: white;
+    padding: 5px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8); /* Add a little shadow for better readability */
+    z-index: 2; /* Make sure it's above other content */
+    opacity: 1; /* Make it visible on hover */}
+
+
+  .event-container:hover .event-description {
+    position: absolute;
+    top: 35%; /* Align the text to the bottom */
+    text-align: start;
+    color: white;
+    padding: 0px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8); /* Add a little shadow for better readability */
+    z-index: 2; /* Make sure it's above other content */
+    opacity: 1; /* Make it visible on hover */}
+
+    .event-container:hover .event-speaker {
+      position: absolute;
+      bottom: 50px; /* Align the text to the bottom */
+      color: white;
+      padding: 5px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8); /* Add a little shadow for better readability */
+      z-index: 2; /* Make sure it's above other content */
+      opacity: 1; /* Make it visible on hover */}
+  
+
+
+  /* Styling for event type, date, and location */
+  .event-location {
+    position: absolute;
+    bottom: 50px; /* Align the text to the bottom */
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8); /* Add a little shadow for better readability */
+    z-index: 2;
+  }
+  .event-container:hover .event-location {
+    position: absolute;
+    top: 80px;
+  }
+
+  .event-date {
+    position: absolute;
+    bottom: 10px; /* Align the text to the bottom */
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8); /* Add a little shadow for better readability */
+    z-index: 2;
+  }
+  .event-container:hover .event-date {
+    position: absolute;
+    top: 120px;
+  }
+  
+
+  

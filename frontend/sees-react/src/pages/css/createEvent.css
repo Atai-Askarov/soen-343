@@ -1,0 +1,119 @@
+.createEventPage{
+  background-image: linear-gradient(#5f2c82, #49a09d);
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  padding: 20px;
+}
+.createEvent{
+  max-width: 500px;
+  padding: 40px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #555;
+  width: 100%;
+}
+
+input,
+textarea,
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+textarea {
+  resize: none;
+  height: 100px;
+}
+
+button {
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+button:focus {
+  outline: none;
+}
+
+@media (max-width: 600px) {
+  .createEvent {
+    padding: 20px;
+  }
+}
+.location-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.location-btn {
+  padding: 8px 16px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.location-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.location-btn.active {
+  background-color: #4CAF50;
+  color: white;
+  border-color: #4CAF50;
+}
+
+.create-button{
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-top: 8px;
+}

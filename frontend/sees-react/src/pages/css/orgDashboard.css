@@ -1,0 +1,267 @@
+/* ===============================
+   Layout & Typography
+================================== */
+.dashboard-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background-image: linear-gradient(#5f2c82, #49a09d);
+}
+
+.welcome-header {
+  font-size: 40px;
+  font-weight: bolder;
+  text-align: left;
+  width: 100%;
+  color: #fff;
+}
+
+.section-header {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #2c3e50;
+}
+
+/* ===============================
+   Layout Containers
+================================== */
+.calendar-and-events {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.events-section {
+  margin-top: 40px;
+  width: 50%;
+  height: 600px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  overflow-y: auto;
+}
+.events-table-wrapper {
+  max-height: 500px; /* or whatever height you prefer */
+  overflow-y: auto;  /* vertical scroll */
+  overflow-x: auto;  /* horizontal scroll just in case */
+  border-radius: 12px;
+}
+
+.events-table-wrapper::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 8px;
+}
+
+
+.calendar-section {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* ===============================
+   Calendar Styling
+================================== */
+.react-big-calendar {
+  width: 90% !important;
+}
+
+.rbc-btn-group button {
+  font-size: 12px;
+  padding: 5px 10px;
+  margin: 2px;
+  border-radius: 3px;
+  width: 70px;
+}
+
+/* ===============================
+   Events Table
+================================== */
+.events-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.events-table thead {
+  background-color: #f5f7fa;
+  color: #2c3e50;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.events-table th,
+.events-table td {
+  padding: 14px 18px;
+  text-align: left;
+  border-bottom: 1px solid #ececec;
+}
+
+.events-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.events-table tbody tr:hover {
+  background-color: #f9fbfd;
+}
+
+.events-table td a {
+  color: #3498db;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.events-table td a:hover {
+  text-decoration: underline;
+}
+
+/* ===============================
+   Campaigns Table
+================================== */
+.campaigns-section {
+  margin-top: 40px;
+  width: 47%;
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.campaign-form {
+  width: 100%;
+  flex-direction: row; /* Ensures the items are aligned in a horizontal row */
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.campaign-form label {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.campaign-form select {
+  width: 450px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #f9f9f9;
+}
+
+.campaigns-table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+}
+
+.campaigns-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.campaigns-table thead {
+  background-color: #f5f7fa;
+  color: #2c3e50;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.campaigns-table th,
+.campaigns-table td {
+  padding: 14px 18px;
+  text-align: left;
+  border-bottom: 1px solid #ececec;
+}
+
+.campaigns-table tbody tr:hover {
+  background-color: #f9fbfd;
+}
+
+.campaign-btn {
+  background-color: #3498db;
+  width: 160px;
+  color: #fff;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.campaign-btn:hover {
+  background-color: #2980b9;
+}
+
+
+/* ===============================
+   Event Popup
+================================== */
+.event-popup {
+  max-width: 300px;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.status-badge.pending {
+  background-color: #ffe8cc;
+  color: #995500;
+}
+
+.status-badge.approved {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.status-badge.failed {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.status-badge.sent {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.no-campaigns {
+  text-align: center;
+  font-style: italic;
+  color: #6b7280;
+  padding: 1rem;
+}
+
+/* ===============================
+   Event Image (Optional)
+================================== */
+.event-image {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+

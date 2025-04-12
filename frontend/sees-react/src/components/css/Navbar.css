@@ -1,0 +1,144 @@
+.polar-bear-image {
+  width: inherit;
+  height: 130vh;
+  position: absolute;
+  top: 0px;
+  display: block;
+  margin: 0 auto;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  z-index: 3;
+  background-color: black;
+}
+.notification-button{
+  background-image: linear-gradient(to right, #d38312 , #a83279);
+  border: none;
+  border-radius: 30px;
+  width: 50px;
+  height: 50px;
+  align-content: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.notification-dropdown {
+  position: absolute;
+  border-radius: 20px;
+  top: 70px; /* Adjust this value to position the dropdown */
+  right: 20px; /* Align it to the left edge of the notification button */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 280px;
+  max-height: 500px; /* Limit the height if you want to prevent overflow */
+  overflow-y: auto; /* Make the dropdown scrollable if too many notifications */
+  z-index: 1000; /* Ensure it appears on top of other elements */
+  text-align:left;
+  padding: 10px;
+}
+
+.notification-dropdown ul {
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.notification-dropdown li {
+  text-align: start;
+  font-size: 14px;
+  padding: 10px;
+  border-bottom: 1px solid #f1f1f1;
+  width: 95%; /* Ensure the list items stretch to full width */
+}
+
+.notification-dropdown li:last-child {
+  border-bottom: none;
+}
+
+.notification-dropdown a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.notification-dropdown a:hover {
+  text-decoration: underline;
+}
+
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  position: absolute;
+  top: 0px;
+  scale: 0.06;
+}
+
+.pookie-bears{
+  position: absolute;
+  top: 15px;
+  left: 80px;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  font-weight: bold;
+}
+
+
+.navbar-right ul {
+  display: flex;
+  list-style: none;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-button {
+  background-color: black;
+  border-style: solid;
+  border-color: white;
+  padding: 8px 20px;
+  height: 20px;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-width: 1px;
+
+}
+
+.nav-button a {
+  text-decoration: none;
+  color: white;
+}
+
+.sign-up {
+  color: white;
+  border: none;
+}
+
+.sign-up a {
+  color: white;
+}
+
+.logout-button{
+  border-style: solid;
+  border-color: white;
+  padding: 8px 20px;
+  height: 20px;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-width: 1px;
+}
