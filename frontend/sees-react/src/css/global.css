@@ -320,7 +320,7 @@
   padding-top: 12px;
 }
 
-/* Responsiveness */
+/* Responsiveness 
 @media (max-width: 720px) {
   .stripe_wrapper .sr-root {
     flex-direction: column;

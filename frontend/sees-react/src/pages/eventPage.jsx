@@ -88,7 +88,17 @@ const Event = () => {
           <h1 className="event-name-page">{event.eventname}</h1>
           <p className="event-type-page">{event.event_type}</p>
           <h2 className="event-section-header">Date and Time</h2>
-          <p className="event-date-page">{event.eventdate}</p>
+          <p className="event-type-page">{new Date(event.eventdate).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}    {new Date(event.eventstarttime).toLocaleTimeString('en-US', {
+              hour: 'numeric',
+              minute: '2-digit',
+            })} -   {new Date(event.eventendtime).toLocaleTimeString('en-US', {
+              hour: 'numeric',
+              minute: '2-digit',
+            })}</p>
           <h2 className="event-section-header">Event Location</h2>
           <p className="event-location-page">{event.eventlocation}</p>
           <h2 className="event-section-header">Event Description</h2>

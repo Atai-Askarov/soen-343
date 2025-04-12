@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import io from 'socket.io-client';
 import './css/Chatbox.css';
 
@@ -12,7 +12,9 @@ const socket = io('http://localhost:5000', {
 });
 
 const Chatbox = () => {
-  const { eventId } = useParams(); // Get eventId from URL params
+  const location = useLocation(); // Get location object to access query parameters
+  const { eventId: eventIdFromParams } = useParams(); // Get eventId from URL parameters
+  const [eventId, setEventId] = useState(null); // Store eventId in state
   const [text, setText] = useState('');
   const [messages, setMessages] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -25,6 +27,19 @@ const Chatbox = () => {
     setChatVisible(!isChatVisible);
   };
 
+  // Extract eventId from URL query parameters or path params
+  useEffect(() => {
+    let extractedEventId = eventIdFromParams; // Default to eventId from URL params
+
+    if (!extractedEventId) {
+      // If it's not in the path params, try to get it from query parameters
+      const queryParams = new URLSearchParams(location.search);
+      extractedEventId = queryParams.get('eventId');
+    }
+
+    setEventId(extractedEventId);
+    console.log('Extracted eventId:', extractedEventId); // Debug log
+  }, [location, eventIdFromParams]); // Re-run when location or eventIdFromParams changes
 
   // Check if user is logged in on mount
   useEffect(() => {
@@ -118,40 +133,40 @@ const Chatbox = () => {
 
   return (
     <div>
-    {/* Floating Button */} 
-    <button className="floating-btn" onClick={toggleChat}>
-      <i className="fa fa-comments"></i> {/* Icon for the button */}
-    </button>
+      {/* Floating Button */}
+      <button className="floating-btn" onClick={toggleChat}>
+        <i className="fa fa-comments"></i> {/* Icon for the button */}
+      </button>
 
-    {/* Chatbox Container */}
-    {isChatVisible && (
-      <div className="chatbox-container">
-        <div className="chat-window">
-        <div>
-          <p>Logged in as: {user?.username || 'Unknown'}</p>
-        </div>
-          {messages.map((msg, index) => (
-            <div className="chat-messages" key={index}>
-              <strong>{msg.user}:</strong> {msg.message}
+      {/* Chatbox Container */}
+      {isChatVisible && (
+        <div className="chatbox-container">
+          <div className="chat-window">
+            <div>
+              <p>Logged in as: {user?.username || 'Unknown'}</p>
             </div>
-          ))}
-        </div>
-        <form className="form-chat" onSubmit={handleSendMessage}>
-          <div className="input-container">
-            <input
-              type="text"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder="Type your message here..."
-            />
-            <button className="send" type="submit">
-              <i className="fa fa-paper-plane"></i>
-            </button>
+            {messages.map((msg, index) => (
+              <div className="chat-messages" key={index}>
+                <strong>{msg.user}:</strong> {msg.message}
+              </div>
+            ))}
           </div>
-        </form>
-      </div>
-    )}
-  </div>
+          <form className="form-chat" onSubmit={handleSendMessage}>
+            <div className="input-container">
+              <input
+                type="text"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder="Type your message here..."
+              />
+              <button className="send" type="submit">
+                <i className="fa fa-paper-plane"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+    </div>
   );
 };
 

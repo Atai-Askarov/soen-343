@@ -11,13 +11,21 @@
   --sm-radius: 8px;
 }
 
+.manage-events{
+  background-image: linear-gradient(#5f2c82, #49a09d);
+  padding: 30px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
 .manage-events-container {
   max-width: 1400px;
-  margin: 2rem auto;
   padding: 2rem;
   background-color: var(--bg-color);
   border-radius: var(--border-radius);
   color: var(--text-color);
+  
 }
 
 /* Clean, minimal header */

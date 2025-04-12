@@ -1,0 +1,116 @@
+/* Calendar Container */
+.calendar-section {
+    margin-top: 40px;
+    padding: 20px;
+    width: 50%;
+    height: 600px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.06);
+  }
+  
+  /* Calendar Heading */
+  .calendar-section .section-header {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #2c3e50;
+  }
+  
+  /* Override react-big-calendar styles */
+  .rbc-calendar {
+    background-color: #fdfdfd;
+    border-radius: 20px;
+    overflow: hidden;
+    font-family: "Segoe UI", sans-serif;
+  }
+  
+  .rbc-toolbar {
+    background-color: #f7f9fc;
+    padding: 10px 20px;
+    border-bottom: 1px solid #e6e6e6;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .rbc-toolbar-label {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+  
+  .rbc-btn-group button {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    padding: 6px 12px;
+    margin: 0 2px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .rbc-btn-group button:hover {
+    background-color: #f0f4f8;
+  }
+  
+  .rbc-btn-group button.rbc-active {
+    background-color: #3498db;
+    color: #ffffff;
+    border-color: #2980b9;
+  }
+  
+  .rbc-month-view,
+  .rbc-time-view,
+  .rbc-agenda-view {
+    background-color: #ffffff;
+  }
+  
+  .rbc-event {
+    background-color: #4a90e2;
+    border-radius: 8px;
+    color: white;
+    padding: 5px;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .rbc-event:hover {
+    background-color: #4629b9;
+  }
+  
+  .rbc-today {
+    background-color: #ecf9ff !important;
+  }
+  
+  .rbc-selected {
+    background-color: #1abc9c !important;
+  }
+  
+  .rbc-off-range {
+    color: #aaa;
+    background-color: #f9f9f9;
+  }
+  
+  .rbc-day-bg:hover {
+    background-color: #f4f7fa;
+    cursor: pointer;
+  }
+  
+  .rbc-time-header-content,
+  .rbc-time-content {
+    border-color: #e5e5e5;
+  }
+  
+  @media (max-width: 768px) {
+    .rbc-toolbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .rbc-toolbar-label {
+      margin-top: 10px;
+    }
+  }
+  

@@ -87,7 +87,17 @@ const Home = () => {
                     <i class="fas fa-solid fa-globe"></i> {event.event_type}
                   </p>
                     <p className="event-date" style={{fontSize:"20px", fontWeight: "bold", fontFamily:"Roboto, sans-serif"}}>
-                      <i className="fas fa-calendar-alt"></i>  {event.eventdate}
+                      <i className="fas fa-calendar-alt"></i>  {new Date(event.eventdate).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })}    {new Date(event.eventstarttime).toLocaleTimeString('en-US', {
+                          hour: 'numeric',
+                          minute: '2-digit',
+                        })} -   {new Date(event.eventendtime).toLocaleTimeString('en-US', {
+                          hour: 'numeric',
+                          minute: '2-digit',
+                        })}
                     </p>
                     <p className="event-location" style={{fontSize:"20px", fontWeight: "bold", fontFamily:"Roboto, sans-serif"}}>
                       <i className="fas fa-map-marker-alt"></i>  {event.eventlocation}

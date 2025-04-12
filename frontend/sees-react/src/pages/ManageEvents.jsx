@@ -125,6 +125,7 @@ const pendingEventCommands = commands.filter(cmd =>
   };
 
   return (
+    <div className='manage-events'>
     <div className="manage-events-container">
       <EventsHeader 
         searchTerm={searchTerm}
@@ -162,6 +163,7 @@ const pendingEventCommands = commands.filter(cmd =>
           />
         </>
       )}
+    </div>
     </div>
   );
 };
