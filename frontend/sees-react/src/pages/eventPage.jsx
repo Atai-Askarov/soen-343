@@ -27,7 +27,19 @@ const Event = () => {
       // Redirect to Stripe Checkout
       window.location.href = response.data.url;
     } catch (error) {
-      console.error("Error creating checkout session:", error.response?.data || error.message);
+      if (error.response) {
+        // Check for 409 Conflict status
+        if (error.response.status === 400) {
+          console.error("Error: Ticket already exists. Only single item purchases are supported.");
+          alert("You have already purchased a ticket for this event. Only single item purchases are supported.");
+        } else {
+          console.error("Error creating checkout session:", error.response.data.message || error.message);
+          alert("An error occurred: " + (error.response.data.message || error.message));
+        }
+      } else {
+        console.error("Error creating checkout session:", error.message);
+        alert("An unexpected error occurred: " + error.message);
+      }
     }
   };
   

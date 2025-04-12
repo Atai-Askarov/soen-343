@@ -117,7 +117,6 @@ def create_sponsorship():
         stripe_product_id = promotion.create_promotion_package_product(
             width = int(str(data['width'])[:-2]), height = int(str(data['height'])[:-2]), name = data['name'],  event_id = data['event_id']
         )
-        print(data['price'])
         
         stripe_price_id = price.create_ticket_price(
             amount = data['price'] * 100, nickname = data['name'], product_id = stripe_product_id
@@ -143,9 +142,7 @@ def create_sponsorship():
                 "stripe_price_id": sponsorship.stripe_price_id
             }
         }), 201
-        print(99999999999990)
-        print(tryThis[0].get_json()["sponsorship"]["stripe_price_id"])
-        print(99999999999990)
+        
         return  tryThis
     except Exception as e:
         print("Classic")

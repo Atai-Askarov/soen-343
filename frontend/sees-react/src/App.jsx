@@ -20,9 +20,7 @@ import MyEventsLearner from "./pages/myEventsLearner";
 import ManageEvents from "./pages/ManageEvents"
 import EventDetail from './pages/EventDetails';
 import ReviewEvent from "./pages/ReviewEvent";
-import './css/normalize.css';
 import EventPageAttendee from './pages/EventPageAttendee'
-// import './css/global.css';
 import SponsorView from "./pages/SponsorView";
 import SponsorPackages from "./pages/SponsorPackages";
 import SponsorAnalytics from "./pages/SponsorAnalytics";
@@ -33,11 +31,13 @@ import Networking from "./pages/networking";
 import GroupchatPage from "./pages/groupchat";
 
 
+import ConfirmationPage from "./pages/QRConfirmationPage";
 import ManageAttendees from "./pages/ManagementEvents/ManageAttendees";
 import ManageAnalytics from "./pages/ManagementEvents/ManageAnalytics";
 import ManageFinancials from "./pages/ManagementEvents/ManageFinancials";
 import ManageRequests from "./pages/ManagementEvents/ManageRequests"
 import OrgPackageCreation from "./pages/OrgPackageCreation";
+import ManageUsers from "./pages/ManagementEvents/ManageUsers";
 
 const App = () => {
   return (
@@ -61,8 +61,7 @@ const App = () => {
               <Route path="/promotion/:eventId" element={<TicketsPage />} />
               <Route path="/share-resources/:eventId" element={<ShareResourcePage />} />
               <Route path="/budget/:eventId" element={<Budget />} />
-              <Route path ="/manage-events" element = {<ManageEvents/>}/>
-              <Route path ="/manage-requests" element = {<ManageRequests/>}/>
+              
 
               <Route path="/sponsor-view" element={<SponsorView />} />
               <Route path="/sponsor/:eventId" element={<SponsorPackages />} />
@@ -74,11 +73,15 @@ const App = () => {
               <Route path="/review-event/:commandId" element={<ReviewEvent />} />
               <Route path="/myevents" element={<MyEventsLearner />} />
               <Route path="/event-attendee/:id" element={<EventPageAttendee />} />
-              <Route path="/manage-qa/:eventId" element={<ManageQA />} />
+              
               //Routes just for management
+              <Route path="/manage-qa/:eventId" element={<ManageQA />} />
               <Route  path="/events/:eventId/attendees" element={<ManageAttendees />} />
               <Route path="/events/:eventId/analytics" element={<ManageAnalytics />} />
               <Route path="/events/:eventId/financials" element={<ManageFinancials/>} />
+              <Route path ="/manage-events" element = {<ManageEvents/>}/>
+              <Route path ="/manage-requests" element = {<ManageRequests/>}/>
+              <Route path ="/manage-users" element = {<ManageUsers/>}/>
 
               {/* 
             <Route path="/events/:eventId/financials" element={<Budget />} />
@@ -89,6 +92,8 @@ const App = () => {
               <Route path="/events/:eventId/networking" element={<Networking />} />
               <Route path="/groupchat/:groupchatTitle" element={<GroupchatPage />} />
 
+              <Route path="/myevents/attendance-confirmation-page/:ticketId" element={<ConfirmationPage/>} />
+              <Route path="/eventDasboard/:eventId/attendance-confirmation-page" element={<ConfirmationPage/>} />
             </Routes>
 
           
