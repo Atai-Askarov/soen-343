@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Flask, render_template, jsonify, send_from_directory, request, send_from_directory, redirect
+from flask import Flask, render_template, jsonify, send_from_directory, request, send_from_directory
 from flask_migrate import Migrate
 from flask_cors import CORS, cross_origin
 from account import db, sign_in, get_users, log_in,get_users_by_role, get_all_user_emails, User, get_user_by_id, get_user_emails_from_array, get_user_by_id
@@ -16,6 +16,8 @@ from dotenv import load_dotenv
 from flask_socketio import SocketIO, join_room, leave_room, emit
 from dotenv import load_dotenv
 from attendance import get_attendance_by_event
+
+from Review import  review_bp
 from EventNotifier import EventNotifier, email_attendees_on_update, email_attendees_on_delete
 from EmailObserver import EmailObserver
 
@@ -27,7 +29,6 @@ EventNotifier.register(email_observer.update)
 
 
 # Import blueprints
-from sponsorship import sponsorship_bp
 from analytics import analytics_bp
 # Import the sponsorship blueprint
 from sponsorship import sponsorship_bp, create_sponsorship
@@ -37,7 +38,6 @@ from sponsorship import sponsorship_bp, create_sponsorship
 from werkzeug.utils import secure_filename
 load_dotenv()
 import stripe
-import json
 import os
 from dotenv import load_dotenv, find_dotenv
 
@@ -97,7 +97,7 @@ def create_checkout_session():
             if sponsorship_response[1] != 201:
                 return jsonify({"error": "Sponsorship creation failed"}), 400
             sponsorship_data = sponsorship_response[0].get_json()
-            price_id = sponsorship_data.get("sponsorship", {}).get("stripe_price_id") if product_type != "ticket" else product.get("ticket", {}).get("stripe_price_id")
+            price_id = sponsorship_data.get("sponsorship", {}).get("stripe_price_id") if product_type != "ticket" else sponsorship_data.get("ticket", {}).get("stripe_price_id")
         
         # Extract the price_id depending on the product type
         
@@ -155,11 +155,17 @@ def webhook():
 # Register the sponsorship blueprint (it handles /packages and /sponsorship endpoints)
 app.register_blueprint(sponsorship_bp)
 app.register_blueprint(analytics_bp)
-
+app.register_blueprint(review_bp, url_prefix="/Review")
 # ───── ROUTES ─────────────────────────────────────────────
 @app.route("/")
 def home():
     return "<p>Event Registration System</p>"
+
+
+
+
+
+
 
 @app.route("/add_user", methods=["POST"])
 @cross_origin(origin='http://localhost:3000')
